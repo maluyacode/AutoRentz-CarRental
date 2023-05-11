@@ -1,0 +1,244 @@
+main {
+    background-color: #F6F1E9;
+}
+
+#navbarSupportedContent {
+    font-size: larger;
+}
+
+
+/*hero section*/
+
+.hero {
+    height: 550px;
+    background-color: #F6F1E9;
+    padding: 0;
+}
+
+.hero-content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #000;
+    z-index: 1;
+}
+
+.hero-content h1 {
+    font-size: 48px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.hero-content p {
+    font-size: 24px;
+    margin-bottom: 40px;
+}
+
+.btn-primary {
+    display: inline-block;
+    padding: 15px 30px;
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #FFB800;
+    color: #fff;
+    border-radius: 30px;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+.btn-primary:hover {
+    background-color: #FFA500;
+}
+
+
+/* shop section */
+
+.shop {
+    padding: 80px 0;
+}
+
+.shop h2 {
+    text-align: center;
+    font-size: 40px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.shop .row {
+    display: flex;
+    justify-content: center;
+}
+
+.shop .col {
+    flex-basis: 300px;
+    margin: 20px;
+}
+
+.shop-item {
+    border: 1px solid #ddd;
+    padding: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.shop-item:hover {
+    box-shadow: 0px 0px 10px #ddd;
+}
+
+.shop-item-image img {
+    width: 100%;
+}
+
+.shop-item-details {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.shop-item-details h3 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.shop-item-details p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.btn-secondary {
+    margin: 10px;
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: #FFB800;
+    color: #fff;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    text-decoration: none;
+}
+
+.btn-secondary:hover {
+    background-color: #FFA500;
+}
+
+
+/* Car Details Section */
+
+.car-details {
+    padding: 80px 0;
+}
+
+.car-image img {
+    width: 100%;
+}
+
+.car-info h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    text-transform: capitalize;
+}
+
+.car-info p {
+    font-size: 18px;
+    margin-bottom: 5px;
+}
+
+.car-info .button-group {
+    margin-top: 20px;
+}
+
+.car-info .button-group .btn {
+    font-size: 18px;
+    margin-right: 10px;
+}
+
+
+/*  For Pendings  */
+
+#pending-bookings {
+    margin: 20px;
+    padding: 30px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+}
+
+#pending-bookings h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+#pending-bookings table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#pending-bookings th {
+    text-align: left;
+    background-color: #ddd;
+    padding: 8px;
+}
+
+#pending-bookings td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+#pending-bookings tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+#pending-bookings button {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#pending-bookings button:hover {
+    background-color: #3e8e41;
+}
+
+
+/* Garage Icon */
+
+.garage-icon-container {
+    position: relative;
+    display: inline-block;
+}
+
+.garage-count {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    background-color: #F7D060;
+    color: black;
+    font-size: 10px;
+    border-radius: 20%;
+    padding: 4px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.garage-icon {
+    position: relative;
+    bottom: 25px;
+    width: 2px;
+    height: 50px;
+    width: 50px;
+    margin-top: 27px
+}
+
+.navbar-nav {
+    opacity: 0.8;
+    font-weight: lighter;
+}
