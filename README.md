@@ -2,6 +2,7 @@
 Laravel Project requirements
 
 ✅ Atleast 4 CRUD scripts datatables with multiple file/image uploads. - Yajra Datatables
+
 ✅ Form validation. - Laravel Validator
 ✅ Database seeding. - Faker library (pelmered/fake-car, Faker built in)
 ✅ Transaction CRUD scripts. only administrators can update transactions. - Custom Middlware
