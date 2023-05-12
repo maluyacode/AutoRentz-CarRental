@@ -8417,7 +8417,7 @@ fieldset:disabled .btn {
 .py-4 {
     /* padding-top: 1.5rem !important;
     padding-bottom: 1.5rem !important; */
-    height: 90vh;
+    height: 800px;
 }
 
 .py-5 {
@@ -8818,6 +8818,7 @@ fieldset:disabled .btn {
 }
 
 .bg-body {
+    background-color: #000;
     --bs-bg-opacity: 1;
     background-color: rgba(var(--bs-body-bg-rgb), var(--bs-bg-opacity)) !important;
 }

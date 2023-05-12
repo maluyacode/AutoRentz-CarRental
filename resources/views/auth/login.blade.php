@@ -70,7 +70,7 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <button type="submit" class="submit-button">
+                                    <button type="submit" class="btn btn-warning submit-button">
                                         {{ __('Login') }}
                                     </button>
                                 </div>

@@ -33,7 +33,7 @@
 </head>
 
 <body>
-    <div id="app">
+    <div id="app" style="background-color: #191A19;">
         <nav class="navbar navbar-expand-md shadow-sm" style="background-color: #191A19;">
             <div class="container" style="font-weight:bolder; font-size:17px">
                 <a class="navbar-brand" href="{{ route('home') }}">

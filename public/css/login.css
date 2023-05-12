@@ -5,13 +5,14 @@
     opacity: 0.9;
     background-image: url("../storage/images/bglogin.jpg");
     background-size: cover;
+    background-repeat: no-repeat;
     background-position: center;
 }
 
 .login-card {
     margin: auto;
     margin-top: 60px;
-    width: 50%;
+    width: 60%;
     height: 520px;
     background-color: rgba(255, 255, 255, 0.13);
     color: #ffffff;
@@ -42,13 +43,14 @@
     display: block;
     height: 50px;
     width: 100%;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: rgba(255, 255, 255, 0.07) !important;
     border-radius: 3px;
     padding: 0 10px;
     margin-top: 8px;
     font-size: 14px;
     font-weight: 300;
     border: none;
+    color: #e5e5e5 !important;
 }
 
 .email-input::placeholder,
