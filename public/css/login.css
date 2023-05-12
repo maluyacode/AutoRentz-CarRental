@@ -1,13 +1,18 @@
 .login-container {
     height: 100%;
     background-color: #262626;
+    background-blend-mode:hard-light;
+    opacity: 0.9;
+    background-image: url("../storage/images/bglogin.jpg");
+    background-size: cover;
+    background-position: center;
 }
 
 .login-card {
     margin: auto;
-    margin-top: 50px;
+    margin-top: 60px;
     width: 50%;
-    height: 75vh;
+    height: 520px;
     background-color: rgba(255, 255, 255, 0.13);
     color: #ffffff;
     backdrop-filter: blur(10px);
