@@ -34,7 +34,7 @@
 
 <body>
     <div id="app" style="background-color: #191A19;">
-        <nav class="navbar navbar-expand-md shadow-sm" style="background-color: #191A19;">
+        <nav class="navbar navbar-expand-md shadow-sm" style="background-color: #191A19; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;">
             <div class="container" style="font-weight:bolder; font-size:17px">
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="{{ url('storage/images/Logo.png') }}" alt="{{ config('app.name', 'Laravel') }}"
@@ -50,20 +50,20 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'user'))
-                            <a class="nav-link" href="{{ route('admindashboard') }}" style="color: #F6F1E9">
+                            <a class="nav-link nav-dashboard nav-link-color" id="link1" href="{{ route('admindashboard') }}" style="color: #F6F1E9">
                                 Dashboard
                             </a>
                         @endif
                         {{-- <a class="nav-link" href="{{ route('home') }}">
                                 Home
                             </a> --}}
-                        <a class="nav-link" href="{{ route('home') }}" style="color: #F6F1E9;">
+                        <a class="nav-link nav-home nav-link-color" id="link2" href="{{ route('home') }}" style="color: #F6F1E9;">
                             Home
                         </a>
-                        <a class="nav-link" href="{{ route('locations', 'all') }}" style="color: #F6F1E9">
+                        <a class="nav-link nav-location nav-link-color" id="link3" href="{{ route('locations', 'all') }}" style="color: #F6F1E9">
                             Locations
                         </a>
-                        <a class="nav-link" href="{{ route('drivers', 'all') }}" style="color: #F6F1E9">
+                        <a class="nav-link nav-drivers nav-link-color" id="link4" href="{{ route('drivers', 'all') }}" style="color: #F6F1E9">
                             Drivers
                         </a>
                     </ul>
@@ -73,16 +73,16 @@
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item">
+                                <li class="nav-item nav-link-color">
                                     <a class="nav-link" href="{{ route('login') }}"
-                                        style="color: #F6F1E9">{{ __('Login') }}</a>
+                                        style="color: #F6F1E9" id="link5">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
-                                <li class="nav-item">
+                                <li class="nav-item nav-link-color">
                                     <a class="nav-link" href="{{ route('register') }}"
-                                        style="color: #F6F1E9">{{ __('Register') }}</a>
+                                        style="color: #F6F1E9" id="link6">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
@@ -139,6 +139,7 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/nav.js') }}"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
     </script>

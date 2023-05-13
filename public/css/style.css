@@ -7,6 +7,24 @@ main {
 }
 
 
+.nav-dashboard,
+.nav-home,
+.nav-location,
+.nav-drivers {
+    font-size: 15px !important;
+}
+
+.nav-dashboard:hover,
+.nav-home:hover,
+.nav-location:hover,
+.nav-drivers:hover {
+    background-color: rgb(44, 43, 43);
+}
+
+.clicked {
+    color: #FFA500 !important;
+}
+
 /*hero section*/
 
 .hero {
