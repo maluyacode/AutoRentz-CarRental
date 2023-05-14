@@ -15,8 +15,6 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
 
-
-
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
@@ -38,7 +36,7 @@
             <div class="container" style="font-weight:bolder; font-size:17px">
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="{{ url('storage/images/Logo.png') }}" alt="{{ config('app.name', 'Laravel') }}"
-                        width="100px">
+                        width="75px">
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
@@ -73,15 +71,15 @@
                         <!-- Authentication Links -->
                         @guest
                             @if (Route::has('login'))
-                                <li class="nav-item nav-link-color">
-                                    <a class="nav-link" href="{{ route('login') }}"
+                                <li class="nav-item ">
+                                    <a class="nav-link nav-link-color" href="{{ route('login') }}"
                                         style="color: #F6F1E9" id="link5">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
                             @if (Route::has('register'))
-                                <li class="nav-item nav-link-color">
-                                    <a class="nav-link" href="{{ route('register') }}"
+                                <li class="nav-item">
+                                    <a class="nav-link nav-link-color" href="{{ route('register') }}"
                                         style="color: #F6F1E9" id="link6">{{ __('Register') }}</a>
                                 </li>
                             @endif

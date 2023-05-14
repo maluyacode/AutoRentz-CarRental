@@ -3,9 +3,19 @@
 @section('content')
     @include('layouts.session-messages')
     <section class="hero">
-        <div class="hero-content">
-            <h1>Explore the World in Style</h1>
-            <p>Rent the car of your dreams and embark on an unforgettable adventure</p>
+        <div class="container home-container">
+            <div class="row" style="height: 100%">
+                <div class="col-md-6 col-content">
+                    <div class="hero-content">
+                        <h1 class="home-title">Explore the World in Style</h1>
+                        <p>Rent the car of your dreams and embark on an unforgettable adventure</p>
+                        <button class="btn-rent">Rent</button>
+                    </div>
+                </div>
+                <div class="col col-image">
+                    <img src="{{ asset('/storage/images/lightning.png') }}" alt="">
+                </div>
+            </div>
         </div>
     </section>
     <section class="shop">

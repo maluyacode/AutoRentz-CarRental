@@ -25,53 +25,6 @@ main {
     color: #FFA500 !important;
 }
 
-/*hero section*/
-
-.hero {
-    height: 550px;
-    background-color: #F6F1E9;
-    padding: 0;
-}
-
-.hero-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: #000;
-    z-index: 1;
-}
-
-.hero-content h1 {
-    font-size: 48px;
-    font-weight: bold;
-    margin-bottom: 20px;
-}
-
-.hero-content p {
-    font-size: 24px;
-    margin-bottom: 40px;
-}
-
-.btn-primary {
-    display: inline-block;
-    padding: 15px 30px;
-    font-size: 20px;
-    font-weight: bold;
-    text-transform: uppercase;
-    background-color: #FFB800;
-    color: #fff;
-    border-radius: 30px;
-    transition: all 0.3s ease-in-out;
-    text-decoration: none;
-}
-
-.btn-primary:hover {
-    background-color: #FFA500;
-}
-
-
 /* shop section */
 
 .shop {
