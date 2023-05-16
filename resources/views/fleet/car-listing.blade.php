@@ -19,20 +19,22 @@
         </div>
     </section>
     <section class="shop">
-        <div class="container">
-            <h2>AutoRentz Cars</h2>
+        <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <form action="{{ route('carsearch') }}" method="GET" id="car-search-form">
-                        <div class="input-group mb-3">
+                        <div class="input-group mb-3 search-row">
                             <input type="text" class="form-control" placeholder="Search for a car by any name"
-                                name="search" id="car-search-input">
-                            <button class="btn btn-primary" type="submit">Search</button>
+                                name="search" id="car-search-input"
+                                onkeypress="
+                                searchCar();
+                                ">
+                            <button class="btn btn-warning btn-search" type="submit">Search</button>
                         </div>
                     </form>
                 </div>
                 @foreach ($cars as $car)
-                    <div style="width: 400px; margin-bottom: 20px">
+                    <div style="width: 400px; margin-bottom: 40px">
                         <div class="shop-item box" style="font-family: serif; font-weight: 200; height:100%">
                             <div class="ribbon {{ $car->car_status == 'taken' ? 'red' : '' }}">
                                 <span>{{ $car->car_status == 'taken' ? 'Taken' : 'Available' }}</span>
@@ -53,9 +55,9 @@
                                     {{ $car->modelname . ' ' . $car->typename }}</h3>
                                 <small>{{ $car->manufacturername }}</small>
                             </div>
-                            <a href="{{ route('addtogarage', $car->id) }}" class="btn-secondary"
+                            <a href="{{ route('addtogarage', $car->id) }}" class="add-to-garage"
                                 style="font-size: 12px">Add to garage</a>
-                            <a href="{{ route('cardetails', $car->id) }}" class="btn-secondary"
+                            <a href="{{ route('cardetails', $car->id) }}" class="car-details"
                                 style="font-size: 12px">View Details</a>
                         </div>
                     </div>
@@ -64,4 +66,17 @@
         </div>
     </div>
 </section>
+{{-- <script>
+    var data = {
+        {!! $data !!}
+    };
+
+    function searchCar() {
+        let inputSearch = document.querySelector('#car-search-input');
+        console.log(inputSearch.value);
+        var results = data.filter(inputSearch.value)
+        console.log(results);
+        return "NONE";
+    }
+</script> --}}
 @endsection

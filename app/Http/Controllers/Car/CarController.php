@@ -263,12 +263,13 @@ class CarController extends Controller
         //         'ma.id as manuID'
         //     )
         //     ->get();
+        $data = json_encode($cars);
         $accessory = DB::table('cars as ca')
             ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
             ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
             ->get();
         $customerClass = new CustomerClass();
-        return View::make('fleet.car-listing', compact('cars', 'accessory', 'customerClass'));
+        return View::make('fleet.car-listing', compact('cars', 'accessory', 'customerClass', 'data'));
     }
 
     public function carsearch(Request $request)
