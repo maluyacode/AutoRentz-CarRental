@@ -309,11 +309,12 @@ class CarController extends Controller
         //     ->orWhere('ta.name', 'LIKE', "%$search%")
         //     ->orWhere('ca.seats', 'LIKE', "%$search%")
         //     ->get();
+        $data = json_encode($cars);
         $accessory = DB::table('cars as ca')
             ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
             ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
             ->get();
         $customerClass = new CustomerClass();
-        return View::make('fleet.car-listing', compact('cars', 'search', 'accessory', 'customerClass'));
+        return View::make('fleet.car-listing', compact('cars', 'search', 'accessory', 'customerClass', 'data'));
     }
 }
