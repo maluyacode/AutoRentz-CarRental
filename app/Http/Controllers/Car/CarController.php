@@ -241,35 +241,40 @@ class CarController extends Controller
     public function carlists()
     {
         $accessInfo = new AccessInformation();
-        $cars = $accessInfo->carJoined()->get();
-        // $cars = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->get();
+        // $cars = $accessInfo->carJoined()->get();
+        $cars = DB::table('cars as ca')
+            ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
+            ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
+            ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
+            ->join('types as ty', 'ty.id', 'mo.type_id')
+            ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
+            ->select(
+                'ca.*',
+                'fu.name as fuelname',
+                'ta.name as transmissionname',
+                'mo.name as modelname',
+                'mo.year as modelyear',
+                'ty.name as typename',
+                'ma.name as manufacturername',
+                'fu.id as fuelID',
+                'ta.id as transID',
+                'mo.id as modelID',
+                'ty.id as typeID',
+                'ma.id as manuID',
+                // DB::raw('(SELECT SUM(fee) FROM accessories
+                // INNER JOIN accessorie_car ON accessories.id = accessorie_car.accessorie_id
+                // INNER JOIN cars ON cars.id = accessorie_car.car_id ) as accessoryFee')
+            )
+            ->get();
         $data = json_encode($cars);
         $accessory = DB::table('cars as ca')
+            ->select('ac.fee', 'ca.id')
             ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
             ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
             ->get();
+        $accessories = json_encode($accessory);
         $customerClass = new CustomerClass();
-        return View::make('fleet.car-listing', compact('cars', 'accessory', 'customerClass', 'data'));
+        return View::make('fleet.car-listing', compact('cars', 'accessory', 'customerClass', 'data', 'accessories'));
     }
 
     public function carsearch(Request $request)

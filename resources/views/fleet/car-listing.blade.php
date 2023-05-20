@@ -24,7 +24,7 @@
                 <div class="col-md-12">
                     <form action="{{ route('carsearch') }}" method="GET" id="car-search-form">
                         <div class="input-group mb-3 search-row">
-                            <input type="text" class="form-control" placeholder="Search for a car by any name"
+                            <input type="text" class="form-control search-input" placeholder="Search here..."
                                 name="search" id="car-search-input" onkeyup="searchObjects()">
                             <button class="btn btn-warning btn-search" type="submit">Search</button>
                         </div>
