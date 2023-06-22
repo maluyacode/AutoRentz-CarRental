@@ -23,7 +23,7 @@
         // console.log(carData[id].id);
         // Display the filtered objects in the results list
         // <img src="/storage/images/${image[0]}" alt="car-image" height="200px">
-        if (carData) {
+        if (carData.length > 0) {
             carData.forEach(function(carlist) {
                 image = carlist.image_path.split('=');
                 results.innerHTML += `
@@ -66,6 +66,9 @@
                     </div>
             `;
             });
+        } else {
+            results.innerHTML = '<div class="no-results" style="height: 500px; width: 100%"><h1>No results</h1<div/>';
+            console.log('NONE');
         }
     }
     let carImages = document.querySelectorAll('.js-image-container img');

@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Database\Eloquent\Builder;
 
 use App\Models\Car;
 use App\Models\Customer;
@@ -27,6 +28,7 @@ class CarController extends Controller
     {
         return $dataTable->render('car.index');
     }
+
     public function create()
     {
         $models = DB::table('modelos as mo')
@@ -44,7 +46,6 @@ class CarController extends Controller
     }
     public function store(Request $request)
     {
-
         Validator::make(
             $request->all(),
             [
@@ -241,7 +242,11 @@ class CarController extends Controller
     public function carlists()
     {
         $accessInfo = new AccessInformation();
-        // $cars = $accessInfo->carJoined()->get();
+        // $data = 'cancelled';
+        // $cars = Car::with(['accessories', 'bookings'])->whereHas('bookings', function($query) use($data){
+        //     $query->where('status', $data);
+        // })->get();
+        // dump($cars);
         $cars = DB::table('cars as ca')
             ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
             ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')

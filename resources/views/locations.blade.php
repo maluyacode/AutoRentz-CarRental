@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row">
-        <form action="{{ route('locations', 'search') }}" method="POST" style="display: flex; justify-content: center;" >
+        <form action="{{ route('locations', 'search') }}" method="POST" style="display: flex; justify-content: center;">
             @csrf
             <div class="form-group">
                 <input type="text" class="form-control" style="width: 300px;" name="searchInput">

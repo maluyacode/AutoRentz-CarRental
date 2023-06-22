@@ -99,20 +99,16 @@ class DriverDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id')
-                ->title('ID NO:'),
+            Column::make('id'),
             Column::make('fname')
-                ->title('FIRST NAME'),
+                ->title('First Name'),
             Column::make('lname')
-                ->title('LAST NAME'),
-            Column::make('licensed_no')
-                ->title('LICENSED NO:'),
-            Column::make('description')
-                ->title('DESCIPTION'),
-            Column::make('address')
-                ->title('ADDRESS'),
+                ->title('Last Name'),
+            Column::make('licensed_no'),
+            Column::make('description'),
+            Column::make('address'),
             Column::make('driver_status')
-                ->title('STATUS'),
+                ->title('Status'),
             Column::make('image_path')
                 ->title('IMAGES'),
             // Column::make('created_at')

@@ -65,6 +65,9 @@
 
 
 /* shop section */
+.shop-container {
+    margin-top: 60px !important;
+}
 
 .shop {
     padding-top: 30px;
@@ -78,6 +81,18 @@
     width: 30% !important;
 }
 
+.no-results {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 300px;
+    width: 100%;
+    color: #ddd;
+}
+.no-results h1{
+    letter-spacing: 5px;
+    font-weight: 500;
+}
 .btn-search {
     width: 100px;
 }

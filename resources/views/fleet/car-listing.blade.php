@@ -9,7 +9,9 @@
                     <div class="hero-content">
                         <h1 class="home-title">Explore the World in Style</h1>
                         <p>Rent the car of your dreams and embark on an unforgettable adventure</p>
-                        <button class="btn-rent">Rent</button>
+                        <a href="#list-cars">
+                            <button class="btn-rent">Rent</button>
+                        </a>
                     </div>
                 </div>
                 <div class="col col-image">
@@ -18,8 +20,8 @@
             </div>
         </div>
     </section>
-    <section class="shop">
-        <div class="container-fluid">
+    <section class="shop" id="list-cars">
+        <div class="container-fluid shop-container">
             <div class="row">
                 <div class="col-md-12">
                     <form action="{{ route('carsearch') }}" method="GET" id="car-search-form">
@@ -61,9 +63,9 @@
                         </div>
                     </div>
                 @endforeach --}}
+                </div>
             </div>
         </div>
-    </div>
-</section>
-@include('fleet.js-car-search')
+    </section>
+    @include('fleet.js-car-search')
 @endsection

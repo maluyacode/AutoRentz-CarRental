@@ -93,16 +93,13 @@ class AccessorieDataTable extends DataTable
     {
         return [
             Column::make('id')
-                ->title('ID NO:')
                 ->addClass('text-center'),
             Column::make('name')
-                ->title('NAME')
                 ->addClass('text-center'),
             Column::make('fee')
-                ->title('FEE')
                 ->addClass('text-center'),
             Column::make('image_path')
-                ->title('IMAGES')
+                ->title('Images')
                 ->addClass('text-center'),
             // Column::make('created_at')
             //     ->width(100)
