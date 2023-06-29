@@ -54,6 +54,9 @@
         .table-bordered {
             border: 1px solid #ccc;
         }
+        .table-bordered td{
+            text-transform: capitalize;
+        }
     </style>
 </head>
 

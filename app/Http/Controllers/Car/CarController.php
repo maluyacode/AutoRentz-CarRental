@@ -96,7 +96,10 @@ class CarController extends Controller
         }
         return redirect()->route('car.index')->with('created', 'New car added successfully!');
     }
-
+    public function show($id){
+        dump($id);
+        return "HEllo";
+    }
     public function edit($id)
     {
         $accessInfo = new AccessInformation();

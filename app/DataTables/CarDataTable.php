@@ -24,64 +24,70 @@ class CarDataTable extends DataTable
     {
         return datatables()
             ->collection($query)
-            ->addColumn('price_per_day', function($car){
+            ->addColumn('price_per_day', function ($car) {
                 Debugbar::info($car->accessories);
-                $fee = $car->accessories->map(function($accessory){
+                $fee = $car->accessories->map(function ($accessory) {
                     return $accessory->fee;
                 })->sum();
                 return "&#8369;" . number_format($fee + $car->price_per_day, 2);
             })
-            ->addColumn('description', function ($cars) {
-                return $cars->description;
+            ->addColumn('cost_price', function ($car) {
+                return "&#8369;" . number_format($car->cost_price, 2);
             })
-            ->addColumn('accessories', function ($cars) {
-                return $cars->accessories->map(function ($accessory) {
-                    return $accessory->name;
-                })->implode('<br>');
+            ->addColumn('model', function ($car) {
+                return $car->modelo->name . " " . $car->modelo->manufacturer->name . " " . $car->modelo->type->name;
             })
-            ->addColumn('image_path', function ($cars) {
-                // $images[] = explode('=', $cars->image_path);
-                // $carImages = array_map(function ($image){
-                //     Debugbar::info($image);
-                //     return '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
-                //     <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
-                // }, $images);
-                // $image_path = [];
-                foreach (explode('=', $cars->image_path) as $key => $image) {
-                    $image_path[] = '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
-                            <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
-                }
-                $displayImage = implode("", $image_path);
-                $container = '<div style="display: flex; flex:direction: row;">' . $displayImage . '</div>';
-                return $container;
-            })
-            ->addColumn('model', function($car){
-                return $car->modelo->name;
-            })
-            ->addColumn('manufacturer', function($car){
-                return $car->modelo->manufacturer->name;
-            })
-            ->addColumn('type', function($car){
-                return $car->modelo->type->name;
-            })
-            ->addColumn('fuel', function($car){
-                return $car->fuel->name;
-            })
-            ->addColumn('transmission', function($car){
-                return $car->transmission->name;
-            })
+            // ->addColumn('accessories', function ($cars) {
+            //     return $cars->accessories->map(function ($accessory) {
+            //         return $accessory->name;
+            //     })->implode('<br>');
+            // })
+            // ->addColumn('image_path', function ($cars) {
+            //     // $images[] = explode('=', $cars->image_path);
+            //     // $carImages = array_map(function ($image){
+            //     //     Debugbar::info($image);
+            //     //     return '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
+            //     //     <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
+            //     // }, $images);
+            //     $image_path = [];
+            //     foreach (explode('=', $cars->image_path) as $key => $image) {
+            //         $image_path[] = '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
+            //                 <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
+            //     }
+            //     $displayImage = implode("", $image_path);
+            //     $container = '<div style="display: flex; flex:direction: row;">' . $displayImage . '</div>';
+            //     return $container;
+            // })
+            // ->addColumn('model', function($car){
+            //     return $car->modelo->name;
+            // })
+            // ->addColumn('manufacturer', function($car){
+            //     return $car->modelo->manufacturer->name;
+            // })
+            // ->addColumn('type', function($car){
+            //     return $car->modelo->type->name;
+            // })
+            // ->addColumn('fuel', function($car){
+            //     return $car->fuel->name;
+            // })
+            // ->addColumn('transmission', function($car){
+            //     return $car->transmission->name;
+            // })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('car.edit', $row->id) . '" style="display: inline-block;">
+                $actionBtn = '<a href="' . route('car.show', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0;">
+                <button type="button" class="btn btn-block bg-gradient-secondary btn-sm" >Details</button>
+            </a>
+            <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0;">
                 <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
             </a>
-            <form action="' . route('car.delete', $row->id) . '" method="POST" style="display: inline-block;">
+            <form action="' . route('car.delete', $row->id) . '" method="POST" style="display: inline-block; width:80%;  margin: 2px 0;">
                 <input type="hidden" name="_method" value="DELETE">
                 <input type="hidden" name="_token" value="' . csrf_token() . '">
                 <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
             </form>';
                 return $actionBtn;
             })
-            ->rawColumns(['action', 'image_path', 'accessories', 'description', 'price_per_day']); // Combined rawColumns method call
+            ->rawColumns(['action', 'image_path', 'accessories', 'description', 'price_per_day', 'cost_price']); // Combined rawColumns method call
 
     }
 
@@ -141,7 +147,7 @@ class CarDataTable extends DataTable
                 Button::make('export'),
                 Button::make('print'),
                 Button::make('reset'),
-                Button::make('reload')
+                Button::make('reload'),
             );
     }
 
@@ -157,36 +163,35 @@ class CarDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('platenumber')
                 ->addClass('text-center'),
+            Column::make('model')
+                ->addClass('text-center'),
             Column::make('price_per_day')
                 ->addClass('text-center'),
-            Column::make('accessories')
-                ->addClass('text-center'),
+            // Column::make('accessories')
+            //     ->addClass('text-center'),
             Column::make('seats')
                 ->addClass('text-center'),
             Column::make('cost_price')
                 ->addClass('text-center'),
             Column::make('car_status')
-                ->addClass('text-center'),
-            Column::make('model')
-                ->addClass('text-center'),
-            Column::make('manufacturer')
-                ->addClass('text-center'),
-            Column::make('type')
-                ->addClass('text-center'),
-            Column::make('fuel')
-                ->addClass('text-center'),
-            Column::make('transmission')
-                ->addClass('text-center'),
-            Column::make('description')
-                ->addClass('text-center'),
-            Column::make('image_path')
-                ->addClass('text-center'),
+                ->addClass('text-center')
+                ->addClass('uppercase'),
+            // Column::make('manufacturer')
+            //     ->addClass('text-center'),
+            // Column::make('type')
+            //     ->addClass('text-center'),
+            // Column::make('fuel')
+            //     ->addClass('text-center'),
+            // Column::make('transmission')
+            //     ->addClass('text-center'),
+            // Column::make('image_path')
+            //     ->addClass('text-center'),
             // Column::make('created_at'),
             // Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
-                ->width(120)
+                // ->width(120)
                 ->addClass('text-center'),
         ];
     }
