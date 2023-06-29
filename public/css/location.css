@@ -1,0 +1,74 @@
+.slider {
+    position: relative;
+}
+
+.prev,
+.next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 32px;
+    cursor: pointer;
+}
+
+.prev:hover,
+.next:hover {
+    color: #ccc;
+    opacity: 0.3;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.location {
+    height: max-content;
+    background-color: #DDE6ED;
+    padding-bottom: 50px;
+}
+
+.search-location {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.search-input-location {
+    width: 300px;
+}
+
+.btn-location {
+    margin: 0 10px;
+    background-color: #FFB800;
+}
+
+.location-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 50px;
+}
+
+.row-location{
+    display: flex;
+    justify-content: center;
+}
+
+.card {
+    width: 90%;
+    padding: 20px;
+    background-color: #4E3636;
+    color: #F4EEE0;
+    font-weight: 100;
+}
+
+.card-img-top {
+    height: 20rem;
+}

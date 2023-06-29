@@ -27,7 +27,7 @@
     <link href="{{ asset('css/register.css') }}" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-
+    @yield('styles')
 </head>
 
 <body>
@@ -148,7 +148,6 @@
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
     </script>
     @yield('scripts')
-
 </body>
 
 </html>

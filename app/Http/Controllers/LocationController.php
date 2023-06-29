@@ -145,7 +145,7 @@ class LocationController extends Controller
         return redirect()->route('location.index')->with('deleted', 'Deleted successfully');
     }
 
-    public function locationlists(Request $request, $data){
+    public function locationlists(Request $request, $data = 'all'){
         $searchValue = '';
         if($data == 'all'){
             $seachValue = null;

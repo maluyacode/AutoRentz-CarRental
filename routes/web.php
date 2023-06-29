@@ -34,10 +34,9 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
 Route::get('/home', [CarController::class, 'carlists'])->name('home');
-Route::get('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
-Route::post('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
+Route::any('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
+// Route::post('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
 Route::get('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::post('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::get('/driver/{id}', [DriverController::class, 'driverDetails'])->name('driver.details');
@@ -52,7 +51,7 @@ Route::prefix('fleet/car')->group(function () {
 Route::prefix('user')->middleware(['auth'])->group(function () {
     Route::get('/profile', [UserController::class, 'profile'])->name('viewprofile');
     Route::put('/edit/{id}', [UserController::class, 'edit'])->name('editprofile');
-    Route::put('change/{id}/password',[UserController::class, 'changePassword'])->name('changePassword');
+    Route::put('change/{id}/password', [UserController::class, 'changePassword'])->name('changePassword');
     Route::get('/addtogarage/{id}', [UserController::class, 'addtousergarage'])->name('addtogarage');
     Route::get('/view/garage', [UserController::class, 'viewusergarage'])->name('viewusergarage');
     Route::get('/edit/garage/car/{id}', [UserController::class, 'editgarage'])->name('editgarage');
@@ -95,6 +94,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::get('/edit/{id}', [CarController::class, 'edit'])->name('car.edit');
         Route::put('/update/{id}', [CarController::class, 'update'])->name('car.update');
         Route::delete('/delete/{id}', [CarController::class, 'destroy'])->name('car.delete');
+        Route::get('/show/{id}', [CarController::class, 'show'])->name('car.show');
     });
 
     Route::middleware('blockuser')->group(function () {
