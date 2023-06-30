@@ -1,0 +1,40 @@
+.driver-container {
+    height: max-content;
+    padding-bottom: 20px;
+    background-color: #27374D;
+}
+
+.driver-search-form {
+    display: flex;
+    justify-content: center;
+    margin: 30px;
+}
+
+.driver-search-input {
+    width: 300px;
+}
+
+.btn-driver{
+    margin: 0 10px;
+}
+
+.driver-row{
+    display: flex;
+    justify-content: center;
+}
+
+.driver-card {
+    max-width: 640px;
+    margin: 10px;
+    background-color: #164B60;
+}
+
+.driver-image{
+    width: 200px;
+    height: 200px;
+    margin: 10px 0;
+}
+
+.card-body{
+    color: aliceblue;
+}

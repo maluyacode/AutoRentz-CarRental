@@ -14,7 +14,7 @@
                         </a>
                     </div>
                 </div>
-                <div class="col col-image">
+                <div class="col col-image" decoding="async">
                     <img src="{{ asset('/storage/images/lightning.png') }}" alt="">
                 </div>
             </div>

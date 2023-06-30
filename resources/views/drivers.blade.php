@@ -1,32 +1,44 @@
 @extends('layouts.app')
 
+@section('styles')
+    <link href="{{ asset('css/driver.css') }}" rel="stylesheet">
+@endsection
+
 @section('content')
-    <div class="row">
-        <form action="{{ route('drivers', 'search') }}" method="POST" style="display: flex; justify-content: center;">
-            @csrf
-            <div class="form-group">
-                <input type="text" class="form-control" style="width: 300px;" name="searchInput">
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
-    @foreach ($drivers as $driver)
-        <div class="card mb-3" style="max-width: 640px;margin:30px auto">
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    @foreach (explode('=', $driver->image_path) as $key => $image)
-                        <img src="{{ '/storage/images/' . $image }}" class="card-img" alt="...">
-                    @break
-                @endforeach
-            </div>
-            <div class="col-md-8">
-                <div class="card-body">
-                    <h5 class="card-title">{{ $driver->fname . ' ' . $driver->lname }}</h5>
-                    <p class="card-text">{{ $driver->description }}.</p>
-                    <a href="{{ route('driver.details', $driver->id) }}" class="btn btn-success">See profile</a>
+    <div class="container-fluid driver-container">
+        <div class="row">
+            <form action="{{ route('drivers', 'search') }}" method="POST" class="driver-search-form">
+                @csrf
+                <div class="form-group">
+                    <input type="text" class="form-control driver-search-input" name="searchInput">
+                </div>
+                <button type="submit" class="btn btn-warning btn-driver">Search</button>
+            </form>
+        </div>
+        <div class="row driver-row">
+            @foreach ($drivers as $driver)
+                <div class="card mb-1 driver-card">
+                    <div class="row no-gutters" >
+                        <div class="col-md-4">
+                            @foreach (explode('=', $driver->image_path) as $key => $image)
+                                <img src="{{ '/storage/images/' . $image }}" class="driver-image" alt="...">
+                            @break
+                        @endforeach
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $driver->fname . ' ' . $driver->lname }}</h5>
+                            <p class="card-text">{{ $driver->description }}.</p>
+                            <a href="{{ route('driver.details', $driver->id) }}" class="btn btn-success">See profile</a>
+                        </div>
+                    </div>
                 </div>
             </div>
+            @endforeach
         </div>
     </div>
-@endforeach
+@endsection
+
+@section('scripts')
+<script src="{{ asset('js/driver.js') }}" defer></script>
 @endsection

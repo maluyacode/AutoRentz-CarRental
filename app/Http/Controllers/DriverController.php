@@ -156,7 +156,7 @@ class DriverController extends Controller
         return redirect()->route('drivers.index')->with('deleted', 'Deleted successfully');
     }
 
-    public function driverlists(Request $request, $data) // user view
+    public function driverlists(Request $request, $data = 'all') // user view
     {
         $searchValue = '';
         if ($data == 'all') {
@@ -164,8 +164,9 @@ class DriverController extends Controller
         } else if ($request->searchInput) {
             $searchValue = $request->searchInput;
         } else {
-            $searchValue = $data;
+            $searchValue = $data && false;
         }
+        // dd($searchValue);
         $drivers = DB::table('drivers')
             ->whereNotIn('id', [1])
             ->where(function ($query) use ($searchValue) {

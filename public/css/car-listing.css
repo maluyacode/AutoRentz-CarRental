@@ -89,10 +89,12 @@
     width: 100%;
     color: #ddd;
 }
-.no-results h1{
+
+.no-results h1 {
     letter-spacing: 5px;
     font-weight: 500;
 }
+
 .btn-search {
     width: 100px;
 }
