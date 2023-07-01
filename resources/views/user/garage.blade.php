@@ -3,7 +3,7 @@
 @section('content')
     {{-- {{ dd($garage) }} --}}
     @include('layouts.session-messages')
-    <div class="container" style="height: 80vh">
+    <div class="container" style="height: 80vh; padding-top: 20px">
         <h1>My Garage</h1>
 
         @if ($garage == null)
@@ -13,7 +13,6 @@
         @else
             <div class="row" style="font-size: 18px">
                 @foreach ($garage as $key => $bookInfo)
-                    {{-- {{ dd($bookInfo) }} --}}
                     <div class="col-md-12 mb-4">
                         <div class="card">
                             <div class="row no-gutters">
@@ -25,9 +24,6 @@
                                             </a>
                                         @break
                                     @endforeach
-                                    {{--
-                                        <img class="card-img"
-                                            src="{{ asset($carDetails->CarDetails($bookInfo['car_id'])->image_path) }}"> --}}
                                 </div>
                                 <div class="row" style="margin: 5%">
                                     <p class="card-title" style="text-transform: capitalize; width:auto">

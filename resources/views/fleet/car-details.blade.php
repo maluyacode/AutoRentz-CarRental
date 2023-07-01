@@ -6,8 +6,11 @@
         .mySlides {
             display: none;
         }
+        .car-detail{
+            padding-top: 50px;
+        }
     </style>
-    <section class="car-details" style="height: 80vh">
+    <section class="car-detail" style="height: 80vh">
         <div class="container">
             <div class="row">
                 <div class="col-md-6">

@@ -3,8 +3,8 @@
 {{-- {{ dd($location->all()) }} --}}
 @section('content')
     @include('layouts.session-messages')
-    <section id="edit-booking" style="height: 100%">
-        <div class="container">
+    <section id="edit-booking" style="height: 100%;">
+        <div class="container" style="padding-top: 20px">
             <h2 style="text-align: center; margin: 0 0 20px 0;">Edit Booking</h2>
             <div class="row">
                 <div class="col-md-4">

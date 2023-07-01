@@ -195,32 +195,6 @@ class BookingController extends Controller
 
     public function index(BookingDataTable $dataTable) //admin access
     { // admin access
-        $bookings = DB::table('users as us')
-            ->select(
-                'bo.*',
-                'mo.name as modelName',
-                'ca.price_per_day as price_per_day',
-                'mo.year',
-                'cu.name as customer_name',
-                'cu.email as customer_email',
-                'cu.phone as customer_phone',
-                'ca.platenumber',
-                DB::raw('CONCAT(lo1.street, ", ", lo1.baranggay, ", ", lo1.city) as pickuplocation'),
-                DB::raw('CONCAT(lo2.street, ", ", lo2.baranggay, ", ", lo2.city) as returnlocation'),
-                DB::raw('(DATEDIFF(bo.end_date, bo.start_date)) + 1 as days'),
-                DB::raw("CASE
-                    WHEN bo.driver_id = 1 THEN 'with driver'
-                    WHEN bo.driver_id IS NULL THEN 'self drive'
-                    END as drivetype")
-            )
-            ->join('customers as cu', 'us.id', 'cu.user_id')
-            ->join('bookings as bo', 'cu.id', 'bo.customer_id')
-            ->join('cars as ca', 'ca.id', 'bo.car_id')
-            ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-            ->leftJoin('locations as lo1', 'lo1.id', 'bo.pickup_location_id')
-            ->leftJoin('locations as lo2', 'lo2.id', 'bo.return_location_id')
-            ->get();
-        // dd($bookings);
         $header = "Bookings";
         $drivers = Driver::all()->skip(1);
         return $dataTable->render('admin.bookings.index', compact('drivers', 'header'));

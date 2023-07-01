@@ -74,7 +74,7 @@ class CarDataTable extends DataTable
             //     return $car->transmission->name;
             // })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('car.show', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0;">
+                $actionBtn = '<a href="' . route('car.edit', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0;">
                 <button type="button" class="btn btn-block bg-gradient-secondary btn-sm" >Details</button>
             </a>
             <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0;">
