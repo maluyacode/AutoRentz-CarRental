@@ -138,7 +138,16 @@
                 </div>
             </div>
             <!-- /.row (main row) -->
+            <div class="row">
+                <div class="col-lg-6">
+                    <br><br>
+                    <div>
+                        {!! $carRentChart->container() !!}
+                        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
+                        {!! $carRentChart->script() !!}
+                    </div>
+                </div>
+            </div>
         </div><!-- /.container-fluid -->
     </section>
-
 @endsection

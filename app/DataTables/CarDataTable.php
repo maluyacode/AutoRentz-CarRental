@@ -37,47 +37,11 @@ class CarDataTable extends DataTable
             ->addColumn('model', function ($car) {
                 return $car->modelo->name . " " . $car->modelo->manufacturer->name . " " . $car->modelo->type->name;
             })
-            // ->addColumn('accessories', function ($cars) {
-            //     return $cars->accessories->map(function ($accessory) {
-            //         return $accessory->name;
-            //     })->implode('<br>');
-            // })
-            // ->addColumn('image_path', function ($cars) {
-            //     // $images[] = explode('=', $cars->image_path);
-            //     // $carImages = array_map(function ($image){
-            //     //     Debugbar::info($image);
-            //     //     return '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
-            //     //     <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
-            //     // }, $images);
-            //     $image_path = [];
-            //     foreach (explode('=', $cars->image_path) as $key => $image) {
-            //         $image_path[] = '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
-            //                 <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
-            //     }
-            //     $displayImage = implode("", $image_path);
-            //     $container = '<div style="display: flex; flex:direction: row;">' . $displayImage . '</div>';
-            //     return $container;
-            // })
-            // ->addColumn('model', function($car){
-            //     return $car->modelo->name;
-            // })
-            // ->addColumn('manufacturer', function($car){
-            //     return $car->modelo->manufacturer->name;
-            // })
-            // ->addColumn('type', function($car){
-            //     return $car->modelo->type->name;
-            // })
-            // ->addColumn('fuel', function($car){
-            //     return $car->fuel->name;
-            // })
-            // ->addColumn('transmission', function($car){
-            //     return $car->transmission->name;
-            // })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('car.edit', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0;">
+                $actionBtn = '<a href="' . route('car.edit', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0; text-decoration: none;">
                 <button type="button" class="btn btn-block bg-gradient-secondary btn-sm" >Details</button>
             </a>
-            <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0;">
+            <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0; text-decoration: none;">
                 <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
             </a>
             <form action="' . route('car.delete', $row->id) . '" method="POST" style="display: inline-block; width:80%;  margin: 2px 0;">
@@ -87,7 +51,7 @@ class CarDataTable extends DataTable
             </form>';
                 return $actionBtn;
             })
-            ->rawColumns(['action', 'image_path', 'accessories', 'description', 'price_per_day', 'cost_price']); // Combined rawColumns method call
+            ->rawColumns(['action', 'image_path', 'accessories', 'description', 'price_per_day', 'cost_price']);
 
     }
 
@@ -99,22 +63,6 @@ class CarDataTable extends DataTable
      */
     public function query()
     {
-        // $cars = DB::table('cars')
-        //     ->join('fuels', 'fuels.id', 'cars.fuel_id')
-        //     ->join('transmissions', 'transmissions.id', 'cars.transmission_id')
-        //     ->join('modelos', 'modelos.id', 'cars.modelos_id')
-        //     ->join('types', 'types.id', 'modelos.type_id')
-        //     ->join('manufacturers', 'manufacturers.id', 'modelos.manufacturer_id')
-        //     ->select(
-        //         'cars.*',
-        //         'fuels.name as fuel',
-        //         'transmissions.name as transmission',
-        //         'modelos.name as model',
-        //         'modelos.year as year',
-        //         'types.name as type',
-        //         'manufacturers.name as manufacturer',
-        //     );
-
         $cars = Car::with([ // eager loading
             'accessories',
             'transmission',
@@ -176,22 +124,9 @@ class CarDataTable extends DataTable
             Column::make('car_status')
                 ->addClass('text-center')
                 ->addClass('uppercase'),
-            // Column::make('manufacturer')
-            //     ->addClass('text-center'),
-            // Column::make('type')
-            //     ->addClass('text-center'),
-            // Column::make('fuel')
-            //     ->addClass('text-center'),
-            // Column::make('transmission')
-            //     ->addClass('text-center'),
-            // Column::make('image_path')
-            //     ->addClass('text-center'),
-            // Column::make('created_at'),
-            // Column::make('updated_at'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
-                // ->width(120)
                 ->addClass('text-center'),
         ];
     }

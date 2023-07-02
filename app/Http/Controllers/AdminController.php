@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AccessInformation;
+use App\Charts\CarRentChart;
 use App\CustomerClass;
 use App\Models\Booking;
 use App\Models\Car;
@@ -21,6 +22,20 @@ use App\Mail\MailToUser;
 
 class AdminController extends Controller
 {
+    private $color;
+    public function __construct()
+    {
+        return $this->color = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 205, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(201, 203, 207, 0.2)'
+        ];
+    }
+
     public function AdminDashboard()
     {
         $allBooking = DB::table('bookings')
@@ -46,7 +61,70 @@ class AdminController extends Controller
         $drivers = Driver::whereNotIn('id', [1])->get()->count();
         $locations = Location::all()->count();
 
-        return view('admin.dashboard', compact('totalPrice', 'pendings', 'confirmed', 'finished', 'cancelled', 'cars', 'drivers', 'users', 'locations'));
+
+        // $carData = DB::select('SELECT platenumber, COUNT(bookings.car_id) as rent FROM cars LEFT JOIN bookings ON (cars.id = bookings.car_id) GROUP BY platenumber');
+        $carData = DB::table('cars')
+            ->leftJoin('bookings', function ($join) {
+                $join->on('cars.id', 'bookings.car_id');
+                $join->where('bookings.status', '=', 'finished');
+            })
+            ->groupBy('platenumber')
+            ->pluck(
+                DB::raw('count(car_id)'),
+                'platenumber'
+            )->all();
+
+        $carRentChart = new CarRentChart;
+
+        $carRentChart->labels(array_keys($carData));
+
+        $carRentChart->dataset(false, "bar", array_values($carData))->options([
+            "backgroundColor" => $this->color,
+            "borderColor" => $this->color,
+            "minBarLength" => 2,
+            "hoverBackgroundColor" => [
+                'rgb(255, 99, 132)',
+                'rgb(255, 159, 64)',
+                'rgb(255, 205, 86)',
+                'rgb(75, 192, 192)',
+                'rgb(54, 162, 235)',
+                'rgb(153, 102, 255)',
+                'rgb(201, 203, 207)'
+            ],
+        ]);
+        $carRentChart->displayLegend(false);
+
+        $carRentChart->title("Car Rents", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+
+        return view(
+            'admin.dashboard',
+            compact(
+                'totalPrice',
+                'pendings',
+                'confirmed',
+                'finished',
+                'cancelled',
+                'cars',
+                'drivers',
+                'users',
+                'locations',
+                'carRentChart'
+            )
+        );
+    }
+
+
+    public function color()
+    {
+        return [
+            'rgb(255, 99, 132)',
+            'rgb(255, 159, 64)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(54, 162, 235)',
+            'rgb(153, 102, 255)',
+            'rgb(201, 203, 207)'
+        ];
     }
 
     public function confirmBooking(Request $request, $id)
@@ -239,27 +317,6 @@ class AdminController extends Controller
         $allcustomer = Customer::all();
         $accessInfo = new AccessInformation();
         $allCar = $accessInfo->carJoined()->get();
-        // $allCar = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->get();
         return view('admin.bookings.edit', compact('allLocation', 'allcustomer', 'allCar', 'booking'));
     }
 
