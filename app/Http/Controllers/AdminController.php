@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\AccessInformation;
 use App\Charts\CarRentChart;
+use App\Charts\CustomerRegisterChart;
 use App\CustomerClass;
 use App\Models\Booking;
 use App\Models\Car;
@@ -36,6 +37,7 @@ class AdminController extends Controller
         ];
     }
 
+
     public function AdminDashboard()
     {
         $allBooking = DB::table('bookings')
@@ -62,7 +64,9 @@ class AdminController extends Controller
         $locations = Location::all()->count();
 
 
-        // $carData = DB::select('SELECT platenumber, COUNT(bookings.car_id) as rent FROM cars LEFT JOIN bookings ON (cars.id = bookings.car_id) GROUP BY platenumber');
+
+
+
         $carData = DB::table('cars')
             ->leftJoin('bookings', function ($join) {
                 $join->on('cars.id', 'bookings.car_id');
@@ -75,9 +79,7 @@ class AdminController extends Controller
             )->all();
 
         $carRentChart = new CarRentChart;
-
         $carRentChart->labels(array_keys($carData));
-
         $carRentChart->dataset(false, "bar", array_values($carData))->options([
             "backgroundColor" => $this->color,
             "borderColor" => $this->color,
@@ -93,8 +95,40 @@ class AdminController extends Controller
             ],
         ]);
         $carRentChart->displayLegend(false);
-
         $carRentChart->title("Car Rents", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
+
+
+        $customer = DB::table('customers')
+            ->groupBy('month')
+            ->select(
+                DB::raw('count(monthname(created_at)) as count'),
+                DB::raw('monthname(created_at) as month'),
+            )
+            ->orderBy('month', 'ASC')
+            ->get()
+            ->toArray();
+
+        for ($i = 1; $i <= 12; $i++) {
+            $months[date('F', mktime(0, 0, 0, $i, 10))] = 0;
+        }
+        // dd($months);
+        foreach ($customer as $key => $customerJoin) {
+            if (array_key_exists($customerJoin->month, $months)) {
+                $months[$customerJoin->month] = $customerJoin->count;
+            }
+        }
+
+        $customerRegister = new CustomerRegisterChart;
+        $customerRegister->labels(array_keys($months));
+        $customerRegister->dataset('Registered Customers 2023', "line", array_values($months))->options([
+            "backgroundColor" => $this->color,
+            "borderColor" => 'rgb(75, 192, 192)',
+            "minBarLength" => 2,
+            "fill" => false,
+        ]);
+        $customerRegister->displayLegend(false);
+        $customerRegister->title("Registered Customers 2023", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");;
+
 
         return view(
             'admin.dashboard',
@@ -108,7 +142,8 @@ class AdminController extends Controller
                 'drivers',
                 'users',
                 'locations',
-                'carRentChart'
+                'carRentChart',
+                'customerRegister'
             )
         );
     }
