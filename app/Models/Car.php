@@ -4,15 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Spatie\Searchable\Searchable;
+use Spatie\Searchable\SearchResult;
 
 use App\Models\Accessorie;
 use App\Models\Modelo;
 use App\Models\Transmission;
 use App\Models\Fuel;
 use App\Models\Booking;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Car extends Model
+class Car extends Model implements Searchable
 {
     use HasFactory;
     protected $fillable = [
@@ -48,4 +50,16 @@ class Car extends Model
     public function bookings(){
         return $this->hasMany(Booking::class);
     }
+
+    public function getSearchResult(): SearchResult
+     {
+        $url = route('cardetails', $this->id);
+
+         return new \Spatie\Searchable\SearchResult(
+            $this,
+            $this->platenumber,
+            $url
+         );
+     }
+
 }

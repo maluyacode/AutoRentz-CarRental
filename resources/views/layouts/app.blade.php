@@ -69,6 +69,14 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
+                        <li class="nav-item ">
+                            <form action="{{ route('global.search') }}" method="POST">
+                                @csrf
+                                <div class="form-group global-search">
+                                    <input class="form-control" type="text" placeholder="Search" name="search">
+                                </div>
+                            </form>
+                        </li>
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item ">

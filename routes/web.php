@@ -16,6 +16,7 @@ use App\Http\Controllers\Car\AccessoriesController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\SearchController;
 use Illuminate\Support\Facades\App;
 
 /*
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\App;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('home');
 });
 
 Auth::routes();
@@ -40,6 +41,7 @@ Route::any('/locations/{data?}', [LocationController::class, 'locationlists'])->
 Route::get('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::post('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::get('/driver/{id}', [DriverController::class, 'driverDetails'])->name('driver.details');
+Route::post('/search', [SearchController::class, 'search'])->name('global.search');
 
 // for Listing, Viewing details
 Route::prefix('fleet/car')->group(function () {
