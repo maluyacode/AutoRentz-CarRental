@@ -111,7 +111,7 @@ body {
 
 .global-search input {
     display: block;
-    height: 30px;
+    height: 40px;
     width: 100% !important;
     background-color: rgba(255, 255, 255, 0.07) !important;
     border-radius: 3px;

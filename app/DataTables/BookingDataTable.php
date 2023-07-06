@@ -67,9 +67,9 @@ class BookingDataTable extends DataTable
                     "<b>PickUp:</b> {$row->picklocation->street} {$row->picklocation->baranggay} {$row->picklocation->city} <br><br>
                  <b>Return:</b> {$row->returnlocation->street} {$row->picklocation->baranggay} {$row->picklocation->city}";
             })
-            ->addColumn('customer', function ($book) {
-                return $book->customer->name;
-            })
+            // ->addColumn('customer', function ($book) {
+            //     return $book->customer->name;
+            // })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="' . route('editBooking', $row->id) . '" class="btn btn-block bg-gradient-primary btn-sm"  style="display: inline-block; width: 100px; margin:5px;"> Edit </a>
             <form action="' . route('deleteBooking', $row->id) . '" method="POST" style="display: inline-block; width: 100px; margin:5px;">
@@ -142,7 +142,8 @@ class BookingDataTable extends DataTable
                 ->className('booking-class'),
             Column::make('end_date')
                 ->className('booking-class'),
-            Column::make('customer')
+            Column::make('customer.name')
+                ->title('customer')
                 ->className('booking-class'),
             Column::make('rent_price')
                 ->className('booking-class')

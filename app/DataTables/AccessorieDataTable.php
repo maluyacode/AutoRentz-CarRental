@@ -9,6 +9,7 @@ use Yajra\DataTables\Html\Editor\Editor;
 use Yajra\DataTables\Html\Editor\Fields;
 use Yajra\DataTables\Services\DataTable;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\View;
 
 class AccessorieDataTable extends DataTable
 {
@@ -81,6 +82,10 @@ class AccessorieDataTable extends DataTable
             ->orderBy(1)
             ->buttons(
                 Button::make('create'),
+                Button::make('export'),
+                Button::make('print'),
+                Button::make('reset'),
+                Button::make('reload'),
             );
     }
 

@@ -88,6 +88,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::resource('fuel', FuelController::class);
         Route::resource('transmission', TransmissionController::class);
         Route::resource('accessories', AccessoriesController::class); //mp3
+        Route::post('accessories/import', [AccessoriesController::class, 'import'])->name('accessories.import');
         Route::resource('drivers', DriverController::class); //mp2
 
         Route::get('/list', [CarController::class, 'index'])->name('car.index'); //mp1

@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
+use App\Imports\AccessoriesImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 use App\Models\Accessorie;
 
@@ -145,5 +147,11 @@ class AccessoriesController extends Controller
     {
         Accessorie::destroy($id);
         return redirect()->route('accessories.index')->with("deleted", "Deleted Successfully");
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new AccessoriesImport, $request->excel);
+        return redirect()->route('accessories.index')->with('success', 'All goods na!');
     }
 }
