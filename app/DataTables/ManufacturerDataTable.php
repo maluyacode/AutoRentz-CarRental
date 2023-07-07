@@ -28,6 +28,12 @@ class ManufacturerDataTable extends DataTable
             ->addColumn('updated_at', function ($row) {
                 return Carbon::parse($row->updated_at)->format('F j, Y - g:i a');
             })
+            ->addColumn('images', function ($row) {
+                $images = $row->getMedia('images');
+                foreach ($images as $image) {
+                    return "<img src='{$image->getUrl('thumb')}'>";
+                }
+            })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<a href="' . route('manufacturers.edit', $row->id) . '" style="display: inline-block;">
                 <button type="button" class="btn btn-block bg-gradient-primary btn-sm" style="background-color: #6c757d">Edit</button>
@@ -39,7 +45,7 @@ class ManufacturerDataTable extends DataTable
                 <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
             </form>';
                 return $actionBtn;
-            })->rawColumns(['action']);
+            })->rawColumns(['action', 'images']);
     }
 
     /**
@@ -83,6 +89,8 @@ class ManufacturerDataTable extends DataTable
     {
         return [
             Column::make('id')
+                ->addClass('text-center'),
+            Column::make('images')
                 ->addClass('text-center'),
             Column::make('name')
                 ->addClass('text-center'),

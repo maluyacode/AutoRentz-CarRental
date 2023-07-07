@@ -83,6 +83,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Cars
     Route::prefix('car')->group(function () {
         Route::resource('manufacturers', ManufacturerController::class);
+        Route::post('manufacturer/storeMedia', [ManufacturerController::class, 'storeMedia'])->name('manufacturer.storeMedia');
         Route::resource('types', TypeController::class);
         Route::resource('model', ModelController::class);
         Route::resource('fuel', FuelController::class);

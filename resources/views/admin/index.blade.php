@@ -51,12 +51,16 @@
         integrity="sha256-oP6HI9z1XaZNBrJURtCoUT5SUnxFr8s3BzRl+cbzUq8=" crossorigin="anonymous"></script>
     <!-- For Yajra DataTables -->
 
-    {{-- Charts --}}
+    {{-- Dropzone --}}
+    <script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
     <style>
         .table-bordered {
             border: 1px solid #ccc;
         }
-        .table-bordered td{
+
+        .table-bordered td {
             text-transform: capitalize;
         }
     </style>
@@ -117,11 +121,11 @@
     <!-- jQuery -->
     <script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
     <!-- jQuery UI 1.11.4 -->
-    <script src="{{ asset('vendors/') }}plugins/jquery-ui/jquery-ui.min.js"></script>
+    {{-- <script src="{{ asset('vendors/') }}plugins/jquery-ui/jquery-ui.min.js"></script> --}}
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    <script>
+    {{-- <script>
         $.widget.bridge('uibutton', $.ui.button)
-    </script>
+    </script> --}}
     <!-- Bootstrap 4 -->
     <script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- ChartJS -->
