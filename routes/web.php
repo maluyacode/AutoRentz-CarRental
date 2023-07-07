@@ -90,6 +90,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::resource('accessories', AccessoriesController::class); //mp3
         Route::post('accessories/import', [AccessoriesController::class, 'import'])->name('accessories.import');
         Route::resource('drivers', DriverController::class); //mp2
+        Route::post('drivers/import', [DriverController::class, 'import'])->name('drivers.import');
 
         Route::get('/list', [CarController::class, 'index'])->name('car.index'); //mp1
         Route::get('/list/create', [CarController::class, 'create'])->name('car.create');

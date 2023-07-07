@@ -10,6 +10,7 @@ use Spatie\Searchable\SearchResult;
 class Driver extends Model implements Searchable
 {
     use HasFactory;
+    protected $fillable = ["fname", "lname", "licensed_no", "description", "address", "image_path", "driver_status"];
 
     public function getSearchResult(): SearchResult
     {

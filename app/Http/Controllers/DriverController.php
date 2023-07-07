@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\DriversImport;
 
 class DriverController extends Controller
 {
@@ -182,5 +184,12 @@ class DriverController extends Controller
     {
         $driver = Driver::find($id);
         return view('driver-details', compact('driver'));
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new DriversImport, $request->excel);
+
+        return redirect()->route('drivers.index')->with('success', 'Imported na ang data');
     }
 }

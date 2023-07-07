@@ -28,6 +28,19 @@
                             <h3 class="card-title">Rentahan ng kotse ni Earl Russell SY</h3>
                         </div>
                         <div style="padding: 20px">
+                            <form action="{{ route('drivers.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="input-group mb-3" style="width: 50%">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04"
+                                            name="excel">
+                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
 
                             {!! $dataTable->table() !!}
 
@@ -39,4 +52,9 @@
     </section>
 
     {!! $dataTable->scripts() !!}
+    <script>
+        $('.custom-file-input').on("change", function(e) {
+            $('.custom-file-label').html(e.target.files[0].name);
+        });
+    </script>
 @endsection
