@@ -268,7 +268,7 @@ class BookingController extends Controller
         ];
         $date = $accessInfo->formatDate(now());
         $pdf = Pdf::loadView('print.transaction', $data);
-        return $pdf->download('autorentzinvoice_'.$id.'_'.$date.'.pdf');
+        return $pdf->download('autorentzinvoice_' . $id . '_' . $date . '.pdf');
         // return View::make('print.transaction', compact('book', 'customer', 'car', 'accessInfo', 'driver', 'totalPrice'));
     }
 }

@@ -21,6 +21,8 @@ use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\Cast\Bool_;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\MailToUser;
+use App\TotalRentPrice;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class AdminController extends Controller
 {
@@ -484,6 +486,47 @@ class AdminController extends Controller
     {
         Booking::withTrashed()->find($id)->forceDelete();
         return back()->with('deleted', 'Deleted successfully 💔');
+    }
+
+    public function salesReport()
+    {
+        // $bookingData = '';
+        $bookings = Booking::with([
+            'car:id,modelos_id,platenumber,price_per_day', // selecting specific column
+            'customer:id,name',
+            'picklocation:id,street,baranggay,city',
+            'returnlocation:id,street,baranggay,city',
+            'driver:fname,lname',
+            'car.accessories:id,fee',
+            'car.modelo:id,manufacturer_id,type_id,name,year',
+            'car.modelo.manufacturer:id,name',
+            'car.modelo.type:id,name',
+        ])
+            ->where('status', 'finished')
+            ->get();
+
+        foreach ($bookings as $key => $booking) {
+
+            $total_rent_price = new TotalRentPrice($booking);
+
+            $bookData[$key] = [
+                "id" => $booking->id,
+                "start_date" => $booking->start_date,
+                "end_date" => $booking->end_date,
+                "mode_of_transac" => $booking->address ? "Deliver" : "Pickup",
+                "locations" => $booking->address ? $booking->address : [
+                    $booking->picklocation->street . " " . $booking->picklocation->baranggay . " " . $booking->picklocation->city,
+                    $booking->returnlocation->street . " " . $booking->returnlocation->baranggay . " " . $booking->returnlocation->city
+                ],
+                "customer" => $booking->customer->name,
+                "car" => $booking->car->platenumber,
+                "total" => $total_rent_price->compute(),
+
+            ];
+        }
+        Debugbar::info($bookData);
+
+        return response()->json(["booking" => $bookData, "status" => 200]);
     }
 
     public function report(Request $request)

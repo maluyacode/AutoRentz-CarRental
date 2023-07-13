@@ -55,41 +55,71 @@
                                         <th>Book ID</th>
                                         <th>Start Date</th>
                                         <th>End Date</th>
-                                        <th>MOD</th>
+                                        <th>Mode of Transaction</th>
+                                        <th>Location(s)</th>
                                         <th>Customer</th>
                                         <th>Car</th>
                                         <th>Total</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    @foreach ($bookings as $booking)
-                                        <tr>
-                                            <td>{{ $booking->id }}</td>
-                                            <td>{{ $booking->start_date }}</td>
-                                            <td>{{ $booking->end_date }}</td>
-                                            @if ($booking->address)
-                                                <td>Delivery: {{ $booking->address }}</td>
-                                            @else
-                                                <td>
-                                                    Pickup: {{ $booking->pickuplocation }} <br>
-                                                    Return: {{ $booking->returnlocation }}
-                                                </td>
-                                            @endif
-                                            <td>{{ $booking->customer_name }}</td>
-                                            <td>{{ $info->concatCarName($booking->car_id) }}</td>
-                                            <td>₱{{ number_format($compute->computationDisplay($booking->start_date, $booking->end_date, $booking->price_per_day, $accessory, $booking->car_id), 2, '.', ',') }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                <tbody id="tableBody">
+
                                 </tbody>
                             </table>
                         </div>
                         <!-- /.card-body -->
                     </div>
-                    <h3 class="m-0" style="text-align: right">Total: ₱{{ number_format($totalPrice, 2, '.', ',') }}</h3>
                     <!-- /.card -->
                 </div>
             </div>
         </div>
     </section>
+    <script>
+        $(document).ready(function() {
+            $.ajax({
+                type: "GET",
+                url: "/api/report/sales",
+                dataType: "json",
+                success: function(data) {
+                    $.each(data.booking, function(key, data) {
+                        let modeOfTransac = data.address ? "Deliver" : "Pickup";
+                        let totalFee = 0;
+                        let days = 0;
+                        let rentPrice = 0;
+
+                        $.each(data.car.accessories.map(function(accsessory) {
+                            return accsessory.fee;
+                        }), function() {
+                            totalFee += Number(this);
+                        });
+
+                        let startDate = new Date(data.start_date);
+                        let endDate = new Date(data.end_date);
+                        let timeDiff = endDate.getTime() - startDate.getTime();
+
+                        days = Math.ceil(timeDiff / (1000 * 3600 * 24) + 1);
+
+                        rentPrice = days * (Number(totalFee) + Number(data.car.price_per_day));
+
+
+                        var tr = $("<tr>");
+                        tr.append($("<td>").html(data.id));
+                        tr.append($("<td>").html(data.start_date));
+                        tr.append($("<td>").html(data.end_date));
+                        tr.append($("<td>").html(modeOfTransac));
+                        tr.append($("<td>").html(data.address ||
+                            `<b>Pickup:</b> ${data.picklocation.street} ${data.picklocation.baranggay} ${data.picklocation.city} <br>
+                            <b>Return:</b> ${data.returnlocation.street} ${data.returnlocation.baranggay} ${data.returnlocation.city}`
+                        ));
+                        tr.append($("<td>").html(data.customer.name));
+                        tr.append($("<td>").html(data.car.platenumber));
+                        tr.append($("<td>").html(`&#8369;${rentPrice.toFixed(2)}`));
+                        $('#tableBody').append(tr);
+
+                    })
+                }
+            })
+
+        });
+    </script>
 @endsection

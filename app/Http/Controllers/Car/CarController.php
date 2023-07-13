@@ -96,36 +96,16 @@ class CarController extends Controller
         }
         return redirect()->route('car.index')->with('created', 'New car added successfully!');
     }
-    public function show($id){
-        dump($id);
-        return "HEllo";
+    public function show($id)
+    {
+        return Car::find($id);
     }
     public function edit($id)
     {
         $accessInfo = new AccessInformation();
         $car = $accessInfo->carJoined()
             ->where('ca.id', $id)->first();
-        // $car = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->where('ca.id', $id)->first();
+
         $models = DB::table('modelos as mo')
             ->join('types as ty', 'ty.id', 'mo.type_id')
             ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
@@ -134,8 +114,11 @@ class CarController extends Controller
                 'ty.name as typename',
                 'ma.name as manufacturername'
             )->whereNotIn('mo.id', [$car->modelID])->get();
+
         $fuels = Fuel::whereNotIn('id', [$car->fuel_id])->get();
+
         $transmissions = Transmission::whereNotIn('id', [$car->transmission_id])->get();
+
         $carAccessory = DB::table('cars as ca')
             ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
             ->join('accessories as ac', 'ac.id', 'ac_ca.accessorie_id')
@@ -143,6 +126,7 @@ class CarController extends Controller
             ->pluck('ac.name as name', 'ac.id as id')
             ->toArray();
         $accessories = Accessorie::all();
+
         return View::make('car.edit', compact('car', 'models', 'fuels', 'transmissions', 'carAccessory', 'accessories'));
     }
 
@@ -211,28 +195,6 @@ class CarController extends Controller
         $car = $accessInfo->carJoined()
             ->where('ca.id', $id)
             ->first();
-        // $car = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->where('ca.id', $id)
-        //     ->first();
         $customerClass = new CustomerClass();
         $accessory = Car::find($id)->accessories()->get();
         $accessoryfee = DB::table('cars as ca')
@@ -245,11 +207,6 @@ class CarController extends Controller
     public function carlists()
     {
         $accessInfo = new AccessInformation();
-        // $data = 'cancelled';
-        // $cars = Car::with(['accessories', 'bookings'])->whereHas('bookings', function($query) use($data){
-        //     $query->where('status', $data);
-        // })->get();
-        // dump($cars);
         $cars = DB::table('cars as ca')
             ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
             ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
@@ -269,9 +226,6 @@ class CarController extends Controller
                 'mo.id as modelID',
                 'ty.id as typeID',
                 'ma.id as manuID',
-                // DB::raw('(SELECT SUM(fee) FROM accessories
-                // INNER JOIN accessorie_car ON accessories.id = accessorie_car.accessorie_id
-                // INNER JOIN cars ON cars.id = accessorie_car.car_id ) as accessoryFee')
             )
             ->get();
         $data = json_encode($cars);
@@ -296,32 +250,7 @@ class CarController extends Controller
             ->orWhere('ta.name', 'LIKE', "%$search%")
             ->orWhere('ca.seats', 'LIKE', "%$search%")
             ->get();
-        // $cars = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->where('mo.name', 'LIKE', "%$search%")
-        //     ->orWhere('ma.name', 'LIKE', "%$search%")
-        //     ->orWhere('ty.name', 'LIKE', "%$search%")
-        //     ->orWhere('ta.name', 'LIKE', "%$search%")
-        //     ->orWhere('ca.seats', 'LIKE', "%$search%")
-        //     ->get();
+
         $data = json_encode($cars);
         $accessory = DB::table('cars as ca')
             ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')

@@ -37,22 +37,29 @@ class CarDataTable extends DataTable
             ->addColumn('model', function ($car) {
                 return $car->modelo->name . " " . $car->modelo->manufacturer->name . " " . $car->modelo->type->name;
             })
+            ->addColumn('image_path', function ($row) {
+                $image_path = [];
+                foreach (explode('=', $row->image_path) as $key => $image) {
+                    $image_path[] = '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
+                        <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
+                }
+                $displayImage = implode("", $image_path);
+                $container = '<div style="display: flex; flex:direction: row;">' . $displayImage . '</div>';
+                return $container;
+            })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('car.edit', $row->id) . '"style="display: inline-block; width:80%; margin: 2px 0; text-decoration: none;">
-                <button type="button" class="btn btn-block bg-gradient-secondary btn-sm" >Details</button>
-            </a>
-            <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0; text-decoration: none;">
-                <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
-            </a>
-            <form action="' . route('car.delete', $row->id) . '" method="POST" style="display: inline-block; width:80%;  margin: 2px 0;">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" value="' . csrf_token() . '">
-                <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
-            </form>';
-                return $actionBtn;
+                $actionBtn = '
+                <a href="' . route('car.edit', $row->id) . '" style="display: inline-block; width:80%;  margin: 2px 0; text-decoration: none; max-width: 200px;">
+                    <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
+                </a>
+                <form action="' . route('car.delete', $row->id) . '" method="POST" style="display: inline-block; width:80%;  margin: 2px 0; max-width: 200px;">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="' . csrf_token() . '">
+                    <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
+                </form>';
+                    return $actionBtn;
             })
             ->rawColumns(['action', 'image_path', 'accessories', 'description', 'price_per_day', 'cost_price']);
-
     }
 
     /**
@@ -119,11 +126,13 @@ class CarDataTable extends DataTable
             //     ->addClass('text-center'),
             Column::make('seats')
                 ->addClass('text-center'),
-            Column::make('cost_price')
-                ->addClass('text-center'),
+            // Column::make('cost_price')
+            //     ->addClass('text-center'),
             Column::make('car_status')
                 ->addClass('text-center')
                 ->addClass('uppercase'),
+            Column::make('image_path')
+                ->title('Images'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
