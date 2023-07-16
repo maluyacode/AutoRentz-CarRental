@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use App\DataTables\TransmissionDataTable;
 
 use App\Models\Transmission;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class TransmissionController extends Controller
 {
@@ -91,6 +92,8 @@ class TransmissionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        Debugbar::info($request);
+
         $rules = [
             'name' => 'required|min:5',
         ];
@@ -103,7 +106,8 @@ class TransmissionController extends Controller
         Transmission::find($id)->update([
             "name" => $request->name,
         ]);
-        return redirect()->route('transmission.index')->with("update", "Updated Successfully!");
+
+        return response()->json(["update" => "Transmission updated!", "status" => 200]);
     }
 
     /**
@@ -115,6 +119,6 @@ class TransmissionController extends Controller
     public function destroy($id)
     {
         Transmission::destroy($id);
-        return redirect()->route('transmission.index')->with("deleted", "Deleted Successfully!");
+        return response()->json(["deleted" => "Transmission deleted!", "status" => 200]);
     }
 }

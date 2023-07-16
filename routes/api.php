@@ -27,3 +27,5 @@ Route::get('/report/sales', [AdminController::class, 'salesReport']);
 Route::get('/report/search', [AdminController::class, 'reportSearch']);
 
 Route::post('/transmission', [TransmissionController::class, 'store']);
+Route::put('/transmission/{id}', [TransmissionController::class, 'update']);
+Route::delete('/transmission/delete/{id}', [TransmissionController::class, 'destroy']);

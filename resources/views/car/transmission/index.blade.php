@@ -60,7 +60,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <button id="cancel" type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
                         <button id="submitForm" type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </form>
@@ -69,16 +69,25 @@
     </div>
     <script>
         $(document).ready(function() {
-            $('.dt-buttons').prepend($('<button>')
+            $('.dt-buttons').prepend($('<button>') // append button to create to datatablse dt-button
                 .attr({
                     "data-toggle": "modal",
                     "data-target": "#exampleModal"
                 })
                 .addClass('btn btn-secondary')
                 .html('Create'));
+
+            $('#exampleModal').on('hidden.bs.modal', function() { // remove input with id value if modal is close
+                $('input[type="hidden"]').remove();
+                $('#updateForm').attr({
+                    'id': 'submitForm'
+                });
+                $('#transmissionForm').trigger("reset");
+            });
         });
 
-        $('#transmissionForm').submit(function(event) {
+
+        $('#transmissionForm').submit(function(event) { // form submit, store
             event.preventDefault();
             let formData = new FormData($(this)[0]);
             console.log(formData);
@@ -94,6 +103,7 @@
                 },
                 success: function(responseData) {
                     $('#exampleModal').modal('hide');
+                    $('.buttons-reload').trigger('click');
                     Swal.fire(responseData.created);
                 },
                 error: function(responseError) {
@@ -106,9 +116,79 @@
                 }
 
             });
-            $(this).trigger("reset");
+            $(this).trigger("reset"); // reset the form
         });
 
+        $(document).on('click', '.edit', function() { // prepare data for from update / specific button selection
+            $('#transmissionForm').trigger("reset");
+            let id = $(this).attr('data-id');
+            let name = $(this).attr('data-name');
+            $('#transmissionForm').prepend($('<input type="hidden" value="' + id + '" name="transmission_id">'))
+            $('#name').val(name);
+            $('#submitForm').attr({
+                'id': 'updateForm'
+            });
+        });
+
+        $('#updateForm').on('click', function(event) {
+            event.preventDefault();
+            let formData = {
+                name: $('#name').val()
+            }
+            $.ajax({
+                url: "/api/transmission/" + $('input[type="hidden"]').val(),
+                type: "PUT",
+                data: formData,
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(responseData) {
+                    $('#exampleModal').modal('hide');
+                    $('.buttons-reload').trigger('click');
+                    $('input[type="hidden"]').remove();
+                    Swal.fire(responseData.update);
+                },
+                error: function(responseError) {
+                    $('small').remove();
+                    $('#name').after($('<small>')
+                        .html(responseError.responseJSON.errors.name)
+                        .css({
+                            "color": "red"
+                        }))
+                }
+            })
+        });
+
+        $(document).on('click', '.delete', function() {
+            Swal.fire({
+                title: 'Confirmation',
+                text: 'Are you sure?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+                cancelButtonText: 'No'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $.ajax({
+                        url: "/api/transmission/delete/" + $(this).attr('data-id'),
+                        type: "DELETE",
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        success: function(responseData) {
+                            $('.buttons-reload').trigger('click');
+                            Swal.fire(responseData.deleted);
+                        },
+                        error: function(responseError) {
+                            alert('Error occured hacker ka siguro!');
+                        }
+                    })
+
+                }
+            });
+        });
+
+        // validate error message, remove
         $('#name').on('keyup', function() {
             if ($(this).val().length > 4) {
                 if ($('small')) {

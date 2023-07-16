@@ -29,15 +29,10 @@ class TransmissionDataTable extends DataTable
                 return Carbon::parse($row->updated_at)->format('F j, Y - g:i a');
             })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('transmission.edit', $row->id) . '" style="display: inline-block;">
-                <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
-            </a>
-            <form action="' . route('transmission.destroy', $row->id) . '"method="POST"
-                style="display: inline-block;">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" value="' . csrf_token() . '">
-                <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
-            </form>';
+                $actionBtn = '<button type="button" data-toggle="modal" data-target="#exampleModal" class="btn btn-block bg-gradient-primary btn-sm edit" data-id=' . $row->id . ' data-name="' . $row->name . '">
+                                Edit
+                            </button>
+                    <button type="button" class="btn btn-block bg-gradient-danger btn-sm delete" data-id=' . $row->id . ' >Delete</button>';
                 return $actionBtn;
             })->rawColumns(['action']);
     }
@@ -89,12 +84,12 @@ class TransmissionDataTable extends DataTable
                 ->addClass('text-center'),
             Column::make('name')
                 ->addClass('text-center'),
-            Column::make('created_at')
-                ->width(100)
-                ->addClass('text-center'),
-            Column::make('updated_at')
-                ->width(100)
-                ->addClass('text-center'),
+            // Column::make('created_at')
+            //     ->width(100)
+            //     ->addClass('text-center'),
+            // Column::make('updated_at')
+            //     ->width(100)
+            //     ->addClass('text-center'),
             Column::computed('action')
                 ->exportable(false)
                 ->printable(false)
