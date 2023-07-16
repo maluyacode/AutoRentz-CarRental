@@ -515,89 +515,54 @@ class AdminController extends Controller
                 "end_date" => $booking->end_date,
                 "mode_of_transac" => $booking->address ? "Deliver" : "Pickup",
                 "locations" => $booking->address ? $booking->address : [
-                    $booking->picklocation->street . " " . $booking->picklocation->baranggay . " " . $booking->picklocation->city,
-                    $booking->returnlocation->street . " " . $booking->returnlocation->baranggay . " " . $booking->returnlocation->city
+                    "pick" => $booking->picklocation->street . " " . $booking->picklocation->baranggay . " " . $booking->picklocation->city,
+                    "return" => $booking->returnlocation->street . " " . $booking->returnlocation->baranggay . " " . $booking->returnlocation->city
                 ],
                 "customer" => $booking->customer->name,
                 "car" => $booking->car->platenumber,
-                "total" => $total_rent_price->compute(),
+                "total" => number_format($total_rent_price->compute(), 2),
+
+            ];
+        }
+        return response()->json(["booking" => $bookData, "status" => 200]);
+    }
+
+    public function reportSearch(Request $request)
+    {
+        $bookings = Booking::with([
+            'car:id,modelos_id,platenumber,price_per_day', // selecting specific column
+            'customer:id,name',
+            'picklocation:id,street,baranggay,city',
+            'returnlocation:id,street,baranggay,city',
+            'driver:fname,lname',
+            'car.accessories:id,fee',
+            'car.modelo:id,manufacturer_id,type_id,name,year',
+            'car.modelo.manufacturer:id,name',
+            'car.modelo.type:id,name',
+        ])
+            ->whereBetween('start_date', [$request->start, $request->end])
+            ->get();
+
+        foreach ($bookings as $key => $booking) {
+
+            $total_rent_price = new TotalRentPrice($booking);
+
+            $bookData[$key] = [
+                "id" => $booking->id,
+                "start_date" => $booking->start_date,
+                "end_date" => $booking->end_date,
+                "mode_of_transac" => $booking->address ? "Deliver" : "Pickup",
+                "locations" => $booking->address ? $booking->address : [
+                    "pick" => $booking->picklocation->street . " " . $booking->picklocation->baranggay . " " . $booking->picklocation->city,
+                    "return" => $booking->returnlocation->street . " " . $booking->returnlocation->baranggay . " " . $booking->returnlocation->city
+                ],
+                "customer" => $booking->customer->name,
+                "car" => $booking->car->platenumber,
+                "total" => number_format($total_rent_price->compute(), 2),
 
             ];
         }
         Debugbar::info($bookData);
-
         return response()->json(["booking" => $bookData, "status" => 200]);
-    }
-
-    public function report(Request $request)
-    {
-        if (($request->start_date && $request->end_date)) {
-            $bookings = DB::table('users as us')
-                ->select(
-                    'bo.*',
-                    'mo.name as modelName',
-                    'ca.price_per_day as price_per_day',
-                    'mo.year',
-                    'cu.name as customer_name',
-                    'cu.email as customer_email',
-                    'cu.phone as customer_phone',
-                    'ca.platenumber',
-                    DB::raw('CONCAT(lo1.street, ", ", lo1.baranggay, ", ", lo1.city) as pickuplocation'),
-                    DB::raw('CONCAT(lo2.street, ", ", lo2.baranggay, ", ", lo2.city) as returnlocation'),
-                )
-                ->join('customers as cu', 'us.id', 'cu.user_id')
-                ->join('bookings as bo', 'cu.id', 'bo.customer_id')
-                ->join('cars as ca', 'ca.id', 'bo.car_id')
-                ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-                ->leftJoin('locations as lo1', 'lo1.id', 'bo.pickup_location_id')
-                ->leftJoin('locations as lo2', 'lo2.id', 'bo.return_location_id')
-                ->whereBetween('bo.created_at', [$request->start_date, $request->end_date])
-                ->where('bo.status', 'finished')
-                ->get();
-        } else {
-            $bookings = $this->refresh();
-        }
-        $info = new AccessInformation();
-        $compute = new CustomerClass();
-        $accessory = DB::table('cars as ca')
-            ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-            ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-            ->get();
-        $totalPrice = 0;
-        foreach ($bookings as $booking) {
-            $totalPrice += $compute->computationDisplay($booking->start_date, $booking->end_date, $booking->price_per_day, $accessory, $booking->car_id);
-        }
-        return View::make('admin.bookings.report', compact('bookings', 'info', 'compute', 'accessory', 'totalPrice'));
-    }
-
-    public function refresh()
-    {
-        $bookings = DB::table('users as us')
-            ->select(
-                'bo.*',
-                'mo.name as modelName',
-                'ca.price_per_day as price_per_day',
-                'mo.year',
-                'cu.name as customer_name',
-                'cu.email as customer_email',
-                'cu.phone as customer_phone',
-                'ca.platenumber',
-                DB::raw('CONCAT(lo1.street, ", ", lo1.baranggay, ", ", lo1.city) as pickuplocation'),
-                DB::raw('CONCAT(lo2.street, ", ", lo2.baranggay, ", ", lo2.city) as returnlocation'),
-                DB::raw('(DATEDIFF(bo.end_date, bo.start_date)) + 1 as days'),
-                DB::raw("CASE
-                    WHEN bo.driver_id IS NOT NULL THEN 'with driver'
-                    WHEN bo.driver_id IS NULL THEN 'self drive'
-                    END as drivetype")
-            )
-            ->join('customers as cu', 'us.id', 'cu.user_id')
-            ->join('bookings as bo', 'cu.id', 'bo.customer_id')
-            ->join('cars as ca', 'ca.id', 'bo.car_id')
-            ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-            ->leftJoin('locations as lo1', 'lo1.id', 'bo.pickup_location_id')
-            ->leftJoin('locations as lo2', 'lo2.id', 'bo.return_location_id')
-            ->orWhere('bo.status', 'finished')
-            ->get();
-        return $bookings;
     }
 }

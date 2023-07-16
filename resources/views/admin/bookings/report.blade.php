@@ -19,30 +19,33 @@
 @endsection
 @include('layouts.session-messages')
 @section('content')
+    <style>
+        .data-height td {
+            height: 75px;
+        }
+    </style>
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="card" style="height: 70vh">
                         <div class="card-header">
-                            <a href="{{ route('report') }}" class="btn bg-gradient-gray">
+                            <button class="btn bg-gradient-gray" onclick="ajaxCall()">
                                 Refresh
-                            </a>
+                            </button>
                             </h3>
                             <div class="card-tools">
                                 <div class="input-group input-group-sm" style="width: 430px;">
-                                    <form action="{{ route('report') }}">
-                                        @csrf
-                                        <div class="form-row">
-                                            <div class="col">
-                                                <input type="date" class="form-control" name="start_date">
-                                            </div>
-                                            <div class="col">
-                                                <input type="date" class="form-control" placeholder="Last name"
-                                                    name="end_date">
-                                            </div>
-                                            <button type="submit" class="btn btn-info">Search</button>
+                                    <div class="form-row">
+                                        <div class="col">
+                                            <input type="date" class="form-control" name="start_date" id="start_date">
                                         </div>
+                                        <div class="col">
+                                            <input type="date" class="form-control" placeholder="Last name"
+                                                name="end_date" id="end_date" disabled>
+                                        </div>
+                                        <button type="submit" class="btn btn-info" id="search">Search</button>
+                                    </div>
                                     </form>
                                 </div>
                             </div>
@@ -76,50 +79,78 @@
     </section>
     <script>
         $(document).ready(function() {
+            ajaxCall()
+        });
+
+        function ajaxCall() {
             $.ajax({
                 type: "GET",
                 url: "/api/report/sales",
                 dataType: "json",
                 success: function(data) {
-                    $.each(data.booking, function(key, data) {
-                        let modeOfTransac = data.address ? "Deliver" : "Pickup";
-                        let totalFee = 0;
-                        let days = 0;
-                        let rentPrice = 0;
-
-                        $.each(data.car.accessories.map(function(accsessory) {
-                            return accsessory.fee;
-                        }), function() {
-                            totalFee += Number(this);
-                        });
-
-                        let startDate = new Date(data.start_date);
-                        let endDate = new Date(data.end_date);
-                        let timeDiff = endDate.getTime() - startDate.getTime();
-
-                        days = Math.ceil(timeDiff / (1000 * 3600 * 24) + 1);
-
-                        rentPrice = days * (Number(totalFee) + Number(data.car.price_per_day));
-
-
-                        var tr = $("<tr>");
-                        tr.append($("<td>").html(data.id));
-                        tr.append($("<td>").html(data.start_date));
-                        tr.append($("<td>").html(data.end_date));
-                        tr.append($("<td>").html(modeOfTransac));
-                        tr.append($("<td>").html(data.address ||
-                            `<b>Pickup:</b> ${data.picklocation.street} ${data.picklocation.baranggay} ${data.picklocation.city} <br>
-                            <b>Return:</b> ${data.returnlocation.street} ${data.returnlocation.baranggay} ${data.returnlocation.city}`
-                        ));
-                        tr.append($("<td>").html(data.customer.name));
-                        tr.append($("<td>").html(data.car.platenumber));
-                        tr.append($("<td>").html(`&#8369;${rentPrice.toFixed(2)}`));
-                        $('#tableBody').append(tr);
-
-                    })
+                    $('#tableBody tr').remove();
+                    updateTable(data);
                 }
             })
+        }
 
+        $('#start_date').on('change', function() {
+            $('#end_date').prop({
+                'disabled': false,
+                'min': $('#start_date').val()
+            });
+            // $('#end_date').attr('min', $('#start_date').val());
+        })
+
+        $('#search').on('click', function(e) {
+            $('#end_date').prop('disabled', true);
+            dataPass = {
+                start: $('#start_date').val(),
+                end: $('#end_date').val(),
+            }
+            $.ajax({
+                type: "GET",
+                url: "/api/report/search",
+                data: dataPass,
+                success: function(data) {
+                    $('#tableBody tr').remove();
+                    updateTable(data);
+                },
+                error: function(error) {
+                    console.log('error');
+                }
+            })
         });
+
+        function updateTable(data) {
+
+            $.each(data.booking, function(key, data) {
+                let locations = '';
+                let start_date_format = moment(data.start_date).format('MM/DD/yy');
+                let end_date_format = moment(data.end_date).format('MM/DD/yy');
+                if (jQuery.type(data.locations) === "object") {
+                    locations = `<strong>Pick: </strong>${data.locations["pick"]} <br />
+                                        <strong>Return: </strong>${data.locations.return}`;
+                } else {
+                    locations = data.locations;
+                }
+                // console.log(data);
+                var tr = $("<tr>");
+                tr.append($("<td>").html(data.id));
+                tr.append($("<td>").html(start_date_format));
+                tr.append($("<td>").html(end_date_format));
+                tr.append($("<td>").html(data.mode_of_transac));
+                tr.append($("<td>").html(locations));
+                tr.append($("<td>").html(data.customer));
+                tr.append($("<td>").html(data.car));
+                tr.append($("<td>").html(`&#8369;${data.total}`));
+
+
+                $('#tableBody').append(tr);
+                // $('tr').fadeIn(200)
+
+            })
+            $('tr').addClass('data-height');
+        }
     </script>
 @endsection

@@ -44,7 +44,7 @@ class AccessoriesController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request);
+        dd($request);
         Validator::make(
             $request->all(),
             [

@@ -55,7 +55,8 @@ class TransmissionController extends Controller
         Transmission::create([
             "name" => $request->name,
         ]);
-        return redirect()->route('transmission.index')->with("created", "New transmission type sucessfully created!");
+
+        return response()->json(["created" => "New transmission type sucessfully created!", "status" => 200]);
     }
 
     /**

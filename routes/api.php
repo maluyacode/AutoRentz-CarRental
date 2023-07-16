@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Car\CarController;
 use App\Http\Controllers\Car\FuelController;
+use App\Http\Controllers\Car\TransmissionController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,5 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::get('/show/{id}', [CarController::class, 'show']);
-Route::post('/fuel', [FuelController::class, 'store']);
+
 Route::get('/report/sales', [AdminController::class, 'salesReport']);
+Route::get('/report/search', [AdminController::class, 'reportSearch']);
+
+Route::post('/transmission', [TransmissionController::class, 'store']);

@@ -8,6 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Google Font: Source Sans Pro -->
@@ -120,13 +121,6 @@
 
     <!-- jQuery -->
     <script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
-    <!-- jQuery UI 1.11.4 -->
-    {{-- <script src="{{ asset('vendors/') }}plugins/jquery-ui/jquery-ui.min.js"></script> --}}
-    <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-    {{-- <script>
-        $.widget.bridge('uibutton', $.ui.button)
-    </script> --}}
-    <!-- Bootstrap 4 -->
     <script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
     <!-- ChartJS -->
     <script src="{{ asset('vendors/plugins/chart.js/Chart.min.js') }}"></script>
@@ -148,10 +142,6 @@
     <script src="{{ asset('vendors/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
     <!-- AdminLTE App -->
     <script src="{{ asset('vendors/dist/js/adminlte.js') }}"></script>
-    <!-- AdminLTE for demo purposes -->
-    {{-- <script src="{{ asset('vendors/dist/js/demo.js') }}"></script> --}}
-    <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-    {{-- <script src="{{ asset('vendors/dist/js/pages/dashboard.js') }}"></script> --}}
 
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('vendors/plugins/datatables/jquery.dataTables.min.js') }}"></script>
