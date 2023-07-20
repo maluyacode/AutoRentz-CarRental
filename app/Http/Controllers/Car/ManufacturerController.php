@@ -41,10 +41,6 @@ class ManufacturerController extends Controller
      */
     public function store(Request $request)
     {
-        // dd($request->file());
-        // $manufacturer = Manufacturer::create([
-        //     'name' => $request->name,
-        // ])->save();
         $manufacturer = new Manufacturer;
         $manufacturer->name = $request->name;
         $manufacturer->save();

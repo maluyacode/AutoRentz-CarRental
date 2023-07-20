@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Car\CarController;
 use App\Http\Controllers\Car\FuelController;
 use App\Http\Controllers\Car\TransmissionController;
+use App\Http\Controllers\DriverController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,3 +30,6 @@ Route::get('/report/search', [AdminController::class, 'reportSearch']);
 Route::post('/transmission', [TransmissionController::class, 'store']);
 Route::put('/transmission/{id}', [TransmissionController::class, 'update']);
 Route::delete('/transmission/delete/{id}', [TransmissionController::class, 'destroy']);
+
+
+Route::post('/drivers', [DriverController::class, 'store']);

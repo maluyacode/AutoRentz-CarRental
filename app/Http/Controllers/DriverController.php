@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\View;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Imports\DriversImport;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class DriverController extends Controller
 {
@@ -41,42 +42,54 @@ class DriverController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path("drivers/images");
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file("file");
+        $name = uniqid() . "_" . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            "name" => $name,
+            "original_name" => $file->getClientOriginalName(),
+        ]);
+    }
+
     public function store(Request $request)
     {
-
+        Debugbar::info($request);
         Validator::make(
             $request->all(),
             [
-                'fname' => 'required|min:2',
-                'lname' => 'required|min:4',
+                'firstname' => 'required|min:2',
+                'lastname' => 'required|min:4',
                 'licensed_no' => 'required|min:4',
                 'description' => 'required|min:10|max:400',
-                'image_path' => 'required',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
-                'address' => 'required|min:5'
+                'address' => 'required|min:5',
             ],
-            ['image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.']
         )->validate();
 
         $driver = new Driver;
-        $driver->fname = $request->fname;
-        $driver->lname = $request->lname;
+        $driver->fname = $request->firstname;
+        $driver->lname = $request->lastname;
         $driver->licensed_no = $request->licensed_no;
         $driver->description = $request->description;
         $driver->address = $request->address;
-        // dd($filenames);
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
+
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $driver->addMedia(storage_path("drivers/images/" . $file))->toMediaCollection("images");
             }
-            $image_path = implode("=", $filenames);
-            $driver->image_path = $image_path;
         }
+
         $driver->save();
-        return redirect()->route('drivers.index')->with('created', 'Successfully created');
+
+        return response()->json(["created" => "Driver Added!", "code" => 200]);
     }
 
     /**

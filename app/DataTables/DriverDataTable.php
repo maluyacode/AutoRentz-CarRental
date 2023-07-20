@@ -83,7 +83,7 @@ class DriverDataTable extends DataTable
             ->dom('Bfrtip')
             ->orderBy(1)
             ->buttons(
-                Button::make('create'),
+                Button::make('create')->action(false),
                 Button::make('export'),
                 Button::make('print'),
                 Button::make('reset'),
