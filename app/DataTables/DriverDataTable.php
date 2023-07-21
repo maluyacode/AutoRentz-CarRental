@@ -40,8 +40,8 @@ class DriverDataTable extends DataTable
                 return $container;
             })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<button class="btn btn-block btn-primary" id="edit" data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '">Edit</button>
-                            <button class="btn btn-block btn-danger" id="delete" data-id="' . $row->id . '">Delete</button>';
+                $actionBtn = '<button class="btn btn-block btn-primary edit"  data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '">Edit</button>
+                            <button class="btn btn-block btn-danger delete" data-id="' . $row->id . '">Delete</button>';
                 return $actionBtn;
             })->rawColumns(['action', 'image_path']);
     }

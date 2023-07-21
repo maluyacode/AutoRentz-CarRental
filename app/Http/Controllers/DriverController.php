@@ -60,6 +60,17 @@ class DriverController extends Controller
         ]);
     }
 
+    public function deleteMedia(Request $request, $id)
+    {
+        $driverID = $request->id;
+        DB::table('media')->where('id', $id)->delete();
+
+        $driver = Driver::find($driverID);
+        $driver->getMedia('images');
+
+        return response()->json($driver);
+    }
+
     public function store(Request $request)
     {
         Debugbar::info($request);
@@ -113,7 +124,9 @@ class DriverController extends Controller
     public function edit($id)
     {
         $driver = Driver::find($id);
+        $driver->getMedia('images');
         // return View::make('drivers.edit', compact('driver'));
+        return response()->json($driver);
     }
 
     /**
