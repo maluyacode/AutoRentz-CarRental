@@ -60,7 +60,7 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="ourModalModalLabel">Add New Driver</h5>
+                    <h5 class="modal-title" id="ourModalModalLabel" style="font-weight: 400;">Add New Driver</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -199,6 +199,7 @@
                 }
             })
         })
+
 
         $('input').on('keyup', function(event) {
             $(this).siblings(".invalid-feedback").css({

@@ -40,15 +40,8 @@ class DriverDataTable extends DataTable
                 return $container;
             })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<a href="' . route('drivers.edit', $row->id) . '" style="display: inline-block;">
-                <button type="button" class="btn btn-block bg-gradient-primary btn-sm" >Edit</button>
-            </a>
-            <form action="' . route('drivers.destroy', $row->id) . '"method="POST"
-                style="display: inline-block;">
-                <input type="hidden" name="_method" value="DELETE">
-                <input type="hidden" name="_token" value="' . csrf_token() . '">
-                <button type="submit" class="btn btn-block bg-gradient-danger btn-sm">Delete</button>
-            </form>';
+                $actionBtn = '<button class="btn btn-block btn-primary" id="edit" data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '">Edit</button>
+                            <button class="btn btn-block btn-danger" id="delete" data-id="' . $row->id . '">Delete</button>';
                 return $actionBtn;
             })->rawColumns(['action', 'image_path']);
     }

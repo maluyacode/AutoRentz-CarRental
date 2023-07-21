@@ -33,3 +33,4 @@ Route::delete('/transmission/delete/{id}', [TransmissionController::class, 'dest
 
 
 Route::post('/drivers', [DriverController::class, 'store']);
+Route::get('/drivers/edit', [DriverController::class, 'edit']);

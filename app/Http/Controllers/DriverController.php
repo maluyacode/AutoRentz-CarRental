@@ -84,6 +84,7 @@ class DriverController extends Controller
         if ($request->document !== null) {
             foreach ($request->input("document", []) as $file) {
                 $driver->addMedia(storage_path("drivers/images/" . $file))->toMediaCollection("images");
+                // unlink(storage_path("drivers/images/" . $file));
             }
         }
 
@@ -112,7 +113,7 @@ class DriverController extends Controller
     public function edit($id)
     {
         $driver = Driver::find($id);
-        return View::make('drivers.edit', compact('driver'));
+        // return View::make('drivers.edit', compact('driver'));
     }
 
     /**
