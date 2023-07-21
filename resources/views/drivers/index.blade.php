@@ -1,55 +1,7 @@
 @extends('admin.index')
 
-@section('header')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Drivers</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Dashboard</a></li>
-                        <li class="breadcrumb-item active">Drivers</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
-@endsection
 @include('layouts.session-messages')
 @section('content')
-    <section class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="card">
-                        <div class="card-header">
-                            <h3 class="card-title">Rentahan ng kotse ni Earl Russell SY</h3>
-                        </div>
-                        <div style="padding: 20px">
-                            <form action="{{ route('drivers.import') }}" method="POST" enctype="multipart/form-data">
-                                @csrf
-                                <div class="input-group mb-3" style="width: 50%">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile04"
-                                            name="excel">
-                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
-                                    </div>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
-                                    </div>
-                                </div>
-                            </form>
-
-                            {!! $dataTable->table() !!}
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <style>
         .form-group label {
             font-weight: normal !important;
@@ -79,12 +31,49 @@
             left: 80%;
             bottom: 31%;
             cursor: pointer;
-        }
-
-        .remove:hover {
             color: red;
         }
+
+        th {
+            font-weight: 500;
+            letter-spacing: 1px
+        }
+
+        .content {
+            margin-top: 25px;
+        }
     </style>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">List of Drivers</h3>
+                        </div>
+                        <div style="padding: 20px">
+                            <form action="{{ route('drivers.import') }}" method="POST" enctype="multipart/form-data">
+                                @csrf
+                                <div class="input-group mb-3" style="width: 50%">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04"
+                                            name="excel">
+                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            {!! $dataTable->table() !!}
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
     <div class="modal fade" id="ourModal" tabindex="-1" role="dialog" aria-labelledby="ourModalModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -95,9 +84,10 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <form action="#" id="driversForm" style="width: 95%; margin: auto;">
+                <form id="driversForm">
+                    <div class="modal-body">
                         <div class="form-group">
+                            <input id="driver_id" type="hidden" name="driver_id">
                             <label for="firstname">First Name: </label>
                             <input type="text" class="form-control" id="firstname" name="firstname">
                         </div>
@@ -121,57 +111,65 @@
                             <label for="images">Upload Image (Optional)</label>
                             <div class="dropzone" id="dropzone-image"></div>
                         </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="submitForm">Save</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" id="submitForm">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
     {!! $dataTable->scripts() !!}
     <script>
+        initilizeDropzone();
         var uploadedDocumentMap = {}
 
-        Dropzone.options.dropzoneImage = {
-            url: '{{ route('drivers.storeMedia') }}',
-            maxFilesize: 2,
-            acceptedFiles: 'image/*',
-            addRemoveLinks: true,
-            headers: {
-                'X-CSRF-TOKEN': "{{ csrf_token() }}"
-            },
-            success: function(file, response) {
-                $('form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
-                uploadedDocumentMap[file.name] = response.name
-            },
-            removedfile: function(file) {
-                file.previewElement.remove()
-                var name = ''
-                if (typeof file.file_name !== 'undefined') {
-                    name = file.file_name
-                } else {
-                    name = uploadedDocumentMap[file.name]
-                }
-                $('form').find('input[name="document[]"][value="' + name + '"]').remove()
-            },
-            error: function(file) {
-                alert("Only image will be accepted.");
-                file.previewElement.remove();
-            },
-            init: function() {
-                @if (isset($project) && $project->document)
-                    var files = {!! json_encode($project->document) !!}
-                    for (var i in files) {
-                        var file = files[i]
-                        this.options.addedfile.call(this, file)
-                        file.previewElement.classList.add('dz-complete')
-                        $('form').append('<input type="hidden" name="document[]" value="' + file.file_name + '">')
+        function initilizeDropzone() {
+            Dropzone.options.dropzoneImage = {
+                url: '{{ route('drivers.storeMedia') }}',
+                maxFilesize: 2,
+                acceptedFiles: 'image/*',
+                addRemoveLinks: true,
+                headers: {
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                success: function(file, response) {
+                    $('form').append('<input type="hidden" name="document[]" value="' + response.name + '">')
+                    uploadedDocumentMap[file.name] = response.name
+                },
+                removedfile: function(file) {
+                    file.previewElement.remove()
+                    var name = ''
+                    if (typeof file.file_name !== 'undefined') {
+                        name = file.file_name
+                    } else {
+                        name = uploadedDocumentMap[file.name]
                     }
-                @endif
-            },
+                    $('form').find('input[name="document[]"][value="' + name + '"]').remove()
+                },
+                error: function(file) {
+                    alert("Only image will be accepted.");
+                    file.previewElement.remove();
+                    $('.dz-message').css({
+                        display: "block",
+                    })
+                },
+                init: function() {
+                    @if (isset($project) && $project->document)
+                        var files = {!! json_encode($project->document) !!}
+                        for (var i in files) {
+                            var file = files[i]
+                            this.options.addedfile.call(this, file)
+                            file.previewElement.classList.add('dz-complete')
+                            $('form').append('<input type="hidden" name="document[]" value="' + file.file_name +
+                                '">')
+                        }
+                    @endif
+                },
+            }
         }
+
 
         $(document).ready(function() {
             $('.custom-file-input').on("change", function(e) {
@@ -189,7 +187,7 @@
             })
         })
 
-        $('#submitForm').on('click', function(event) {
+        $('#driversForm').submit(function(event) {
             event.preventDefault();
             let formData = new FormData($('#driversForm')[0]);
             // for (var pair of formData.entries()) {
@@ -210,34 +208,26 @@
                     $('.buttons-reload').trigger('click');
                     Swal.fire(responseData.created);
                     $('#driversForm').trigger("reset");
+                    $('.dz-preview').remove()
+                    $('.dz-message').css({
+                        display: "block",
+                    })
+                    $('input[name="document[]"]').remove();
                 },
                 error: function(responseError) {
-                    $('.invalid-feedback').remove();
-                    $('#firstname').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.firstname))
-                    $('#lastname').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.lastname))
-                    $('#licensed_no').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.licensed_no))
-                    $('#description').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.description))
-                    $('#address').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.address))
-                    $('#document').after($('<div>').addClass('invalid-feedback').css({
-                        display: "block"
-                    }).html(responseError.responseJSON.errors.document))
+                    errorDisplay(responseError.responseJSON.errors);
                 }
             })
         })
 
         $(document).on('click', 'button.edit', function() {
+            $('#submitForm').attr({
+                id: "updateForm",
+            });
+
+            $('.image-container').remove();
             let id = $(this).attr('data-id');
-            console.log(id);
+
             $.ajax({
                 url: `/api/drivers/${id}/edit`,
                 type: "GET",
@@ -247,6 +237,7 @@
                 },
                 success: function(responseData) {
                     let driver = responseData;
+                    $('#driver_id').val(driver.id)
                     $('#firstname').val(driver.fname);
                     $('#lastname').val(driver.lname);
                     $('#licensed_no').val(driver.licensed_no);
@@ -259,6 +250,44 @@
                 },
             })
         })
+
+        $(document).on('click', '#updateForm', function(event) {
+            event.preventDefault();
+            let id = $('#driver_id').val();
+            let formData = new FormData($('#driversForm')[0]);
+            for (var pair of formData.entries()) {
+                console.log(pair[0] + ', ' + pair[1]);
+            }
+            formData.append('_method', 'PUT');
+            $.ajax({
+                url: `/api/drivers/${id}/update`,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                data: formData,
+                dataType: "json",
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(responseData) {
+                    $('#ourModal').modal("hide");
+                    $('.buttons-reload').trigger('click');
+                    Swal.fire(responseData.update);
+                    $('#driversForm').trigger("reset");
+                    $('#updateForm').attr({
+                        id: "submitForm",
+                    });
+                    $('.dz-preview').remove()
+                    $('.dz-message').css({
+                        display: "block",
+                    })
+                    $('input[name="document[]"]').remove();
+                },
+                error: function(responseError) {
+                    errorDisplay(responseError.responseJSON.errors);
+                }
+            })
+        });
 
         $(document).on('click', 'i.remove', function() {
             let id = $(this).attr("data-id");
@@ -294,6 +323,28 @@
                         </div>`);
             });
             $('.modal-body').append(imageContainer);
+        }
+
+        function errorDisplay(errors) {
+            $('.invalid-feedback').remove();
+            $('#firstname').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.firstname))
+            $('#lastname').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.lastname))
+            $('#licensed_no').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.licensed_no))
+            $('#description').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.description))
+            $('#address').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.address))
+            $('#document').after($('<div>').addClass('invalid-feedback').css({
+                display: "block"
+            }).html(errors.document))
         }
 
         $('input').on('keyup', function(event) {

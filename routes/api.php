@@ -34,4 +34,5 @@ Route::delete('/transmission/delete/{id}', [TransmissionController::class, 'dest
 
 Route::post('/drivers', [DriverController::class, 'store']);
 Route::get('/drivers/{id}/edit', [DriverController::class, 'edit']);
+Route::put('/drivers/{id}/update', [DriverController::class, 'update']);
 Route::delete('/drivers/{id}/images', [DriverController::class, 'deleteMedia']);

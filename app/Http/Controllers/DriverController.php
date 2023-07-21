@@ -138,39 +138,36 @@ class DriverController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // dd($request->image_path);
+        Debugbar::info($id);
+
         Validator::make(
             $request->all(),
             [
-                'fname' => 'required|min:2',
-                'lname' => 'required|min:4',
+                'firstname' => 'required|min:2',
+                'lastname' => 'required|min:4',
                 'licensed_no' => 'required|min:4',
                 'description' => 'required|min:10|max:400',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
                 'address' => 'required|min:5',
             ],
-            ['image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.']
         )->validate();
 
         $driver = Driver::find($id);
-        $driver->fname = $request->fname;
-        $driver->lname = $request->lname;
+        $driver->fname = $request->firstname;
+        $driver->lname = $request->lastname;
         $driver->licensed_no = $request->licensed_no;
         $driver->description = $request->description;
         $driver->address = $request->address;
-        // dd($filenames);
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
+
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $driver->addMedia(storage_path("drivers/images/" . $file))->toMediaCollection("images");
+                // unlink(storage_path("drivers/images/" . $file));
             }
-            $image_path = implode("=", $filenames);
-            $driver->image_path = $image_path;
         }
+
         $driver->save();
-        return redirect()->route('drivers.index')->with('update', 'Successfully updated');
+
+        return response()->json(["update" => "Transmission updated!", "status" => 200, $request]);
     }
 
     /**

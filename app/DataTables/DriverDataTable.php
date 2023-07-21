@@ -23,12 +23,6 @@ class DriverDataTable extends DataTable
     {
         return datatables()
             ->query($query)
-            // ->addColumn('created_at', function ($row) {
-            //     return Carbon::parse($row->created_at)->format('F j, Y - g:i a');
-            // })
-            // ->addColumn('updated_at', function ($row) {
-            //     return Carbon::parse($row->updated_at)->format('F j, Y - g:i a');
-            // })
             ->addColumn('image_path', function ($row) {
                 $image_path = [];
                 foreach (explode('=', $row->image_path) as $key => $image) {
@@ -40,8 +34,8 @@ class DriverDataTable extends DataTable
                 return $container;
             })
             ->addColumn('action', function ($row) {
-                $actionBtn = '<button class="btn btn-block btn-primary edit"  data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '">Edit</button>
-                            <button class="btn btn-block btn-danger delete" data-id="' . $row->id . '">Delete</button>';
+                $actionBtn = '<button class="btn btn-primary bi bi-pencil-square edit"  data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '"></button>
+                            <button class="btn btn-danger   bi bi-trash3 delete" data-id="' . $row->id . '"></button>';
                 return $actionBtn;
             })->rawColumns(['action', 'image_path']);
     }
@@ -69,8 +63,8 @@ class DriverDataTable extends DataTable
         return $this->builder()
             ->setTableId('driver-table')
             ->addTableClass('table-bordered')
+            ->autoWidth(false)
             ->responsive(true)
-            ->autoWidth(true)
             ->columns($this->getColumns())
             ->minifiedAjax()
             ->dom('Bfrtip')
@@ -92,7 +86,8 @@ class DriverDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            Column::make('id'),
+            Column::make('id')
+                ->title('ID'),
             Column::make('fname')
                 ->title('First Name'),
             Column::make('lname')
@@ -102,16 +97,8 @@ class DriverDataTable extends DataTable
             Column::make('address'),
             Column::make('driver_status')
                 ->title('Status'),
-            Column::make('image_path')
-                ->title('IMAGES'),
-            // Column::make('created_at')
-            //     ->title('CREATED AT')
-            //     ->addClass('text-center')
-            //     ->width(100),
-            // Column::make('updated_at')
-            //     ->title('LAST UPDATE')
-            //     ->addClass('text-center')
-            //     ->width(100),
+            // Column::make('image_path')
+            //     ->title('Images'),
             Column::computed('action')
                 ->exportable(true)
                 ->printable(true)
