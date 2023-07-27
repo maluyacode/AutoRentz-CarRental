@@ -7,32 +7,15 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
     <title>{{ config('app.name', 'Laravel') }}</title>
 
-    <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}" defer></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.min.js"></script>
-
-    <!-- Fonts -->
-    <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
-
-    <!-- Styles -->
-    <link href="{{ asset('css/car-listing.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/login.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/register.css') }}" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/jquery.slick/1.6.0/slick.css" />
-    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-    @yield('styles')
+    @include('layouts.styles')
 </head>
 
 <body>
     <div id="app" style="background-color: #191A19;">
-        <nav class="navbar navbar-expand-md shadow-sm" style="background-color: #191A19; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;">
+        <nav class="navbar navbar-expand-md shadow-sm"
+            style="background-color: #191A19; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;">
             <div class="container" style="font-weight:bolder; font-size:17px">
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="{{ url('storage/images/Logo.png') }}" alt="{{ config('app.name', 'Laravel') }}"
@@ -48,24 +31,27 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'user'))
-                            <a class="nav-link nav-dashboard nav-link-color" id="link1" href="{{ route('admindashboard') }}" style="color: #F6F1E9">
+                            <a class="nav-link nav-dashboard nav-link-color" id="link1"
+                                href="{{ route('admindashboard') }}" style="color: #F6F1E9">
                                 Dashboard
                             </a>
                         @endif
                         {{-- <a class="nav-link" href="{{ route('home') }}">
                                 Home
                             </a> --}}
-                        <a class="nav-link nav-home nav-link-color" id="link2" href="{{ route('home') }}" style="color: #F6F1E9;">
+                        <a class="nav-link nav-home nav-link-color" id="link2" href="{{ route('home') }}"
+                            style="color: #F6F1E9;">
                             Home
                         </a>
-                        <a class="nav-link nav-location nav-link-color" id="link3" href="{{ route('locations', 'all') }}" style="color: #F6F1E9">
+                        <a class="nav-link nav-location nav-link-color" id="link3"
+                            href="{{ route('locations', 'all') }}" style="color: #F6F1E9">
                             Locations
                         </a>
-                        <a class="nav-link nav-drivers nav-link-color" id="link4" href="{{ route('drivers', 'all') }}" style="color: #F6F1E9">
+                        <a class="nav-link nav-drivers nav-link-color" id="link4"
+                            href="{{ route('drivers', 'all') }}" style="color: #F6F1E9">
                             Drivers
                         </a>
                     </ul>
-
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
@@ -80,8 +66,8 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item ">
-                                    <a class="nav-link nav-link-color" href="{{ route('login') }}"
-                                        style="color: #F6F1E9" id="link5">{{ __('Login') }}</a>
+                                    <a class="nav-link nav-link-color" href="{{ route('login') }}" style="color: #F6F1E9"
+                                        id="link5">{{ __('Login') }}</a>
                                 </li>
                             @endif
 
@@ -107,7 +93,6 @@
                                     </div>
                                 </a>
                             </li>
-
                             <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 @if (Auth::user()->customer && Auth::user()->customer->image_path)
@@ -128,11 +113,9 @@
                                                      document.getElementById('logout-form').submit();">
                                     {{ __('Logout') }}
                                 </a>
-
                                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                     @csrf
                                 </form>
-
                             </div>
                             </li>
                         @endguest
@@ -145,17 +128,7 @@
             @yield('content')
         </main>
     </div>
-    <script src="{{ asset('js/nav.js') }}"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
-    </script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous">
-    </script>
-    @yield('scripts')
+    @include('layouts.scripts')
 </body>
 
 </html>
