@@ -49,7 +49,9 @@ class DriverDataTable extends DataTable
     public function query(Driver $model)
     {
         $drivers = DB::table('drivers')
-            ->whereNotIn('id', [1]);
+            ->whereNotIn('id', [1])
+            ->orderBy('updated_at', 'desc')
+            ->orderBy('created_at', 'desc');
         return $drivers;
     }
 

@@ -167,7 +167,7 @@ class DriverController extends Controller
 
         $driver->save();
 
-        return response()->json(["update" => "Transmission updated!", "status" => 200, $request]);
+        return response()->json($driver);
     }
 
     /**
@@ -179,7 +179,7 @@ class DriverController extends Controller
     public function destroy($id)
     {
         Driver::destroy($id);
-        return redirect()->route('drivers.index')->with('deleted', 'Deleted successfully');
+        return response()->json([], 200, [], 0);
     }
 
     public function driverlists(Request $request, $data = 'all') // user view

@@ -7,6 +7,7 @@ use App\Http\Controllers\Car\CarController;
 use App\Http\Controllers\Car\FuelController;
 use App\Http\Controllers\Car\TransmissionController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\LocationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,3 +37,10 @@ Route::post('/drivers', [DriverController::class, 'store']);
 Route::get('/drivers/{id}/edit', [DriverController::class, 'edit']);
 Route::put('/drivers/{id}/update', [DriverController::class, 'update']);
 Route::delete('/drivers/{id}/images', [DriverController::class, 'deleteMedia']);
+Route::delete('/drivers/{id}/delete', [DriverController::class, 'destroy']);
+
+Route::get('/location', [LocationController::class, 'index']);
+Route::post('/location', [LocationController::class, 'store']);
+Route::post('/location/storeMeida', [LocationController::class, 'storeMedia'])->name('location.storeMedia');
+Route::get('/location/{id}/edit', [LocationController::class, 'edit']);
+Route::put('/location/{id}/update', [LocationController::class, 'update']);

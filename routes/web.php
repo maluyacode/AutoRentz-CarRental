@@ -79,7 +79,8 @@ Route::prefix('user')->middleware(['auth'])->group(function () {
 //Administrator Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admindashboard');
-    Route::resource('/location', LocationController::class); //mp4
+    // Route::resource('/location', LocationController::class); //mp4
+    Route::view('/location', 'location.index')->name('location.index');
     // Cars
     Route::prefix('car')->group(function () {
         Route::resource('manufacturers', ManufacturerController::class);

@@ -1,6 +1,6 @@
     <!-- jQuery -->
     <script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
-    <script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script> --}}
     <!-- ChartJS -->
     <script src="{{ asset('vendors/plugins/chart.js/Chart.min.js') }}"></script>
     <!-- Sparkline -->
@@ -24,7 +24,7 @@
 
     <!-- DataTables  & Plugins -->
     <script src="{{ asset('vendors/plugins/datatables/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendors/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendors/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js') }}"></script> --}}
     <script src="{{ asset('vendors/plugins/datatables-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('vendors/plugins/datatables-responsive/js/responsive.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('vendors/plugins/datatables-buttons/js/dataTables.buttons.min.js') }}"></script>

@@ -12,32 +12,35 @@ use Illuminate\Support\Facades\DB;
 
 class LocationController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(LocationDataTable $dataTable)
+    public function index()
     {
-        return $dataTable->render('drivers.index');
+        $locations = Location::all();
+        return response()->json($locations);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('location.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path("locations/images");
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file("file");
+        $name = uniqid() . "_" . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            "name" => $name,
+            "original_name" => $file->getClientOriginalName(),
+        ]);
+        // unlink($path);
+    }
+
     public function store(Request $request)
     {
         Validator::make(
@@ -71,36 +74,17 @@ class LocationController extends Controller
         return redirect()->route('location.index')->with('created', 'Created successfully');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $location = Location::find($id);
         return View::make('location.edit', compact('location'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         Validator::make(
@@ -133,29 +117,24 @@ class LocationController extends Controller
         return redirect()->route('location.index')->with('update', 'Updated successfully');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         Location::destroy($id);
         return redirect()->route('location.index')->with('deleted', 'Deleted successfully');
     }
 
-    public function locationlists(Request $request, $data = 'all'){
+    public function locationlists(Request $request, $data = 'all')
+    {
         $searchValue = '';
-        if($data == 'all'){
+        if ($data == 'all') {
             $seachValue = null;
-        }else{
+        } else {
             $searchValue = $request->searchInput;
         }
         $locations = DB::table('locations')
-        ->where('street', 'LIKE', "%{$searchValue}%")
-        ->orWhere('baranggay', 'LIKE', "%{$searchValue}%")
-        ->orWhere('city', 'LIKE', "%{$searchValue}%")->get();
+            ->where('street', 'LIKE', "%{$searchValue}%")
+            ->orWhere('baranggay', 'LIKE', "%{$searchValue}%")
+            ->orWhere('city', 'LIKE', "%{$searchValue}%")->get();
         return View::make('locations', compact('locations'));
     }
 }

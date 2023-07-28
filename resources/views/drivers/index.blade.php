@@ -1,48 +1,11 @@
 @extends('admin.index')
-
 @include('layouts.session-messages')
+
+@section('pageStyles')
+    <link rel="stylesheet" href="{{ asset('css/driver-index.css') }}">
+@endsection
+
 @section('content')
-    <style>
-        .form-group label {
-            font-weight: normal !important;
-        }
-
-        .image-container {
-            display: flex;
-            flex-direction: row;
-            margin: 0 auto;
-            flex-wrap: wrap;
-        }
-
-        .image-container div {
-            width: fit-content;
-        }
-
-        .image-container img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            margin: 10px 10px;
-            border: 1px solid rgba(0, 0, 0, .3);
-        }
-
-        .remove {
-            position: relative;
-            left: 80%;
-            bottom: 31%;
-            cursor: pointer;
-            color: red;
-        }
-
-        th {
-            font-weight: 500;
-            letter-spacing: 1px
-        }
-
-        .content {
-            margin-top: 25px;
-        }
-    </style>
     <section class="content">
         <div class="container-fluid">
             <div class="row">
@@ -50,30 +13,30 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">List of Drivers</h3>
-                        </div>
-                        <div style="padding: 20px">
                             <form action="{{ route('drivers.import') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="input-group mb-3" style="width: 50%">
                                     <div class="custom-file">
                                         <input type="file" class="custom-file-input" id="inputGroupFile04"
                                             name="excel">
-                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                        <label class="custom-file-label" for="inputGroupFile04">Import Excel
+                                            Records</label>
                                     </div>
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="submit">Submit</button>
                                     </div>
                                 </div>
                             </form>
-
+                        </div>
+                        <div style="padding: 20px">
                             {!! $dataTable->table() !!}
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
     <div class="modal fade" id="ourModal" tabindex="-1" role="dialog" aria-labelledby="ourModalModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -120,7 +83,9 @@
             </div>
         </div>
     </div>
+
     {!! $dataTable->scripts() !!}
+
     <script>
         initilizeDropzone();
         var uploadedDocumentMap = {}
@@ -169,193 +134,9 @@
                 },
             }
         }
-
-
-        $(document).ready(function() {
-            $('.custom-file-input').on("change", function(e) {
-                $('.custom-file-label').html(e.target.files[0].name);
-            });
-
-            $('.buttons-create').attr({
-                "data-toggle": "modal",
-                "data-target": "#ourModal"
-            });
-
-            $('.buttons-create').on('click', function() {
-                $('.image-container').remove();
-                $('#driversForm').trigger("reset");
-            })
-        })
-
-        $('#driversForm').submit(function(event) {
-            event.preventDefault();
-            let formData = new FormData($('#driversForm')[0]);
-            // for (var pair of formData.entries()) {
-            //     console.log(pair[0] + ', ' + pair[1]);
-            // }
-            $.ajax({
-                url: '/api/drivers',
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                dataType: "json",
-                success: function(responseData) {
-                    $('#ourModal').modal("hide");
-                    $('.buttons-reload').trigger('click');
-                    Swal.fire(responseData.created);
-                    $('#driversForm').trigger("reset");
-                    $('.dz-preview').remove()
-                    $('.dz-message').css({
-                        display: "block",
-                    })
-                    $('input[name="document[]"]').remove();
-                },
-                error: function(responseError) {
-                    errorDisplay(responseError.responseJSON.errors);
-                }
-            })
-        })
-
-        $(document).on('click', 'button.edit', function() {
-            $('#submitForm').attr({
-                id: "updateForm",
-            });
-
-            $('.image-container').remove();
-            let id = $(this).attr('data-id');
-
-            $.ajax({
-                url: `/api/drivers/${id}/edit`,
-                type: "GET",
-                dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(responseData) {
-                    let driver = responseData;
-                    $('#driver_id').val(driver.id)
-                    $('#firstname').val(driver.fname);
-                    $('#lastname').val(driver.lname);
-                    $('#licensed_no').val(driver.licensed_no);
-                    $('#address').val(driver.address);
-                    $('#description').val(driver.description);
-                    imageDisplay(driver.media, driver.id);
-                },
-                error: function(responseError) {
-                    alert("error");
-                },
-            })
-        })
-
-        $(document).on('click', '#updateForm', function(event) {
-            event.preventDefault();
-            let id = $('#driver_id').val();
-            let formData = new FormData($('#driversForm')[0]);
-            for (var pair of formData.entries()) {
-                console.log(pair[0] + ', ' + pair[1]);
-            }
-            formData.append('_method', 'PUT');
-            $.ajax({
-                url: `/api/drivers/${id}/update`,
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                data: formData,
-                dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(responseData) {
-                    $('#ourModal').modal("hide");
-                    $('.buttons-reload').trigger('click');
-                    Swal.fire(responseData.update);
-                    $('#driversForm').trigger("reset");
-                    $('#updateForm').attr({
-                        id: "submitForm",
-                    });
-                    $('.dz-preview').remove()
-                    $('.dz-message').css({
-                        display: "block",
-                    })
-                    $('input[name="document[]"]').remove();
-                },
-                error: function(responseError) {
-                    errorDisplay(responseError.responseJSON.errors);
-                }
-            })
-        });
-
-        $(document).on('click', 'i.remove', function() {
-            let id = $(this).attr("data-id");
-            let driver_id = $(this).attr("data-driverId");
-            $.ajax({
-                url: `/api/drivers/${id}/images`,
-                type: 'DELETE',
-                data: {
-                    "id": driver_id
-                },
-                dataType: "json",
-                headers: {
-                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                },
-                success: function(responseData) {
-                    let driver = responseData;
-                    $('.image-container').remove();
-                    imageDisplay(driver.media, driver.id);
-                },
-                error: function() {
-                    alert('error')
-                }
-            })
-        })
-
-        function imageDisplay(images, id) {
-            let imageContainer = $('<div>').addClass('image-container');
-            console.log(imageContainer)
-            $.each(images, function(i, image) {
-                imageContainer.append(`<div>
-                            <i class="bi bi-x-square-fill remove" data-id="${image.id}" data-driverId="${id}"></i>
-                            <img src="${image.original_url}">
-                        </div>`);
-            });
-            $('.modal-body').append(imageContainer);
-        }
-
-        function errorDisplay(errors) {
-            $('.invalid-feedback').remove();
-            $('#firstname').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.firstname))
-            $('#lastname').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.lastname))
-            $('#licensed_no').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.licensed_no))
-            $('#description').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.description))
-            $('#address').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.address))
-            $('#document').after($('<div>').addClass('invalid-feedback').css({
-                display: "block"
-            }).html(errors.document))
-        }
-
-        $('input').on('keyup', function(event) {
-            $(this).siblings(".invalid-feedback").css({
-                display: "none",
-            })
-        });
-        $('textarea').on('keyup', function(event) {
-            $(this).siblings(".invalid-feedback").css({
-                display: "none",
-            })
-        });
     </script>
+@endsection
+
+@section('pageScripts')
+    <script src="{{ asset('js/driver-index.js') }}"></script>
 @endsection

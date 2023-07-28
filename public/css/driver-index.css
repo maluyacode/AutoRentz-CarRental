@@ -1,0 +1,68 @@
+.swal2-title {
+    font-size: medium;
+}
+
+#driver-table_filter {
+    float: right;
+}
+
+.form-group label {
+    font-weight: normal !important;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.image-container div {
+    width: fit-content;
+}
+
+.image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 10px 10px;
+    border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.remove {
+    position: relative;
+    left: 80%;
+    bottom: 31%;
+    cursor: pointer;
+    color: red;
+}
+
+th {
+    font-weight: 500;
+    letter-spacing: 1px
+}
+
+.content {
+    margin-top: 25px;
+}
+
+.custom-file * {
+    cursor: pointer;
+}
+
+tr.newRow {
+    background-color: #E8FFCE !important;
+}
+
+.input-group {
+    float: right;
+    margin-bottom: 0px !important;
+}
+
+#driver-table {
+    margin-top: 20px !important;
+}
+
+.swal2-actions {
+   gap: 10px;
+}
