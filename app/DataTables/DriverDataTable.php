@@ -3,6 +3,8 @@
 namespace App\DataTables;
 
 use App\Models\Driver;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Twig\Extension\Debug;
 use Yajra\DataTables\Html\Button;
 use Yajra\DataTables\Html\Column;
 use Yajra\DataTables\Html\Editor\Editor;
@@ -22,22 +24,20 @@ class DriverDataTable extends DataTable
     public function dataTable($query)
     {
         return datatables()
-            ->query($query)
-            ->addColumn('image_path', function ($row) {
-                $image_path = [];
-                foreach (explode('=', $row->image_path) as $key => $image) {
-                    $image_path[] = '<a href="' . asset("storage/images/" . $image) . '" target="_blank">
-                        <img src=" ' . asset("storage/images/" . $image) . '" width="50px" height="50px" style="margin: 5px"></a>';
+            ->collection($query)
+            ->addColumn('image', function ($row) {
+                $media = $row->getMedia('images')->first();
+                if ($media) {
+                    return '<div class="data-image"><img class="model-image" src="' . $media->getUrl('thumb') . '"></div>';
+                } else {
+                    return "No images in media";
                 }
-                $displayImage = implode("", $image_path);
-                $container = '<div style="display: flex; flex:direction: row;">' . $displayImage . '</div>';
-                return $container;
             })
             ->addColumn('action', function ($row) {
                 $actionBtn = '<button class="btn btn-primary bi bi-pencil-square edit"  data-toggle="modal" data-target="#ourModal" data-id="' . $row->id . '"></button>
                             <button class="btn btn-danger   bi bi-trash3 delete" data-id="' . $row->id . '"></button>';
                 return $actionBtn;
-            })->rawColumns(['action', 'image_path']);
+            })->rawColumns(['action', 'image']);
     }
 
     /**
@@ -48,10 +48,12 @@ class DriverDataTable extends DataTable
      */
     public function query(Driver $model)
     {
-        $drivers = DB::table('drivers')
+        $drivers = Driver::with(['media'])
             ->whereNotIn('id', [1])
             ->orderBy('updated_at', 'desc')
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')
+            ->get();
+        Debugbar::info($drivers);
         return $drivers;
     }
 
@@ -90,6 +92,8 @@ class DriverDataTable extends DataTable
         return [
             Column::make('id')
                 ->title('ID'),
+            Column::make('image')
+                ->title('Image'),
             Column::make('fname')
                 ->title('First Name'),
             Column::make('lname')

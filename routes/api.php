@@ -44,3 +44,6 @@ Route::post('/location', [LocationController::class, 'store']);
 Route::post('/location/storeMeida', [LocationController::class, 'storeMedia'])->name('location.storeMedia');
 Route::get('/location/{id}/edit', [LocationController::class, 'edit']);
 Route::put('/location/{id}/update', [LocationController::class, 'update']);
+Route::delete('/location/{id}/images', [LocationController::class, 'deleteMedia']);
+Route::delete('/location/{id}/delete', [LocationController::class, 'destroy']);
+Route::post('/location/multidelete', [LocationController::class, 'multidestroy']);

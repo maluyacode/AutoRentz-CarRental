@@ -16,7 +16,9 @@
                             <table id="location-table" class="table-bordered">
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>ID</th>
+                                        <th>Image</th>
                                         <th>Street</th>
                                         <th>Baranggay</th>
                                         <th>City</th>
@@ -38,6 +40,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h5 class="modal-title" id="ourModalModalLabel" style="font-weight: 400;"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -48,15 +51,15 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label>Street</label>
-                                <input type="text" class="form-control" name="street">
+                                <input id="street" type="text" class="form-control" name="street">
                             </div>
                             <div class="form-group">
                                 <label>Baranggay</label>
-                                <input type="text" class="form-control" name="baranggay">
+                                <input id="baranggay" type="text" class="form-control" name="baranggay">
                             </div>
                             <div class="form-group">
                                 <label>City</label>
-                                <input type="text" class="form-control" name="city">
+                                <input id="city" type="text" class="form-control" name="city">
                             </div>
                             <div class="form-group">
                                 <label for="images">Upload Image (Optional)</label>

@@ -10,6 +10,7 @@ $(function () {
     });
 
     $('.buttons-create').on('click', function () {
+        $('.modal-title').html('Add New Driver');
         clearError($('input'), $('textarea'));
         $('.image-container').remove();
         $('#driversForm').trigger("reset");
@@ -77,13 +78,14 @@ $('input').on('keyup', function (event) {
         display: "none",
     })
 });
+
 $('textarea').on('keyup', function (event) {
     $(this).siblings(".invalid-feedback").css({
         display: "none",
     })
 });
 
-function colorRow(objElement) {
+function colorRow() {
     let firstChild = $('#driver-table tbody tr:first-child');
     firstChild.addClass('newRow');
     setTimeout(function () {
@@ -126,6 +128,7 @@ $('#driversForm').on('submit', function (event) {
 })
 
 $(document).on('click', 'button.edit', function () {
+    $('.modal-title').html('Edit Driver Details');
     clearError($('input'), $('textarea'));
     $('#submitForm').attr({
         id: "updateForm",

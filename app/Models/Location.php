@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Searchable\Searchable;
 use Spatie\Searchable\SearchResult;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Location extends Model implements Searchable
+class Location extends Model implements Searchable, HasMedia
 {
     use HasFactory;
-
+    use InteractsWithMedia;
     public function accessLocation($id)
     {
         return $this->where('id', $id)->first();
@@ -30,5 +33,13 @@ class Location extends Model implements Searchable
             $this->street . ' ' . $this->baranggay . ' ' . $this->city,
             $url
         );
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10);
     }
 }

@@ -6,6 +6,11 @@
     float: right;
 }
 
+thead th {
+    font-weight: 600 !important;
+    letter-spacing: 1px;
+}
+
 .form-group label {
     font-weight: normal !important;
 }
@@ -37,10 +42,6 @@
     color: red;
 }
 
-th {
-    font-weight: 500;
-    letter-spacing: 1px
-}
 
 .content {
     margin-top: 25px;
@@ -64,5 +65,16 @@ tr.newRow {
 }
 
 .swal2-actions {
-   gap: 10px;
+    gap: 10px;
+}
+
+.data-image {
+    display: flex;
+    justify-content: center;
+}
+
+.model-image {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
 }

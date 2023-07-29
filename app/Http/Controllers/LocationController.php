@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\DataTables\LocationDataTable;
 use App\Models\Location;
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -14,7 +15,7 @@ class LocationController extends Controller
 {
     public function index()
     {
-        $locations = Location::all();
+        $locations = Location::with('media')->get();
         return response()->json($locations);
     }
 
@@ -49,29 +50,23 @@ class LocationController extends Controller
                 'street' => 'required|min:2',
                 'baranggay' => 'required|min:4',
                 'city' => 'required|min:4',
-                'image_path' => 'required',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
             ],
-            ['image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.']
         )->validate();
 
         $location = new Location;
         $location->street = $request->street;
         $location->baranggay = $request->baranggay;
         $location->city = $request->city;
-
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
+        $location->image_path = 'in media table';
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $location->addMedia(storage_path("locations/images/" . $file))->toMediaCollection("images");
             }
-            $image_path = implode("=", $filenames);
-            $location->image_path = $image_path;
         }
         $location->save();
-        return redirect()->route('location.index')->with('created', 'Created successfully');
+        $location->getMedia('images');
+        // unlink(storage_path("locations/images/"));
+        return response()->json($location);
     }
 
     public function show($id)
@@ -82,8 +77,21 @@ class LocationController extends Controller
     public function edit($id)
     {
         $location = Location::find($id);
-        return View::make('location.edit', compact('location'));
+        $location->getMedia('images');
+        return response()->json($location);
     }
+
+    public function deleteMedia(Request $request, $id)
+    {
+        $modelID = $request->id;
+        DB::table('media')->where('id', $id)->delete();
+
+        $model = Location::find($modelID);
+        $model->getMedia('images');
+
+        return response()->json($model);
+    }
+
 
     public function update(Request $request, $id)
     {
@@ -93,9 +101,7 @@ class LocationController extends Controller
                 'street' => 'required|min:2',
                 'baranggay' => 'required|min:4',
                 'city' => 'required|min:4',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
             ],
-            ['image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.']
         )->validate();
 
         $location = Location::find($id);
@@ -103,24 +109,27 @@ class LocationController extends Controller
         $location->baranggay = $request->baranggay;
         $location->city = $request->city;
 
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $location->addMedia(storage_path("locations/images/" . $file))->toMediaCollection("images");
+                // unlink(storage_path("drivers/images/" . $file));
             }
-            $image_path = implode("=", $filenames);
-            $location->image_path = $image_path;
         }
         $location->save();
-        return redirect()->route('location.index')->with('update', 'Updated successfully');
+        $location->getMedia('images');
+        return response()->json($location);
     }
 
     public function destroy($id)
     {
         Location::destroy($id);
-        return redirect()->route('location.index')->with('deleted', 'Deleted successfully');
+        return response()->json([]);
+    }
+
+    public function multidestroy(Request $request)
+    {
+        Location::destroy($request->multipleID);
+        return response()->json($request);
     }
 
     public function locationlists(Request $request, $data = 'all')

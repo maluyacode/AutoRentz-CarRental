@@ -1,3 +1,79 @@
-#location-table{
+#location-table {
     margin-top: 25px !important;
+}
+
+.swal2-title {
+    font-size: medium;
+}
+
+thead th{
+    font-weight: 600 !important;
+    letter-spacing: 1px;
+}
+
+.form-group label {
+    font-weight: normal !important;
+}
+
+tr.newRow {
+    background-color: #E8FFCE !important;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: row;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.image-container div {
+    width: fit-content;
+}
+
+.image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 10px 10px;
+    border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.remove {
+    position: relative;
+    left: 80%;
+    bottom: 31%;
+    cursor: pointer;
+    color: red;
+}
+
+.swal2-actions {
+    gap: 10px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+tbody tr td .model-id {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.for-action{
+    width: 20px;
+    justify-self: center;
+}
+
+.data-image{
+    display: flex;
+    justify-content: center;
+}
+
+.model-image{
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
 }
