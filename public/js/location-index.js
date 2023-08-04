@@ -1,7 +1,8 @@
 let table = $('#location-table').DataTable({
     ajax: {
         url: '/api/location',
-        dataSrc: ''
+        dataSrc: '',
+        contentType: 'application/json',
     },
     responsive: true,
     autoWidth: false,
@@ -66,7 +67,11 @@ let table = $('#location-table').DataTable({
                 </button>
                 <button type="button" data-id="${data.id}" class="btn btn-danger btn-delete delete">
                     <i class="bi bi-trash3" style="color:white"></i>
-                </button></div>`;
+                </button>
+                <button type="button" data-id="${data.id}" class="btn btn-warning btn-delete view" data-toggle="modal" data-target="#imagesModal">
+                    <i class="bi bi-eye" style="color:white"></i>
+                </button>
+            </div>`;
             }
         }
     ]
@@ -82,32 +87,52 @@ $(function () {
         "data-toggle": "modal",
         "data-target": "#locationModalCenter",
     });
+    $('#location-form').validate({
+        rules: {
+            street: {
+                required: true,
+                minlength: 5,
+            },
+            baranggay: {
+                required: true,
+                minlength: 5,
+            },
+            city: {
+                required: true,
+                minlength: 5,
+            },
+        },
+        errorPlacement: function (error, element) {
+            error.addClass('error-messages');
+            error.appendTo(element.parent());
+        }
+    })
 })
 
-function errorDisplay(errors) {
-    $('.invalid-feedback').remove();
-    $('#street').after($('<div>').addClass('invalid-feedback').css({
-        display: "block"
-    }).html(errors.street))
-    $('#baranggay').after($('<div>').addClass('invalid-feedback').css({
-        display: "block"
-    }).html(errors.baranggay))
-    $('#city').after($('<div>').addClass('invalid-feedback').css({
-        display: "block"
-    }).html(errors.city))
-}
+// function errorDisplay(errors) {
+//     $('.invalid-feedback').remove();
+//     $('#street').after($('<div>').addClass('invalid-feedback').css({
+//         display: "block"
+//     }).html(errors.street))
+//     $('#baranggay').after($('<div>').addClass('invalid-feedback').css({
+//         display: "block"
+//     }).html(errors.baranggay))
+//     $('#city').after($('<div>').addClass('invalid-feedback').css({
+//         display: "block"
+//     }).html(errors.city))
+// }
 
-$('input').on('keyup', function (event) {
-    $(this).siblings(".invalid-feedback").css({
-        display: "none",
-    })
-});
+// $('input').on('keyup', function (event) {
+//     $(this).siblings(".invalid-feedback").css({
+//         display: "none",
+//     })
+// });
 
-function clearError() {
-    $('input').siblings(".invalid-feedback").css({
-        display: "none",
-    })
-}
+// function clearError() {
+//     $('input').siblings(".invalid-feedback").css({
+//         display: "none",
+//     })
+// }
 
 function saveButton() {
     save.css({
@@ -163,16 +188,19 @@ function appendToTop(newdata) {
             <button type="button" data-id="${newdata.id}" class="btn btn-danger btn-delete delete">
                 <i class="bi bi-trash3" style="color:white"></i>
             </button>
+            <button type="button" data-id="${newdata.id}" class="btn btn-warning btn-delete view" data-toggle="modal" data-target="#imagesModal">
+            <i class="bi bi-eye" style="color:white"></i>
+        </button>
         </div>`
     ));
 
-    $('#location-table tbody').fadeIn(2000, function () {
+    $('#location-table tbody').fadeIn(5000, function () {
         $(this).prepend(tr);
     })
     setTimeout(function () {
         tr.removeClass('newRow', 3000);
         table.ajax.reload();
-    }, 5000)
+    }, 3000)
 }
 
 function fillForm(data) {
@@ -194,45 +222,50 @@ function imageDisplay(images, id) {
 }
 
 function createButton() {
+    checks = [];
+    $('#delete-selected').remove();
+    $('tbody tr').css({
+        "background-color": "transparent",
+    })
+    $('.for-action').children('.model-id').prop("checked", false)
     $('.modal-title').html('Add New Location');
     $('.image-container').remove()
     saveButton();
     formInModal.trigger('reset');
     resetDropZone();
-    clearError()
 }
 
 save.on('click', function () {
+    if ($("#location-form").valid()) {
+        let formData = new FormData($('#location-form')[0]);
+        // for (var pair of formData.entries()) {
+        //     console.log(pair[0] + ', ' + pair[1]);
+        // }
+        $.ajax({
+            url: '/api/location',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "json",
+            success: function (responseData) {
 
-    let formData = new FormData($('#location-form')[0]);
-    // for (var pair of formData.entries()) {
-    //     console.log(pair[0] + ', ' + pair[1]);
-    // }
-    $.ajax({
-        url: '/api/location',
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        dataType: "json",
-        success: function (responseData) {
+                $('#locationModalCenter').modal("hide");
+                formInModal.trigger("reset");
+                resetDropZone()
 
-            $('#locationModalCenter').modal("hide");
-            formInModal.trigger("reset");
-            clearError()
-            resetDropZone()
+                appendToTop(responseData);
+                alertTopLeft("New location successfully added")
 
-            appendToTop(responseData);
-            alertTopLeft("New location successfully added")
-
-        },
-        error: function (responseError) {
-            errorDisplay(responseError.responseJSON.errors);
-        }
-    })
+            },
+            error: function (responseError) {
+                // errorDisplay(responseError.responseJSON.errors);
+            }
+        })
+    }
 })
 
 $('.modal').on('hidden.bs.modal', function (event) {
@@ -242,12 +275,17 @@ $('.modal').on('hidden.bs.modal', function (event) {
 })
 
 $(document).on('click', '.edit', function () {
+    checks = [];
+    $('#delete-selected').remove();
+    $('tbody tr').css({
+        "background-color": "transparent",
+    })
+    $('.for-action').children('.model-id').prop("checked", false)
     $('.modal-title').html('Edit Location');
     $('.image-container').remove();
     updatebutton();
     formInModal.trigger('reset');
     resetDropZone();
-    clearError()
     let id = $(this).attr('data-id');
     update.attr({
         "data-id": id,
@@ -264,7 +302,6 @@ $(document).on('click', '.edit', function () {
         dataType: "json",
         success: function (responseData) {
             let location = responseData;
-
             fillForm(location);
             // console.log(location);
             imageDisplay(location.media, location.id);
@@ -301,37 +338,38 @@ $(document).on('click', 'i.remove', function () {
 })
 
 update.on('click', function () {
-    let id = $(this).attr("data-id");
-    let formData = new FormData($('#location-form')[0]);
-    for (var pair of formData.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-    }
-    formData.append('_method', 'PUT');
-    $.ajax({
-        url: `/api/location/${id}/update`,
-        type: 'POST',
-        data: formData,
-        contentType: false,
-        processData: false,
-        headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        },
-        dataType: "json",
-        success: function (responseData) {
-            clearError()
-            $('#locationModalCenter').modal("hide");
-            formInModal.trigger("reset");
-
-            resetDropZone()
-            $(`td:contains(${id})`).closest('tr').remove();
-            appendToTop(responseData);
-            alertTopLeft("Location updated successfully")
-
-        },
-        error: function (responseError) {
-            errorDisplay(responseError.responseJSON.errors);
+    if ($("#location-form").valid()) {
+        let id = $(this).attr("data-id");
+        let formData = new FormData($('#location-form')[0]);
+        for (var pair of formData.entries()) {
+            console.log(pair[0] + ', ' + pair[1]);
         }
-    })
+        formData.append('_method', 'PUT');
+        $.ajax({
+            url: `/api/location/${id}/update`,
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            dataType: "json",
+            success: function (responseData) {
+                $('#locationModalCenter').modal("hide");
+                formInModal.trigger("reset");
+
+                resetDropZone()
+                $(`td:contains(${id})`).closest('tr').remove();
+                appendToTop(responseData);
+                alertTopLeft("Location updated successfully")
+
+            },
+            error: function (responseError) {
+                // errorDisplay(responseError.responseJSON.errors);
+            }
+        })
+    }
 })
 
 const swalWithBootstrapButtons = Swal.mixin({
@@ -465,3 +503,38 @@ $(document).on('click', 'button#delete-selected', function (event) {
         }
     })
 })
+
+$(document).on('click', 'button.view', function () {
+    $('.for-model-images').empty();
+    let id = $(this).attr('data-id');
+    console.log(id);
+    $.ajax({
+        url: `/api/location/view/${id}/images`,
+        type: 'GET',
+        headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-tokens"]').attr('content'),
+        },
+        dataType: "json",
+        success: function (data) {
+
+            $.each(data, function (i, value) {
+                console.log(value.original_url);
+                $('.for-model-images').append(
+                    $('<img>').attr({
+                        "src": value.original_url
+                    }).css({
+                        "width": "200px",
+                        "height": "200px",
+                        "object-fit": "cover",
+                        "border": "1px solid black",
+                        "margin": "10px",
+                    })
+                );
+            })
+        },
+        error: function (error) {
+            alert("error");
+        }
+
+    })
+});

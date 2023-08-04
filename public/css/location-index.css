@@ -6,7 +6,7 @@
     font-size: medium;
 }
 
-thead th{
+thead th {
     font-weight: 600 !important;
     letter-spacing: 1px;
 }
@@ -62,18 +62,36 @@ tbody tr td .model-id {
     cursor: pointer;
 }
 
-.for-action{
+.for-action {
     width: 20px;
     justify-self: center;
 }
 
-.data-image{
+.data-image {
     display: flex;
     justify-content: center;
 }
 
-.model-image{
+.model-image {
     width: 75px;
     height: 75px;
     object-fit: cover;
+}
+
+/* Style error messages */
+.error-messages {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Style input fields with errors */
+.error {
+    border-color: red;
+}
+
+/* Style label for error */
+.error-label {
+    color: red;
+    font-weight: 200 !important;
 }

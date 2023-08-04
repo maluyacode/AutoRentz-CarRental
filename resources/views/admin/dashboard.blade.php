@@ -99,7 +99,7 @@
                             <h3>{{ $cars }}</h3>
                             <p>Vehicles</p>
                         </div>
-                        <a href="{{ route('car.index') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('cars.page') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>

@@ -17,6 +17,12 @@ class Accessorie extends Model
     {
         return $this->belongsToMany(Car::class);
     }
+
+    public function cars()
+    {
+        return $this->belongsToMany(Car::class);
+    }
+
     public function accessory($id)
     {
         // dd($id);

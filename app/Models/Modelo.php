@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,13 +14,13 @@ class Modelo extends Model
     protected $fillable = ['name', 'year', 'manufacturer_id', 'type_id'];
     // protected $guarded = ['type_id'];
 
-    public function type(){
+    public function type()
+    {
         return $this->belongsTo(Type::class);
     }
 
-    public function manufacturer(){
+    public function manufacturer()
+    {
         return $this->belongsTo(Manufacturer::class);
     }
-
-
 }

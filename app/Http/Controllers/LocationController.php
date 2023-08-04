@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DataTables\LocationDataTable;
 use App\Models\Location;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -13,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 class LocationController extends Controller
 {
+
     public function index()
     {
         $locations = Location::with('media')->get();
@@ -40,6 +42,13 @@ class LocationController extends Controller
             "original_name" => $file->getClientOriginalName(),
         ]);
         // unlink($path);
+    }
+
+    public function viewImages($id)
+    {
+        $location = Location::find($id);
+        $media = $location->getMedia('images');
+        return response()->json($media);
     }
 
     public function store(Request $request)
@@ -123,12 +132,14 @@ class LocationController extends Controller
     public function destroy($id)
     {
         Location::destroy($id);
+        DB::table('media')->where('model_id', $id)->delete();
         return response()->json([]);
     }
 
     public function multidestroy(Request $request)
     {
         Location::destroy($request->multipleID);
+        DB::table('media')->whereIn('model_id', $request->multipleID)->delete();
         return response()->json($request);
     }
 

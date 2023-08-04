@@ -1,0 +1,103 @@
+#car-table {
+    margin-top: 25px !important;
+}
+
+thead th,
+.dtr-title {
+    font-weight: 600 !important;
+    letter-spacing: 1px;
+}
+
+tbody {
+    letter-spacing: 0.5px;
+}
+
+.form-group label:not(.form-check-label),
+label:not(.error),
+h6 {
+    font-weight: normal;
+}
+
+.no-arrow::-webkit-outer-spin-button,
+.no-arrow::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+.checkbox-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap-reverse;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+select option,
+select,
+.form-check-label {
+    text-transform: capitalize;
+}
+
+/* Style error messages */
+.error-messages {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Style input fields with errors */
+.error {
+    border-color: red;
+}
+
+/* Style label for error */
+.error-label {
+    color: red;
+    font-weight: 200 !important;
+}
+
+.swal2-title {
+    font-size: medium;
+}
+
+.image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    margin: 0 auto;
+    flex-wrap: wrap;
+}
+
+.image-container div {
+    width: fit-content;
+}
+
+.image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    margin: 10px 10px;
+    border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.remove {
+    position: relative;
+    left: 80%;
+    bottom: 31%;
+    cursor: pointer;
+    color: red;
+}
+
+.swal2-actions {
+    gap: 10px;
+}
+
+tr.newRow {
+    background-color: #E8FFCE !important;
+}
+
+.model-image {
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+}

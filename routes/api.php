@@ -41,9 +41,16 @@ Route::delete('/drivers/{id}/delete', [DriverController::class, 'destroy']);
 
 Route::get('/location', [LocationController::class, 'index']);
 Route::post('/location', [LocationController::class, 'store']);
-Route::post('/location/storeMeida', [LocationController::class, 'storeMedia'])->name('location.storeMedia');
+Route::post('/location/storeMedia', [LocationController::class, 'storeMedia'])->name('location.storeMedia');
 Route::get('/location/{id}/edit', [LocationController::class, 'edit']);
 Route::put('/location/{id}/update', [LocationController::class, 'update']);
 Route::delete('/location/{id}/images', [LocationController::class, 'deleteMedia']);
+Route::get('/location/view/{id}/images', [LocationController::class, 'viewImages']);
 Route::delete('/location/{id}/delete', [LocationController::class, 'destroy']);
 Route::post('/location/multidelete', [LocationController::class, 'multidestroy']);
+
+
+Route::resource('cars', CarController::class);
+Route::post('/cars/storeMedia', [CarController::class, 'storeMedia'])->name('cars.storeMedia');
+Route::delete('/cars/{id}/images', [CarController::class, 'deleteMedia']);
+Route::get('/cars/{id}/view/images', [CarController::class, 'viewMedia']);

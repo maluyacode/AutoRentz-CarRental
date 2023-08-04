@@ -10,6 +10,7 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
 
     @include('layouts.styles')
+    @yield('styles')
 </head>
 
 <body>
@@ -129,6 +130,7 @@
         </main>
     </div>
     @include('layouts.scripts')
+    @yield('scripts')
 </body>
 
 </html>

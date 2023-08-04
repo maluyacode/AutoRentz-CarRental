@@ -95,12 +95,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::post('drivers/images', [DriverController::class, 'storeMedia'])->name('drivers.storeMedia');
         Route::post('drivers/import', [DriverController::class, 'import'])->name('drivers.import');
 
-        Route::get('/list', [CarController::class, 'index'])->name('car.index'); //mp1
-        Route::get('/list/create', [CarController::class, 'create'])->name('car.create');
-        Route::post('/store', [CarController::class, 'store'])->name('car.store');
-        Route::get('/edit/{id}', [CarController::class, 'edit'])->name('car.edit');
-        Route::put('/update/{id}', [CarController::class, 'update'])->name('car.update');
-        Route::delete('/delete/{id}', [CarController::class, 'destroy'])->name('car.delete');
+        Route::view('/index', 'car.index')->name('cars.page'); //mp1
         Route::get('/show/{id}', [CarController::class, 'show'])->name('car.show');
     });
 

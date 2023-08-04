@@ -76,6 +76,23 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade bd-example-modal-lg" id="imagesModal" tabindex="-1" role="dialog"
+        aria-labelledby="imagesModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imagesModalLongTitle">Location Images</h5>
+                </div>
+                <div class="modal-body for-model-images">
+                    ..
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 @section('pageScripts')
     <script>
@@ -127,6 +144,7 @@
             }
         }
     </script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="{{ asset('js/location-index.js') }}"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script>
 @endsection
