@@ -14,6 +14,9 @@ class Location extends Model implements Searchable, HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+
+    public $fillable = ["street", "baranggay", "city", "image_path"];
+
     public function accessLocation($id)
     {
         return $this->where('id', $id)->first();

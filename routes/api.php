@@ -41,6 +41,7 @@ Route::post('drivers/images', [DriverController::class, 'storeMedia'])->name('dr
 Route::delete('/drivers/{id}/images', [DriverController::class, 'deleteMedia']);
 Route::delete('/drivers/{id}/delete', [DriverController::class, 'destroy']);
 Route::get('/drivers/{id}/view/images', [DriverController::class, 'viewMedia']);
+Route::post('/drivers/import', [DriverController::class, 'import']);
 
 Route::get('/location', [LocationController::class, 'index']);
 Route::post('/location', [LocationController::class, 'store']);
@@ -51,14 +52,16 @@ Route::delete('/location/{id}/images', [LocationController::class, 'deleteMedia'
 Route::get('/location/view/{id}/images', [LocationController::class, 'viewImages']);
 Route::delete('/location/{id}/delete', [LocationController::class, 'destroy']);
 Route::post('/location/multidelete', [LocationController::class, 'multidestroy']);
-
+Route::post('/location/import', [LocationController::class, 'import']);
 
 Route::resource('cars', CarController::class);
 Route::post('/cars/storeMedia', [CarController::class, 'storeMedia'])->name('cars.storeMedia');
 Route::delete('/cars/{id}/images', [CarController::class, 'deleteMedia']);
 Route::get('/cars/{id}/view/images', [CarController::class, 'viewMedia']);
+Route::post('/cars/import', [CarController::class, 'import']);
 
 Route::resource('accessories', AccessoriesController::class);
 Route::post('/accessories/storeMedia', [AccessoriesController::class, 'storeMedia'])->name('accessories.storeMedia');
 Route::delete('/accessories/{id}/images', [AccessoriesController::class, 'deleteMedia']);
 Route::get('/accessories/{id}/view/images', [AccessoriesController::class, 'viewMedia']);
+Route::post('/accessories/import', [AccessoriesController::class, 'import']);

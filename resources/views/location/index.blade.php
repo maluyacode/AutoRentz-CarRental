@@ -11,6 +11,20 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">List of Locations</h3>
+                            <form id="importExcel" method="POST" enctype="multipart/form-data" style="cursor: pointer">
+                                @csrf
+                                <div class="input-group mb-3" style="width: 50%; float:right" style="cursor: pointer">
+                                    <div class="custom-file" style="cursor: pointer">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04" name="excel"
+                                            style="cursor: pointer" accept=".xls, .xlsx">
+                                        <label class="custom-file-label" for="inputGroupFile04"
+                                            style="cursor: pointer">Import Excel Records</label>
+                                    </div>
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-secondary" type="submit">Submit</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <div style="padding: 20px">
                             <table id="location-table" class="table-bordered">

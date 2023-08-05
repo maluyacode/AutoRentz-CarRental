@@ -552,3 +552,32 @@ $(document).on('click', 'button.view', function () {
 
     })
 });
+
+$('.custom-file-input').on("change", function (e) {
+    $('.custom-file-label').html(e.target.files[0].name);
+});
+
+$('#importExcel').on('submit', function (e) {
+    e.preventDefault()
+    let formData = new FormData($(this)[0]);
+    $.ajax({
+        url: '/api/location/import',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "json",
+        success: function (responseData) {
+            $('.custom-file-label').html('Import Excel Records');
+            alertTopLeft('Imported Successfully');
+            $('#importExcel').trigger("reset");
+            table.ajax.reload();
+        },
+        error: function (responseError) {
+            // errorDisplay(responseError.responseJSON.errors);
+        }
+    })
+})

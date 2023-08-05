@@ -13,12 +13,12 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">List of Drivers</h3>
-                            <form action="{{ route('drivers.import') }}" method="POST" enctype="multipart/form-data">
+                            <form id="importExcel" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="input-group mb-3" style="width: 50%">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile04"
-                                            name="excel">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04" name="excel"
+                                            accept=".xls, .xlsx">
                                         <label class="custom-file-label" for="inputGroupFile04">Import Excel
                                             Records</label>
                                     </div>

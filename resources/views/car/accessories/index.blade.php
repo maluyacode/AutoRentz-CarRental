@@ -10,13 +10,14 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">List of Accessories</h3>
-                            <form action="{{ route('accessories.import') }}" method="POST" enctype="multipart/form-data">
+                            <form id="importExcel" method="POST" enctype="multipart/form-data" style="cursor: pointer">
                                 @csrf
-                                <div class="input-group mb-3" style="width: 50%; float:right">
-                                    <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="inputGroupFile04"
-                                            name="excel">
-                                        <label class="custom-file-label" for="inputGroupFile04">Choose file</label>
+                                <div class="input-group mb-3" style="width: 50%; float:right" style="cursor: pointer">
+                                    <div class="custom-file" style="cursor: pointer">
+                                        <input type="file" class="custom-file-input" id="inputGroupFile04" name="excel"
+                                            style="cursor: pointer">
+                                        <label class="custom-file-label" for="inputGroupFile04"
+                                            style="cursor: pointer">Import Excel Records</label>
                                     </div>
                                     <div class="input-group-append">
                                         <button class="btn btn-outline-secondary" type="submit">Submit</button>

@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\LocationImport;
 
 class LocationController extends Controller
 {
@@ -156,5 +158,11 @@ class LocationController extends Controller
             ->orWhere('baranggay', 'LIKE', "%{$searchValue}%")
             ->orWhere('city', 'LIKE', "%{$searchValue}%")->get();
         return View::make('locations', compact('locations'));
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new LocationImport(), $request->excel);
+        return response()->json([]);
     }
 }

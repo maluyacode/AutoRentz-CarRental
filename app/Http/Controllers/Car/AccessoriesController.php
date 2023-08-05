@@ -196,6 +196,6 @@ class AccessoriesController extends Controller
     public function import(Request $request)
     {
         Excel::import(new AccessoriesImport, $request->excel);
-        return redirect()->route('accessories.index')->with('success', 'All goods na!');
+        return response()->json([]);
     }
 }

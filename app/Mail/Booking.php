@@ -10,6 +10,7 @@ use App\Models\Booking as Book;
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use App\AccessInformation;
+use Illuminate\Support\Facades\Auth;
 
 class Booking extends Mailable
 {

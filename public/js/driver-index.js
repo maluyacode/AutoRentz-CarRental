@@ -439,3 +439,28 @@ $(document).on('click', 'button.view', function () {
 
     })
 });
+
+$('#importExcel').on('submit', function (e) {
+    e.preventDefault()
+    let formData = new FormData($(this)[0]);
+    $.ajax({
+        url: '/api/drivers/import',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        },
+        dataType: "json",
+        success: function (responseData) {
+            $('.custom-file-label').html('Import Excel Records');
+            alertTopLeft('Imported Successfully');
+            $('#importExcel').trigger("reset");
+            table.ajax.reload();
+        },
+        error: function (responseError) {
+            // errorDisplay(responseError.responseJSON.errors);
+        }
+    })
+})

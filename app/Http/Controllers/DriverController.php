@@ -221,6 +221,6 @@ class DriverController extends Controller
     {
         Excel::import(new DriversImport, $request->excel);
 
-        return redirect()->route('drivers.index')->with('success', 'Imported na ang data');
+        return response()->json([]);
     }
 }

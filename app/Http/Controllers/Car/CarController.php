@@ -22,6 +22,8 @@ use App\Models\Transmission;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use GuzzleHttp\Promise\Create;
 use Faker\Factory as Faker;
+use App\Imports\CarImport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class CarController extends Controller
 {
@@ -357,5 +359,11 @@ class CarController extends Controller
             ->get();
         $customerClass = new CustomerClass();
         return View::make('fleet.car-listing', compact('cars', 'search', 'accessory', 'customerClass', 'data'));
+    }
+
+    public function import(Request $request)
+    {
+        Excel::import(new CarImport(), $request->excel);
+        return response()->json([]);
     }
 }
