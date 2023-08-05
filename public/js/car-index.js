@@ -99,7 +99,7 @@ let table = $('#car-table').DataTable({
         }
     ]
 });
-
+let validator
 $(function () {
     $('.buttons-create').attr({
         "data-toggle": "modal",
@@ -110,7 +110,15 @@ $(function () {
         return this.optional(element) || /^[1-9][0-9]*$/i.test(value);
     }, "Please enter a valid number. (Do not start with zero)");
 
-    $('#carForm').validate({
+    validator = $('#carForm').validate({
+        invalidHandler: function (form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                var firstInvalidElement = $(validator.errorList[0].element);
+                $('.content,.modal-content').scrollTop(firstInvalidElement.offset().top);
+                firstInvalidElement.focus();
+            }
+        },
         rules: {
             platenumber: {
                 required: true,
@@ -258,6 +266,11 @@ $('.modal').on('hidden.bs.modal', function (event) {
     $('tbody tr').css({
         "background-color": "transparent",
     })
+    validator.resetForm();
+    $('.error').css({
+        "border-color": "#ced4da"
+    })
+    console.log("Dasd");
 })
 
 function createButton() {

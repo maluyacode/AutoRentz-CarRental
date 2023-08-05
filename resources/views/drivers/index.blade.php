@@ -28,8 +28,25 @@
                                 </div>
                             </form>
                         </div>
-                        <div style="padding: 20px">
-                            {!! $dataTable->table() !!}
+                        <div class="card-body">
+                            <table id="drivers-table" class="table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Image</th>
+                                        <th>First Name</th>
+                                        <th>Last Name</th>
+                                        <th>Licensed No</th>
+                                        <th>Description</th>
+                                        <th>Address</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -84,8 +101,22 @@
         </div>
     </div>
 
-    {!! $dataTable->scripts() !!}
-
+    <div class="modal fade bd-example-modal-lg" id="imagesModal" tabindex="-1" role="dialog"
+        aria-labelledby="imagesModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="imagesModalLongTitle">Driver Images</h5>
+                </div>
+                <div class="modal-body driver-images">
+                    ..
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         initilizeDropzone();
         var uploadedDocumentMap = {}
@@ -93,8 +124,8 @@
         function initilizeDropzone() {
             Dropzone.options.dropzoneImage = {
                 url: '{{ route('drivers.storeMedia') }}',
-                maxFilesize: 2,
-                acceptedFiles: 'image/*',
+                // maxFilesize: 2,
+                // acceptedFiles: 'image/*',
                 addRemoveLinks: true,
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"
@@ -138,5 +169,6 @@
 @endsection
 
 @section('pageScripts')
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
     <script src="{{ asset('js/driver-index.js') }}"></script>
 @endsection

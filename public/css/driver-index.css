@@ -1,3 +1,7 @@
+#drivers-table {
+    margin-top: 25px !important;
+}
+
 .swal2-title {
     font-size: medium;
 }
@@ -60,10 +64,6 @@ tr.newRow {
     margin-bottom: 0px !important;
 }
 
-#driver-table {
-    margin-top: 20px !important;
-}
-
 .swal2-actions {
     gap: 10px;
 }
@@ -77,4 +77,28 @@ tr.newRow {
     width: 75px;
     height: 75px;
     object-fit: cover;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+/* Style error messages */
+.error-messages {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Style input fields with errors */
+.error {
+    border-color: red;
+}
+
+/* Style label for error */
+.error-label {
+    color: red;
+    font-weight: 200 !important;
 }

@@ -141,7 +141,7 @@
                     </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="{{ route('drivers.index') }}" class="nav-link">
+                    <a href="{{ route('drivers.page') }}" class="nav-link">
                         <i class="fa fa-thin fa-id-card" style="margin: 0 2px"></i>
                         <p>
                             Drivers (MP2)

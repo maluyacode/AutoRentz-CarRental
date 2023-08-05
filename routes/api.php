@@ -33,12 +33,14 @@ Route::post('/transmission', [TransmissionController::class, 'store']);
 Route::put('/transmission/{id}', [TransmissionController::class, 'update']);
 Route::delete('/transmission/delete/{id}', [TransmissionController::class, 'destroy']);
 
-
+Route::get('/drivers', [DriverController::class, 'index']);
 Route::post('/drivers', [DriverController::class, 'store']);
 Route::get('/drivers/{id}/edit', [DriverController::class, 'edit']);
 Route::put('/drivers/{id}/update', [DriverController::class, 'update']);
+Route::post('drivers/images', [DriverController::class, 'storeMedia'])->name('drivers.storeMedia');
 Route::delete('/drivers/{id}/images', [DriverController::class, 'deleteMedia']);
 Route::delete('/drivers/{id}/delete', [DriverController::class, 'destroy']);
+Route::get('/drivers/{id}/view/images', [DriverController::class, 'viewMedia']);
 
 Route::get('/location', [LocationController::class, 'index']);
 Route::post('/location', [LocationController::class, 'store']);

@@ -22,8 +22,8 @@ class DriverController extends Controller
      */
     public function index(DriverDataTable $dataTable)
     {
-        // dd($dataTable.destroy());
-        return $dataTable->render('drivers.index');
+        $drivers = Driver::with(['media'])->whereKeyNot(1)->get();
+        return response()->json($drivers);
     }
 
     /**
@@ -42,6 +42,12 @@ class DriverController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+    public function viewMedia($id)
+    {
+        $driver = Driver::find($id);
+        $driver->getMedia('images');
+        return response()->json($driver);
+    }
 
     public function storeMedia(Request $request)
     {
@@ -100,8 +106,8 @@ class DriverController extends Controller
         }
 
         $driver->save();
-
-        return response()->json(["created" => "Driver Added!", "code" => 200]);
+        $driver->getMedia('images');
+        return response()->json($driver);
     }
 
     /**
@@ -166,6 +172,7 @@ class DriverController extends Controller
         }
 
         $driver->save();
+        $driver->getMedia('images');
 
         return response()->json($driver);
     }

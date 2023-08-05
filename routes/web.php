@@ -91,8 +91,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::resource('transmission', TransmissionController::class);
         Route::view('accessories/index', 'car.accessories.index')->name('accessories.index'); //mp3
         Route::post('accessories/import', [AccessoriesController::class, 'import'])->name('accessories.import');
-        Route::resource('drivers', DriverController::class); //mp2
-        Route::post('drivers/images', [DriverController::class, 'storeMedia'])->name('drivers.storeMedia');
+        Route::view('/drivers/index', 'drivers.index')->name('drivers.page'); //mp2
         Route::post('drivers/import', [DriverController::class, 'import'])->name('drivers.import');
 
         Route::view('/index', 'car.index')->name('cars.page'); //mp1

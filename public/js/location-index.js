@@ -81,13 +81,22 @@ let save = $('button#save');
 let update = $('button#update');
 let formInModal = $('#location-form');
 let ourModal = $('#locationModalCenter');
+let validator;
 
 $(function () {
     $('.buttons-create').attr({
         "data-toggle": "modal",
         "data-target": "#locationModalCenter",
     });
-    $('#location-form').validate({
+    validator = $('#location-form').validate({
+        invalidHandler: function (form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                var firstInvalidElement = $(validator.errorList[0].element);
+                $('.content,.modal-content').scrollTop(firstInvalidElement.offset().top);
+                firstInvalidElement.focus();
+            }
+        },
         rules: {
             street: {
                 required: true,
@@ -272,6 +281,11 @@ $('.modal').on('hidden.bs.modal', function (event) {
     $('tbody tr').css({
         "background-color": "transparent",
     })
+    validator.resetForm();
+    $('.error').css({
+        "border-color": "#ced4da"
+    })
+    console.log("Dasd");
 })
 
 $(document).on('click', '.edit', function () {

@@ -69,13 +69,21 @@ let table = $('#accessories-table').DataTable({
     ]
 });
 
-
+let validator
 $(function () {
     $('.buttons-create').attr({
         "data-toggle": "modal",
         "data-target": "#accessoriesModal",
     });
-    $('#accessories-form').validate({
+    validator = $('#accessories-form').validate({
+        invalidHandler: function (form, validator) {
+            var errors = validator.numberOfInvalids();
+            if (errors) {
+                var firstInvalidElement = $(validator.errorList[0].element);
+                $('.content,.modal-content').scrollTop(firstInvalidElement.offset().top);
+                firstInvalidElement.focus();
+            }
+        },
         rules: {
             name: {
                 required: true,
@@ -376,3 +384,11 @@ $(document).on('click', 'button.view', function () {
 
     })
 });
+
+$('#ourModal').on('hidden.bs.modal', function () {
+    validator.resetForm();
+    $('.error').css({
+        "border-color": "#ced4da"
+    })
+    console.log("Dasd");
+})
