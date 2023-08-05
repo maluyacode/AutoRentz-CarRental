@@ -7,10 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\DB;
 use App\Models\Car;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Accessorie extends Model
+class Accessorie extends Model implements HasMedia
 {
     use HasFactory;
+    use InteractsWithMedia;
+
     protected $fillable = ['name', 'fee', 'image_path'];
 
     public function access(): BelongsToMany
@@ -32,5 +37,13 @@ class Accessorie extends Model
             ->where('ca.id', $id)
             ->get();
         return $accessory;
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        $this->addMediaConversion('thumb')
+            ->width(200)
+            ->height(200)
+            ->sharpen(10);
     }
 }

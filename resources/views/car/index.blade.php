@@ -150,8 +150,8 @@
         </div>
     </div>
 
-    <div class="modal fade bd-example-modal-lg" id="imagesModal" tabindex="-1" role="dialog" aria-labelledby="imagesModalTitle"
-        aria-hidden="true">
+    <div class="modal fade bd-example-modal-lg" id="imagesModal" tabindex="-1" role="dialog"
+        aria-labelledby="imagesModalTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -175,8 +175,8 @@
         function initilizeDropzone() {
             Dropzone.options.dropzoneImage = {
                 url: '{{ route('cars.storeMedia') }}',
-                maxFilesize: 3,
-                // acceptedFiles: 'image/*',
+                maxFilesize: 2,
+                acceptedFiles: 'image/*',
                 addRemoveLinks: true,
                 headers: {
                     'X-CSRF-TOKEN': "{{ csrf_token() }}"

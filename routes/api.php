@@ -8,6 +8,7 @@ use App\Http\Controllers\Car\FuelController;
 use App\Http\Controllers\Car\TransmissionController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LocationController;
+use App\Http\Controllers\Car\AccessoriesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,3 +55,8 @@ Route::resource('cars', CarController::class);
 Route::post('/cars/storeMedia', [CarController::class, 'storeMedia'])->name('cars.storeMedia');
 Route::delete('/cars/{id}/images', [CarController::class, 'deleteMedia']);
 Route::get('/cars/{id}/view/images', [CarController::class, 'viewMedia']);
+
+Route::resource('accessories', AccessoriesController::class);
+Route::post('/accessories/storeMedia', [AccessoriesController::class, 'storeMedia'])->name('accessories.storeMedia');
+Route::delete('/accessories/{id}/images', [AccessoriesController::class, 'deleteMedia']);
+Route::get('/accessories/{id}/view/images', [AccessoriesController::class, 'viewMedia']);

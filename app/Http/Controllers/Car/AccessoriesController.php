@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Storage;
 use App\Imports\AccessoriesImport;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Accessorie;
 
@@ -20,10 +21,10 @@ class AccessoriesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(AccessorieDataTable $dataTable)
+    public function index()
     {
-        $accessories = new Accessorie();
-        return $dataTable->render('car.accessories.index', compact('accessories'));
+        $accessories = Accessorie::with(['media'])->get();
+        return response()->json($accessories);
     }
 
     /**
@@ -36,43 +37,70 @@ class AccessoriesController extends Controller
         return view('car.accessories.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function storeMedia(Request $request)
+    {
+        $path = storage_path("accessories/images");
+        if (!file_exists($path)) {
+            mkdir($path, 0777, true);
+        }
+
+        $file = $request->file("file");
+        $name = uniqid() . "_" . trim($file->getClientOriginalName());
+        $file->move($path, $name);
+
+        return response()->json([
+            "name" => $name,
+            "original_name" => $file->getClientOriginalName(),
+        ]);
+    }
+
+    public function viewMedia($id)
+    {
+        $accessory = Accessorie::find($id);
+        $accessory->getMedia('images');
+        return response()->json($accessory);
+    }
+
     public function store(Request $request)
     {
-        dd($request);
-        Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|min:5',
-                'fee' => 'required|numeric',
-                'image_path' => 'required',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
-            ],
-            [
-                'image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.',
-                'image_path.required' => 'The image(s) field is required.'
-            ]
-        )->validate();
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
-            }
-            $image_path = implode("=", $filenames);
-        }
-        Accessorie::create([
+        // Validator::make(
+        //     $request->all(),
+        //     [
+        //         'name' => 'required|min:5',
+        //         'fee' => 'required|numeric',
+        //         'image_path' => 'required',
+        //         'image_path.*' => '|mimes:jpeg,png,jpg',
+        //     ],
+        //     [
+        //         'image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.',
+        //         'image_path.required' => 'The image(s) field is required.'
+        //     ]
+        // )->validate();
+        // if ($request->file()) {
+        //     foreach ($request->image_path as $images) {
+        //         $fileName = time() . '_' . $images->getClientOriginalName();
+        //         // dd($fileName);
+        //         $path = Storage::putFileAs('public/images', $images, $fileName);
+        //         $filenames[] = $fileName;
+        //     }
+        //     $image_path = implode("=", $filenames);
+        // }
+        $accessory = Accessorie::create([
             "name" => $request->name,
             "fee" => $request->fee,
-            "image_path" => $image_path
+            "image_path" => 'Switched in media',
         ]);
-        return redirect()->route('accessories.index')->with("created", "New accessory created successfully");
+
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $accessory->addMedia(storage_path("accessories/images/" . $file))->toMediaCollection("images");
+                // unlink(storage_path("drivers/images/" . $file));
+            }
+        }
+
+        $newAccessory = Accessorie::with(['media'])->where('id', $accessory->id)->first();
+
+        return response()->json($newAccessory);
     }
 
     /**
@@ -86,16 +114,21 @@ class AccessoriesController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+    public function deleteMedia(Request $request, $id)
+    {
+        $modelID = $request->id;
+        DB::table('media')->where('id', $id)->delete();
+
+        $model = Accessorie::find($modelID);
+        $model->getMedia('images');
+
+        return response()->json($model);
+    }
+
     public function edit($id)
     {
-        $accessory = Accessorie::find($id);
-        return View::make('car.accessories.edit', compact('accessory'));
+        $accessory = Accessorie::with('media')->find($id);
+        return response()->json($accessory);
     }
 
     /**
@@ -107,34 +140,44 @@ class AccessoriesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Validator::make(
-            $request->all(),
-            [
-                'name' => 'required|min:5',
-                'fee' => 'required|numeric',
-                'image_path.*' => '|mimes:jpeg,png,jpg',
-            ],
-            [
-                'image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.',
-            ]
-        )->validate();
-        if ($request->file()) {
-            foreach ($request->image_path as $images) {
-                $fileName = time() . '_' . $images->getClientOriginalName();
-                // dd($fileName);
-                $path = Storage::putFileAs('public/images', $images, $fileName);
-                $filenames[] = $fileName;
-            }
-            $image_path = implode("=", $filenames);
-            Accessorie::whereId($id)->update([
-                "image_path" => $image_path,
-            ]);
-        }
-        Accessorie::find($id)->update([
+        // Validator::make(
+        //     $request->all(),
+        //     [
+        //         'name' => 'required|min:5',
+        //         'fee' => 'required|numeric',
+        //         'image_path.*' => '|mimes:jpeg,png,jpg',
+        //     ],
+        //     [
+        //         'image_path.*.mimes' => 'The image(s) must be a file of type: jpeg, png, jpg.',
+        //     ]
+        // )->validate();
+        // if ($request->file()) {
+        //     foreach ($request->image_path as $images) {
+        //         $fileName = time() . '_' . $images->getClientOriginalName();
+        //         // dd($fileName);
+        //         $path = Storage::putFileAs('public/images', $images, $fileName);
+        //         $filenames[] = $fileName;
+        //     }
+        //     $image_path = implode("=", $filenames);
+        //     Accessorie::whereId($id)->update([
+        //         "image_path" => $image_path,
+        //     ]);
+        // }
+        $accessory = Accessorie::find($id)->update([
             "name" => $request->name,
             "fee" => $request->fee
         ]);
-        return redirect()->route('accessories.index')->with("update", "Updated Successfully");
+
+        $accessory = Accessorie::find($id);
+        if ($request->document !== null) {
+            foreach ($request->input("document", []) as $file) {
+                $accessory->addMedia(storage_path("accessories/images/" . $file))->toMediaCollection("images");
+                // unlink(storage_path("drivers/images/" . $file));
+            }
+        }
+
+        $updatedAccessory = Accessorie::with(['media'])->where('id', $accessory->id)->first();
+        return response()->json($updatedAccessory);
     }
 
     /**
@@ -146,7 +189,8 @@ class AccessoriesController extends Controller
     public function destroy($id)
     {
         Accessorie::destroy($id);
-        return redirect()->route('accessories.index')->with("deleted", "Deleted Successfully");
+        DB::table('media')->where('model_id', $id)->where('model_type', 'App\Models\Accessorie')->delete();
+        return response()->json([]);
     }
 
     public function import(Request $request)

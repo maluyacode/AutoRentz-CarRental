@@ -89,7 +89,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::resource('model', ModelController::class);
         Route::resource('fuel', FuelController::class);
         Route::resource('transmission', TransmissionController::class);
-        Route::resource('accessories', AccessoriesController::class); //mp3
+        Route::view('accessories/index', 'car.accessories.index')->name('accessories.index'); //mp3
         Route::post('accessories/import', [AccessoriesController::class, 'import'])->name('accessories.import');
         Route::resource('drivers', DriverController::class); //mp2
         Route::post('drivers/images', [DriverController::class, 'storeMedia'])->name('drivers.storeMedia');
