@@ -8,6 +8,8 @@ use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvi
 use Illuminate\Support\Facades\Event;
 use App\Events\UserBookEvent;
 use App\Listeners\UserBookListener;
+use App\Events\BookConfirmEvent;
+use App\Listeners\BookConfirmListener;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,6 +24,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserBookEvent::class => [
             UserBookListener::class,
+        ],
+        BookConfirmEvent::class => [
+            BookConfirmListener::class,
         ],
     ];
 

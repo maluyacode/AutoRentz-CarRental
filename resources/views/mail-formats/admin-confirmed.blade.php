@@ -82,45 +82,49 @@
             <h1>Car Reservation Confirmed</h1>
         </header>
         <div class="content">
-            <p>Dear {{ $customer->name }},</p>
+            <p>Dear {{ $book->customer->name }},</p>
             <p>Your car rental booking has been confirmed on {{ config('app.name') }}:</p>
             <div class="booking-details">
                 <h2>Booking Details</h2>
                 <dl>
                     <dt>Booking ID:</dt>
-                    <dd>{{ $newbook->id }}</dd>
+                    <dd>{{ $book->id }}</dd>
                     <dt>Plate Number:</dt>
                     <a href="#">
-                        <dd>{{ $car->platenumber }}</dd>
+                        <dd>{{ $book->car->platenumber }}</dd>
                     </a>
                     <dt>Car Model:</dt>
                     <a href="#">
-                        <dd>{{ $car->modelname }}, {{ $car->modelyear }}, {{ $car->typename }} -
-                            {{ $car->manufacturername }}</dd>
+                        <dd>{{ $book->car->modelo->name }}, {{ $book->car->modelo->year }},
+                            {{ $book->car->modelo->type->name }} -
+                            {{ $book->car->modelo->manufacturer->name }}</dd>
                     </a>
                     <dt>Pickup Date:</dt>
-                    <dd>{{ $newbook->start_date }}</dd>
+                    <dd>{{ $book->start_date }}</dd>
                     <dt>Return Date:</dt>
-                    <dd>{{ $newbook->end_date }}</dd>
-                    @if ($newbook->address)
+                    <dd>{{ $book->end_date }}</dd>
+                    @if ($book->address)
                         <dt>Delivery Address:</dt>
-                        <dd>{{ $newbook->address }}</dd>
+                        <dd>{{ $book->address }}</dd>
                     @else
                         <dt>PickUp Location:</dt>
-                        <dd>{{ $accessInfo->picklocation($newbook->pickup_location_id) }}</dd>
-                        <dt>Return Lacation:</dt>
-                        <dd>{{ $accessInfo->returnlocation($newbook->return_location_id) }}</dd>
+                        <dd>{{ $book->picklocation->street }} {{ $book->picklocation->baranggay }}
+                            {{ $book->picklocation->city }}</dd>
+                        <dt>Return Location:</dt>
+                        <dd>{{ $book->returnlocation->street }} {{ $book->returnlocation->baranggay }}
+                            {{ $book->returnlocation->city }}</dd>
                     @endif
                     <dt>Drive Type:</dt>
-                    @if ($newbook->driver_id)
-                        <dd>With Driver: {{ $driver->fname }} {{ $driver->lname }} <br>
-                            Licensed No: {{ $driver->licensed_no }}</dd>
+                    @if ($book->driver_id)
+                        <dd>With Driver: {{ $book->driver->fname }} {{ $book->driver->lname }} <br>
+                            Licensed No: {{ $book->driver->licensed_no }}</dd>
                     @else
                         <dd>Self Drive</dd>
                     @endif
                 </dl>
                 <div style="width: 100%; height: 75px; text-align: right;">
-                    <h3 style="margin-right: 50px;">Total Rent Price: ₱{{ number_format($totalPrice, 2, '.', ',') }}</h3>
+                    <h3 style="margin-right: 50px;">Total Rent Price: ₱{{ number_format($total, 2, '.', ',') }}
+                    </h3>
                 </div>
             </div>
             <p>Please login to your AutoRentz account for more details.</p>

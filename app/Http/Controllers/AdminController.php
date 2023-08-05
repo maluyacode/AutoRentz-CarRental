@@ -7,6 +7,7 @@ use App\Charts\CarRentChart;
 use App\Charts\CustomerRegisterChart;
 use App\Charts\MonthlyIncomeChart;
 use App\CustomerClass;
+use App\Events\BookConfirmEvent;
 use App\Models\Booking;
 use App\Models\Car;
 use App\Models\Customer;
@@ -231,6 +232,7 @@ class AdminController extends Controller
         if ($id == 0) {
             DB::beginTransaction();
             try {
+
                 $booking = Booking::find($request->booking_id);
                 $booking->status = 'confirmed';
                 $booking->driver_id = $request->driver_id;
@@ -242,13 +244,17 @@ class AdminController extends Controller
                 $driver->driver_status = 'taken';
             } catch (\Exception $e) {
                 DB::rollBack();
+                dd($e);
                 return back()->with('deleted', 'Error Occured!');
             }
+
             $booking->save();
             $driver->save();
             $car->save();
+
             DB::commit();
-            $this->mail($request->booking_id);
+            $this->mail($booking->id);
+            dd($booking->id);
             return back()->with('update', 'Book confirmed 🤑');
         } else {
             DB::beginTransaction();
@@ -260,6 +266,7 @@ class AdminController extends Controller
                 $car->car_status = 'taken';
             } catch (\Exception $e) {
                 DB::rollBack();
+                dd($e);
                 return back()->with('deleted', 'Error Occured!');
             }
             $car->save();
@@ -273,13 +280,21 @@ class AdminController extends Controller
     public function mail($id)
     {
         try {
-            $booking = Booking::find($id);
-            $customerTable = Customer::find($booking->customer_id);
-            $mail = new MailToUser($id);
-            $mailmessage = $mail->build($booking->id);
-            $mailmessage->from('autorentz24@gmail.com', 'AutoRentz');
-            Mail::to($customerTable->email)->send($mailmessage);
+            $book = Booking::with([
+                'customer',
+                'customer.user',
+                'car',
+                'car.accessories',
+                'car.modelo',
+                'car.modelo.type',
+                'car.modelo.manufacturer',
+                'picklocation',
+                'returnlocation',
+                'driver',
+            ])->find($id);
+            BookConfirmEvent::dispatch($book);
         } catch (\Exception $e) {
+            dd($e);
             return back()->with('update', 'Book confirmed, without email due to connection problem');
         }
     }
