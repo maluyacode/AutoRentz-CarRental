@@ -29,7 +29,7 @@ class Location extends Model implements Searchable, HasMedia
 
     public function getSearchResult(): SearchResult
     {
-        $url = route('locations', $this->id);
+        $url = route('locations.show', $this->id);
 
         return new \Spatie\Searchable\SearchResult(
             $this,

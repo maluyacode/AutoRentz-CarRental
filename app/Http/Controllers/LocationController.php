@@ -82,7 +82,8 @@ class LocationController extends Controller
 
     public function show($id)
     {
-        //
+        $locations = Location::where('id', $id)->get();
+        return View::make('locations', compact('locations'));
     }
 
     public function edit($id)

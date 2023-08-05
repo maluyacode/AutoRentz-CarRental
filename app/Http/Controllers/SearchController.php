@@ -23,4 +23,12 @@ class SearchController extends Controller
 
         return View::make('search-output', compact('searchResults'));
     }
+
+    public function dataSearch()
+    {
+        $drivers = Driver::all();
+        $cars = Car::with(['modelo'])->get();
+        $locations = Location::all();
+        return response()->json(['cars' => $cars, 'drivers' => $drivers, 'locations' => $locations]);
+    }
 }

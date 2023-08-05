@@ -121,7 +121,7 @@
                             <h3>{{ $drivers }}</h3>
                             <p>Drivers</p>
                         </div>
-                        <a href="{{ route('drivers.index') }}" class="small-box-footer">More info <i
+                        <a href="{{ route('drivers.page') }}" class="small-box-footer">More info <i
                                 class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>

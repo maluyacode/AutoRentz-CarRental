@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 
 use App\Models\Manufacturer;
 use App\Models\Type;
+use Illuminate\Support\Facades\Session;
 
 class ModelController extends Controller
 {
@@ -29,7 +30,7 @@ class ModelController extends Controller
         //     ->select('mo.*', 'ty.name as typename', 'ma.name as manuname')
         //     ->get();
         // return View::make('car.model.index', compact('modelos'));
-
+        dd(Session::all());
         return $dataTable->render('car.model.index');
     }
 

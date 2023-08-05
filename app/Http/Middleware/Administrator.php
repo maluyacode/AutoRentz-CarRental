@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -19,18 +20,15 @@ class Administrator
 
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check()){
-
-            if (Auth::user()->role == 'admin' || Auth::user()->role == 'user'){
+        if (Auth::check()) {
+            if (Auth::user()->role == 'admin' || Auth::user()->role == 'user') {
                 return $next($request);
-            } else{
+            } else {
                 return redirect('home')->with('warning', 'You are not authorize to access the page.');
             }
-
-         } else{
+        } else {
             return redirect('/login');
         }
         return $next($request);
     }
-
 }

@@ -37,9 +37,10 @@ Route::get('/', function () {
 Auth::routes();
 Route::get('/home', [CarController::class, 'carlists'])->name('home');
 Route::any('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
+Route::get('/locations/{id}/show', [LocationController::class, 'show'])->name('locations.show');
 // Route::post('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
-Route::get('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
-Route::post('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
+Route::any('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
+// Route::post('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::get('/driver/{id}', [DriverController::class, 'driverDetails'])->name('driver.details');
 Route::post('/search', [SearchController::class, 'search'])->name('global.search');
 
@@ -79,8 +80,8 @@ Route::prefix('user')->middleware(['auth'])->group(function () {
 //Administrator Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admindashboard');
-    // Route::resource('/location', LocationController::class); //mp4
-    Route::view('/location', 'location.index')->name('location.index');
+
+    Route::view('/location', 'location.index')->name('location.index'); //mp4
     // Cars
     Route::prefix('car')->group(function () {
         Route::resource('manufacturers', ManufacturerController::class);
@@ -89,9 +90,9 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::resource('model', ModelController::class);
         Route::resource('fuel', FuelController::class);
         Route::resource('transmission', TransmissionController::class);
-        Route::view('accessories/index', 'car.accessories.index')->name('accessories.index'); //mp3
-        Route::view('/drivers/index', 'drivers.index')->name('drivers.page'); //mp2
 
+        Route::view('accessories/index', 'car.accessories.index')->name('accessories.page'); //mp3
+        Route::view('/drivers/index', 'drivers.index')->name('drivers.page'); //mp2
         Route::view('/index', 'car.index')->name('cars.page'); //mp1
         Route::get('/show/{id}', [CarController::class, 'show'])->name('car.show');
     });

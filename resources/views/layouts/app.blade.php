@@ -11,12 +11,14 @@
 
     @include('layouts.styles')
     @yield('styles')
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 </head>
 
 <body>
     <div id="app" style="background-color: #191A19;">
         <nav class="navbar navbar-expand-md shadow-sm"
-            style="background-color: #191A19; position: fixed; top: 0; left: 0; width: 100%; z-index: 9999;">
+            style="background-color: #191A19; position: fixed; top: 0; left: 0; width: 100%; z-index: 1;">
             <div class="container" style="font-weight:bolder; font-size:17px">
                 <a class="navbar-brand" href="{{ route('home') }}">
                     <img src="{{ url('storage/images/Logo.png') }}" alt="{{ config('app.name', 'Laravel') }}"
@@ -59,8 +61,13 @@
                         <li class="nav-item ">
                             <form action="{{ route('global.search') }}" method="POST">
                                 @csrf
-                                <div class="form-group global-search">
-                                    <input class="form-control" type="text" placeholder="Search" name="search">
+                                <div class="form-group global-search" style="width: 400px">
+                                    <div class="ui-widget" style="width: 400px">
+                                        <input id="tags" class="form-control" type="text"
+                                            placeholder="Input keywords" name="search">
+                                    </div>
+                                    <button class="btn btn-warning btn-sm" type="submit"
+                                        style="height: 40px; margin-top:8px; margin-left:-52px;">Search</button>
                                 </div>
                             </form>
                         </li>

@@ -98,7 +98,7 @@
                             </a>
                         </li>
                         <li class="nav-item child-item">
-                            <a href="{{ route('accessories.index') }}" class="nav-link">
+                            <a href="{{ route('accessories.page') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Accessories (MP3)</p>
                             </a>
