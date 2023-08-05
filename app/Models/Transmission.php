@@ -9,4 +9,9 @@ class Transmission extends Model
 {
     use HasFactory;
     protected $fillable = ['name'];
+
+    public function cars()
+    {
+        $this->hasMany(Car::class, 'transmission_id', 'id');
+    }
 }

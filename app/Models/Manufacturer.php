@@ -16,6 +16,11 @@ class Manufacturer extends Model implements HasMedia
         'name',
     ];
 
+    public function modelos()
+    {
+        $this->hasMany(Modelo::class, 'manufacturer_id', 'id');
+    }
+
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')

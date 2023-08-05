@@ -23,4 +23,9 @@ class Modelo extends Model
     {
         return $this->belongsTo(Manufacturer::class);
     }
+
+    public function modelos()
+    {
+        return $this->hasMany(Car::class, 'modelos_id', 'id');
+    }
 }

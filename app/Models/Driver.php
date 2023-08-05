@@ -17,6 +17,11 @@ class Driver extends Model implements Searchable, HasMedia
 
     protected $fillable = ["fname", "lname", "licensed_no", "description", "address", "image_path", "driver_status"];
 
+    public function cars()
+    {
+        $this->hasMany(Car::class, 'driver_id', 'id');
+    }
+
     public function getSearchResult(): SearchResult
     {
         $url = route('driver.details', $this->id);

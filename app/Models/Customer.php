@@ -9,7 +9,8 @@ class Customer extends Model
 {
     use HasFactory;
     protected $fillable = ['name', 'address', 'phone', 'image_path', 'email', 'user_id'];
-    public function user(){
+    public function user()
+    {
         return $this->hasOne(User::class);
     }
 }

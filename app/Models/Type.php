@@ -11,4 +11,9 @@ class Type extends Model
     protected $fillable = [
         'name',
     ];
+
+    public function modelos()
+    {
+        $this->hasMany(Modelo::class, 'type_id', 'id');
+    }
 }

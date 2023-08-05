@@ -17,14 +17,14 @@ class Location extends Model implements Searchable, HasMedia
 
     public $fillable = ["street", "baranggay", "city", "image_path"];
 
-    public function accessLocation($id)
+    public function return_bookings()
     {
-        return $this->where('id', $id)->first();
+        $this->hasMany(Booking::class, 'return_location_id', '');
     }
 
-    public function hasLocation()
+    public function pick_bookings()
     {
-        return $this->hasMany(Booking::class);
+        $this->hasMany(Booking::class, 'pickup_location_id', 'id');
     }
 
     public function getSearchResult(): SearchResult
@@ -44,5 +44,15 @@ class Location extends Model implements Searchable, HasMedia
             ->width(200)
             ->height(200)
             ->sharpen(10);
+    }
+
+    public function accessLocation($id)
+    {
+        return $this->where('id', $id)->first();
+    }
+
+    public function hasLocation()
+    {
+        return $this->hasMany(Booking::class);
     }
 }

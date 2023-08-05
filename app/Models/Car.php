@@ -35,6 +35,11 @@ class Car extends Model implements Searchable, HasMedia
         'car_status'
     ];
 
+    public function accessories()
+    {
+        return $this->belongsToMany(Accessorie::class);
+    }
+
     public function modelo(): BelongsTo
     {
         return $this->belongsTo(Modelo::class, 'modelos_id');
@@ -48,11 +53,6 @@ class Car extends Model implements Searchable, HasMedia
     public function fuel()
     {
         return $this->belongsTo(Fuel::class);
-    }
-
-    public function accessories()
-    {
-        return $this->belongsToMany(Accessorie::class);
     }
 
     public function bookings()
