@@ -88,40 +88,43 @@
                 <h2>Customer Details</h2>
                 <dl>
                     <dt>Name:</dt>
-                    <dd>{{ $customer->name }}</dd>
+                    <dd>{{ $book->customer->name }}</dd>
                     <dt>Email:</dt>
-                    <dd>{{ $customer->email }}</dd>
+                    <dd>{{ $book->customer->user->email }}</dd>
                     <dt>Phone:</dt>
-                    <dd>{{ $customer->phone }}</dd>
+                    <dd>{{ $book->customer->phone }}</dd>
                 </dl>
                 <h2>Booking Details</h2>
                 <dl>
                     <dt>Booking ID:</dt>
-                    <dd>{{ $newbook->id }}</dd>
+                    <dd>{{ $book->id }}</dd>
                     <dt>Plate Number:</dt>
                     <a href="#">
-                        <dd>{{ $car->platenumber }}</dd>
+                        <dd>{{ $book->car->platenumber }}</dd>
                     </a>
                     <dt>Car Model:</dt>
                     <a href="#">
-                        <dd>{{ $car->modelname }}, {{ $car->modelyear }}, {{ $car->typename }} -
-                            {{ $car->manufacturername }}</dd>
+                        <dd>{{ $book->car->modelo->name }}, {{ $book->car->modelo->year }},
+                            {{ $book->car->modelo->type->name }} -
+                            {{ $book->car->modelo->manufacturer->name }}</dd>
                     </a>
                     <dt>Pickup Date:</dt>
-                    <dd>{{ $newbook->start_date }}</dd>
+                    <dd>{{ $book->start_date }}</dd>
                     <dt>Return Date:</dt>
-                    <dd>{{ $newbook->end_date }}</dd>
-                    @if ($newbook->address)
+                    <dd>{{ $book->end_date }}</dd>
+                    @if ($book->address)
                         <dt>Delivery Address:</dt>
-                        <dd>{{ $newbook->address }}</dd>
+                        <dd>{{ $book->address }}</dd>
                     @else
                         <dt>PickUp Location:</dt>
-                        <dd>{{ $accessInfo->picklocation($newbook->pickup_location_id) }}</dd>
+                        <dd>{{ $book->picklocation->street }} {{ $book->picklocation->baranggay }}
+                            {{ $book->picklocation->city }}</dd>
                         <dt>Return Lacation:</dt>
-                        <dd>{{ $accessInfo->returnlocation($newbook->return_location_id) }}</dd>
+                        <dd>{{ $book->returnlocation->street }} {{ $book->returnlocation->baranggay }}
+                            {{ $book->returnlocation->city }}</dd>
                     @endif
                     <dt>Drive Type:</dt>
-                    @if ($newbook->driver_id)
+                    @if ($book->driver_id)
                         <dd>With Driver: Need to assign</dd>
                     @else
                         <dd>Self Drive</dd>

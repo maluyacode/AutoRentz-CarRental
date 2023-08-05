@@ -23,6 +23,7 @@ use App\Models\Car;
 use App\Models\Location;
 use App\DataTables\UserDataTable;
 use League\Flysystem\Adapter\Local;
+use App\Events\UserBookEvent;
 
 class UserController extends Controller
 {
@@ -177,14 +178,12 @@ class UserController extends Controller
         $usergarage = Session::get('garage' . auth()->user()->id);
         if ((!$usergarage[$id]['start_date'] == null && !$usergarage[$id]['end_date'] == null) && (($usergarage[$id]['address']) || ($usergarage[$id]['pick_id'] && $usergarage[$id]['return_id']))) {
             $customerClass = new CustomerClass();
-            $message = $customerClass->sessionToBooking($usergarage, $id);
+            $newbook = $customerClass->sessionToBooking($usergarage, $id);
 
             $user = User::find(auth()->user()->id);
             try {
-                $mail = new MailBooking();
-                $mailmessage = $mail->build();
-                $mailmessage->from($user->email, $user->name);
-                Mail::to('autorentz24@gmail.com')->send($mailmessage);
+
+                UserBookEvent::dispatch($newbook, $user->email, $user->name);
             } catch (\Exception $e) {
                 return redirect()->route('viewusergarage')->with('success', 'Reservation confirmed, without email, due to connection problem');
             }

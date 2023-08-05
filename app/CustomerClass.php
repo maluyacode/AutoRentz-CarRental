@@ -153,15 +153,16 @@ class CustomerClass
             unset($usergarage[$id]);
             Session::put('garage' . Auth::user()->id, $usergarage);
             Session::save();
-            return "success";
+            return $bookingTable;
         }
     }
 
     // computes the total rent price.
-    public function computationDisplay($start, $end, $price, $accessory, $key){
+    public function computationDisplay($start, $end, $price, $accessory, $key)
+    {
         $fee = 0;
-        if($accessory){
-            foreach($accessory->where('car_id', $key) as $accessories){
+        if ($accessory) {
+            foreach ($accessory->where('car_id', $key) as $accessories) {
                 $accumulate = $accessories->fee;
                 $fee = $fee + $accumulate;
             }
@@ -170,7 +171,7 @@ class CustomerClass
         $datetime2 = date_create($end);
         $diff = date_diff($datetime1, $datetime2);
         $count = $diff->format('%a') + 1;
-        if($count == 0){
+        if ($count == 0) {
             return ($price * 1) + $fee;
         }
         return ($price + $fee) * $count;
