@@ -153,4 +153,5 @@
             $('tr').addClass('data-height');
         }
     </script>
+
 @endsection

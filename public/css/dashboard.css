@@ -1,0 +1,24 @@
+.carousel-control-prev {
+    width: 50px;
+    background-color: #27282928;
+}
+
+.carousel-control-next {
+    width: 50px;
+    background-color: #27282928;
+}
+
+
+.carouselExampleControls {
+    height: 50%;
+}
+
+.chart-container {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.carousel-control-next:hover,
+.carousel-control-prev:hover {
+    background-color: #27282961;
+}

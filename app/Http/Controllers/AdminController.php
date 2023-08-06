@@ -41,6 +41,78 @@ class AdminController extends Controller
         ];
     }
 
+    public function chartsData()
+    {
+        $bookings = Booking::with(['car', 'car.accessories'])
+            ->where('status', '=', 'finished')
+            ->withTrashed()
+            ->orderBy('created_at')
+            ->get();
+
+        foreach ($bookings as $booking) {
+            $days = date_diff(
+                date_create($booking->end_date),
+                date_create($booking->start_date)
+            )->format('%a') + 1;
+            $accessoriesFee = $booking->car->accessories->map(function ($accessory) {
+                return $accessory->fee;
+            })->sum();
+
+            $monthly[] = [
+                "month" => date_create($booking->created_at)->format("F"),
+                "rent" => ($booking->car->price_per_day + $accessoriesFee) * $days
+            ];
+        }
+
+        for ($i = 1; $i <= 12; $i++) {
+            $monthlyIncome[date('F', mktime(0, 0, 0, $i, 10))] = 0;
+        }
+
+        foreach ($monthly as $key => $income) {
+            if (array_key_exists($income["month"], $monthlyIncome)) {
+                $monthlyIncome[$income["month"]] += $income["rent"];
+            }
+        }
+
+        $carData = DB::table('cars')
+            ->leftJoin('bookings', function ($join) {
+                $join->on('cars.id', '=', 'bookings.car_id');
+                $join->where('bookings.status', '=', 'finished');
+            })
+            ->join('modelos', 'modelos.id', '=', 'cars.modelos_id')
+            ->selectRaw('count(cars.id) as count, CONCAT(cars.platenumber, " ", modelos.name) as car_info')
+            ->groupBy('cars.platenumber', 'modelos.name')
+            ->orderBy('count', 'DESC')
+            ->pluck('count', 'car_info')
+            ->all();
+
+        $customer = DB::table('customers')
+            ->groupBy('month')
+            ->select(
+                DB::raw('count(monthname(created_at)) as count'),
+                DB::raw('monthname(created_at) as month'),
+            )
+            ->orderBy('month', 'ASC')
+            ->get()
+            ->toArray();
+
+        for ($i = 1; $i <= 12; $i++) {
+            $registersPerMonth[date('F', mktime(0, 0, 0, $i, 10))] = 0;
+        }
+
+        foreach ($customer as $key => $customerJoin) {
+            if (array_key_exists($customerJoin->month, $registersPerMonth)) {
+                $registersPerMonth[$customerJoin->month] = $customerJoin->count;
+            }
+        }
+
+
+        return response()->json([
+            'monthlyIncome' => $monthlyIncome,
+            'rentCountPerCar' => $carData,
+            'registeredPerMonth' => $registersPerMonth
+        ]);
+    }
 
     public function AdminDashboard()
     {
@@ -108,21 +180,6 @@ class AdminController extends Controller
             "tension" => 0.2,
             "fill" => true,
             "minBarLength" => 2,
-        ]);
-        $monthlyIncome->dataset("Monthly Income 2023", 'bar', array_values($months))->options([
-            "backgroundColor" => $this->color,
-            "borderColor" => $this->color,
-            "minBarLength" => 1,
-            "barPercentage" => 0.1,
-            "hoverBackgroundColor" => [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
-            ],
         ]);
 
         $monthlyIncome->displayLegend(false);

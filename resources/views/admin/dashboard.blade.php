@@ -1,157 +1,166 @@
 @extends('admin.index')
 
-@section('header')
-    @include('layouts.session-messages')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Dashboard</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Dashboard v1</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
+@section('pageStyles')
+    <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
 @endsection
 
 @section('content')
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
-            @if (Auth::user()->role == 'admin')
-                <div class="row">
-                    <div class="col-lg-3 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-info" style="text-align: center">
-                            <div class="inner">
-                                <h3>₱{{ number_format($totalPrice, 2, '.', ',') }}</h3>
-                                <p>Overall Income</p>
-                            </div>
-                            <a href="{{ route('users.index') }}" class="small-box-footer">More info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6" style="text-align: center">
-                        <!-- small box -->
-                        <div class="small-box bg-secondary">
-                            <div class="inner">
-                                <h3>{{ $pendings }}</h3>
+            <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        @if (Auth::user()->role == 'admin')
+                            <div class="row">
+                                <div class="col-lg-3 col-6">
+                                    <!-- small box -->
+                                    <div class="small-box bg-info" style="text-align: center">
+                                        <div class="inner">
+                                            <h3>₱{{ number_format($totalPrice, 2, '.', ',') }}</h3>
+                                            <p>Overall Income</p>
+                                        </div>
+                                        <a href="{{ route('users.index') }}" class="small-box-footer">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6" style="text-align: center">
+                                    <!-- small box -->
+                                    <div class="small-box bg-secondary">
+                                        <div class="inner">
+                                            <h3>{{ $pendings }}</h3>
 
-                                <p>Pendings</p>
-                            </div>
-                            <a href="{{ route('adminPendings') }}" class="small-box-footer">More info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6" style="text-align: center">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3>{{ $confirmed }}</h3>
-                                <p>Confirmed</p>
-                            </div>
-                            <a href="{{ route('adminConfirms') }}" class="small-box-footer">More info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-3 col-6" style="text-align: center">
-                        <!-- small box -->
-                        <div class="small-box bg-success">
-                            <div class="inner">
-                                <h3>{{ $finished }}</h3>
+                                            <p>Pendings</p>
+                                        </div>
+                                        <a href="{{ route('adminPendings') }}" class="small-box-footer">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6" style="text-align: center">
+                                    <!-- small box -->
+                                    <div class="small-box bg-warning">
+                                        <div class="inner">
+                                            <h3>{{ $confirmed }}</h3>
+                                            <p>Confirmed</p>
+                                        </div>
+                                        <a href="{{ route('adminConfirms') }}" class="small-box-footer">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
+                                <div class="col-lg-3 col-6" style="text-align: center">
+                                    <!-- small box -->
+                                    <div class="small-box bg-success">
+                                        <div class="inner">
+                                            <h3>{{ $finished }}</h3>
 
-                                <p>Finished</p>
+                                            <p>Finished</p>
+                                        </div>
+                                        <a href="{{ route('adminFinish') }}" class="small-box-footer">More info <i
+                                                class="fas fa-arrow-circle-right"></i></a>
+                                    </div>
+                                </div>
+                                <div class="col-lg-3 col-6" style="text-align: center">
+                                    <!-- small box -->
+                                    <div class="small-box bg-danger">
+                                        <div class="inner">
+                                            <h3>{{ $cancelled }}</h3>
+                                            <p>Cancelled</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- ./col -->
                             </div>
-                            <a href="{{ route('adminFinish') }}" class="small-box-footer">More info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <div class="col-lg-3 col-6" style="text-align: center">
-                        <!-- small box -->
-                        <div class="small-box bg-danger">
-                            <div class="inner">
-                                <h3>{{ $cancelled }}</h3>
-                                <p>Cancelled</p>
+                        @endif
+                        <div class="row">
+                            <div class="col-lg-3 col-6" style="text-align: center">
+                                <!-- small box -->
+                                <div class="small-box bg-info">
+                                    <div class="inner">
+                                        <h3>{{ $cars }}</h3>
+                                        <p>Vehicles</p>
+                                    </div>
+                                    <a href="{{ route('cars.page') }}" class="small-box-footer">More info <i
+                                            class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6" style="text-align: center">
+                                <!-- small box -->
+                                <div class="small-box bg-success">
+                                    <div class="inner">
+                                        <h3>{{ $users }}</h3>
+                                        <p>Users</p>
+                                    </div>
+                                    <a href="{{ route('users.index') }}" class="small-box-footer">More info <i
+                                            class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6" style="text-align: center">
+                                <!-- small box -->
+                                <div class="small-box bg-warning">
+                                    <div class="inner">
+                                        <h3>{{ $drivers }}</h3>
+                                        <p>Drivers</p>
+                                    </div>
+                                    <a href="{{ route('drivers.page') }}" class="small-box-footer">More info <i
+                                            class="fas fa-arrow-circle-right"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-6" style="text-align: center">
+                                <!-- small box -->
+                                <div class="small-box bg-secondary">
+                                    <div class="inner">
+                                        <h3>{{ $locations }}</h3>
+                                        <p>Locations</p>
+                                    </div>
+                                    <a href="{{ route('location.index') }}" class="small-box-footer">More info <i
+                                            class="fas fa-arrow-circle-right"></i></a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <!-- ./col -->
+                    {{-- add Item --}}
+                    <div class="carousel-item">
+                        <div class="chart-container">
+                            <canvas id="monthlyIncomeChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="chart-container">
+                            <canvas id="rentCountPerMonthChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="chart-container">
+                            <canvas id="customerRegisteredChart"></canvas>
+                        </div>
+                    </div>
                 </div>
-            @endif
-            <!-- /.row -->
-            <!-- Main row -->
-            <div class="row">
-                <br><br>
+                <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
-            <div class="row">
-                <div class="col-lg-3 col-6" style="text-align: center">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{ $cars }}</h3>
-                            <p>Vehicles</p>
-                        </div>
-                        <a href="{{ route('cars.page') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6" style="text-align: center">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>{{ $users }}</h3>
-                            <p>Users</p>
-                        </div>
-                        <a href="{{ route('users.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6" style="text-align: center">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>{{ $drivers }}</h3>
-                            <p>Drivers</p>
-                        </div>
-                        <a href="{{ route('drivers.page') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6" style="text-align: center">
-                    <!-- small box -->
-                    <div class="small-box bg-secondary">
-                        <div class="inner">
-                            <h3>{{ $locations }}</h3>
-                            <p>Locations</p>
-                        </div>
-                        <a href="{{ route('location.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
-                    </div>
-                </div>
-            </div>
-            <!-- /.row (main row) -->
-            <div class="row">
+
+            {{-- Laravel Charts Disabled for now --}}
+            {{-- <div class="row">
                 <br><br>
                 <div class="col-lg-12">
                     {!! $monthlyIncome->container() !!}
-                    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
                     {!! $monthlyIncome->script() !!}
                 </div>
             </div>
+
             <div class="row" style="padding-bottom: 50px">
                 <div class="col-lg-6">
                     <br><br>
                     <div>
                         {!! $carRentChart->container() !!}
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
                         {!! $carRentChart->script() !!}
                     </div>
                 </div>
@@ -159,11 +168,15 @@
                     <br><br>
                     <div>
                         {!! $customerRegister->container() !!}
-                        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script>
                         {!! $customerRegister->script() !!}
                     </div>
                 </div>
-            </div>
-        </div><!-- /.container-fluid -->
+            </div> --}}
+        </div>
     </section>
+@endsection
+@section('pageScripts')
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script> --}}
+    <script src="{{ asset('js/dashboard.js') }}"></script>
 @endsection

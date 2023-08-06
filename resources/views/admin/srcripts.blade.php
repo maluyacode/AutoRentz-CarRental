@@ -1,15 +1,14 @@
     <!-- jQuery -->
     <script src="{{ asset('vendors/plugins/jquery/jquery.min.js') }}"></script>
     {{-- <script src="{{ asset('vendors/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script> --}}
-    <!-- ChartJS -->
-    <script src="{{ asset('vendors/plugins/chart.js/Chart.min.js') }}"></script>
+
     <!-- Sparkline -->
     <script src="{{ asset('vendors/plugins/sparklines/sparkline.js') }}"></script>
     <!-- JQVMap -->
     <script src="{{ asset('vendors/plugins/jqvmap/jquery.vmap.min.js') }}"></script>
     <script src="{{ asset('vendors/plugins/jqvmap/maps/jquery.vmap.usa.js') }}"></script>
     <!-- jQuery Knob Chart -->
-    <script src="{{ asset('vendors/plugins/jquery-knob/jquery.knob.min.js') }}"></script>
+    {{-- <script src="{{ asset('vendors/plugins/jquery-knob/jquery.knob.min.js') }}"></script> --}}
     <!-- daterangepicker -->
     <script src="{{ asset('vendors/plugins/moment/moment.min.js') }}"></script>
     <script src="{{ asset('vendors/plugins/daterangepicker/daterangepicker.js') }}"></script>
