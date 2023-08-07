@@ -37,7 +37,7 @@ $(function () {
             $.each(data.locations, function (i, value) {
                 srcData.push(value.street);
             })
-            console.log(srcData);
+            // console.log(srcData);
         },
         error: function (error) {
 

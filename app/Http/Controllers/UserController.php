@@ -24,12 +24,14 @@ use App\Models\Location;
 use App\DataTables\UserDataTable;
 use League\Flysystem\Adapter\Local;
 use App\Events\UserBookEvent;
+use App\Models\Driver;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class UserController extends Controller
 {
     public function profile() // viewing profile of a user/customer
     {
-        dd(Session::all());
+        // dd(Session::all());
         $customer = Customer::where('user_id', Auth::user()->id)->first();
         if (!$customer) {
             $customer = new CustomerClass;
@@ -107,18 +109,70 @@ class UserController extends Controller
         }
     }
 
-    public function viewusergarage()
+    public function garage()
     {
 
-        $carDetails = new CustomerClass();
+        // $carDetails = new CustomerClass();
+        // $garage = Session::get('garage' . Auth::user()->id);
+        // // dd($garage);
+        // $location = new Location;
+        // $accessory = DB::table('cars as ca')
+        //     ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
+        //     ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
+        //     ->get();
+        // // dd($accessory);
+        // return View::make('user.garage', compact('garage', 'carDetails', 'location', 'accessory'));
+    }
+
+    public function viewusergarage()
+    {
         $garage = Session::get('garage' . Auth::user()->id);
-        $location = new Location;
-        $accessory = DB::table('cars as ca')
-            ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-            ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-            ->get();
-        // dd($accessory);
-        return View::make('user.garage', compact('garage', 'carDetails', 'location', 'accessory'));
+
+        $cars = Car::with([
+            'modelo',
+            'modelo.manufacturer',
+            'modelo.type',
+            'transmission',
+            'fuel',
+            'accessories',
+            'media',
+        ])->get()->keyBy('id');
+
+        $locations = Location::select(DB::raw("CONCAT(street, ', ', baranggay, ', ', city) AS lugar"), 'id')->get()->pluck('lugar', 'id')->toArray();
+        // dd($locations);
+        foreach ($cars as $car) {
+            if (array_key_exists($car->id, $garage)) {
+                $garage[$car->id]["car"] = $car;
+
+                $accessoriesFee = $car->accessories->map(function ($accessory) {
+                    return $accessory->fee;
+                })->sum();
+
+                $garage[$car->id]["totalPrice"] = $car->price_per_day + $accessoriesFee;
+            }
+        }
+
+        foreach ($garage as $key => $garageData) {
+
+            $locationsForGarage = [];
+
+            if (array_key_exists($garageData["pick_id"], $locations)) {
+                $locationsForGarage["pick"] = $locations[$garageData["pick_id"]];
+            }
+
+            if (array_key_exists($garageData["return_id"], $locations)) {
+                $locationsForGarage["return"] = $locations[$garageData["return_id"]];
+            }
+
+            $diff = date_diff(date_create($garageData['start_date']), date_create($garageData['end_date']));
+            $count = (int) $diff->format('%a');
+            $garageData["days"] = $count + 1;
+
+            $garageData["locations"] = $locationsForGarage;
+            $carInGarage[$key] = $garageData;
+        }
+
+        return View::make('user.garage', compact('carInGarage'));
     }
 
     public function editgarage($id)

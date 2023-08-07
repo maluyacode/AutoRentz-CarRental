@@ -124,6 +124,8 @@ class CustomerClass
     // store the data from session to database table 'bookings'
     public function sessionToBooking($usergarage, $id)
     {
+
+        // dd($usergarage);
         if ($usergarage && $id) {
             try {
                 DB::beginTransaction();

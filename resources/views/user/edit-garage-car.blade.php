@@ -1,11 +1,10 @@
 @extends('layouts.app')
-{{-- {{ dd($carInGarage) }} --}}
-{{-- {{ dd($location->all()) }} --}}
+
 @section('content')
     @include('layouts.session-messages')
     <section id="edit-booking" style="height: 100%;">
         <div class="container" style="padding-top: 20px">
-            <h2 style="text-align: center; margin: 0 0 20px 0;">Edit Booking</h2>
+            {{-- <h2 style="text-align: center; margin: 0 0 20px 0;">Edit Booking</h2> --}}
             <div class="row">
                 <div class="col-md-4">
                     <figure>
@@ -27,9 +26,9 @@
                         {{ $car->CarDetails($carInGarage['car_id'])->manufacturername }}
                     </h4>
                 </div>
-                <div class="row" style="text-align: justify; text-justify: inter-word; margin: 5px">
+                {{-- <div class="row" style="text-align: justify; text-justify: inter-word; margin: 5px">
                     {{ $car->CarDetails($carInGarage['car_id'])->description }}
-                </div>
+                </div> --}}
                 <style>
                     .accessories {
                         text-align: left;
@@ -63,7 +62,7 @@
             <div class="col-md-8">
                 <form action="{{ route('savegarage', $carInGarage['car_id']) }}" method="POST">
                     @csrf
-                    <input type="text" name="customer_id" value="{{ $carInGarage['customer_id'] }}">
+                    <input type="hidden" name="customer_id" value="{{ $carInGarage['customer_id'] }}">
                     <div class="row">
                         <div class="form-group col-md-6">
                             <label for="pickup-date">Start Date</label>

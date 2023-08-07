@@ -1,0 +1,64 @@
+.no-gutters * {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    font-weight: 100;
+}
+
+#bookForm {
+    padding: 20px;
+}
+
+.no-gutters img {
+    height: 300px;
+    width: 400px;
+    object-fit: cover;
+}
+
+.card {
+    background-color: #FFF6DC !important;
+    box-shadow: 5px 5px grey;
+}
+
+.radio-drive-type {
+    /* display: block; */
+    justify-content: center;
+    align-items: center;
+}
+
+.radio-drive-type p {
+    display: block;
+    margin-bottom: 5px;
+    padding-top: 20px;
+}
+
+.form-check-inline,
+.form-check-inline input,
+.form-check-inline label {
+    cursor: pointer !important;
+}
+
+.pickup-deliver {
+    padding-top: 20px;
+    margin-bottom: 5px;
+}
+
+/* Style error messages */
+.error-messages {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Style input fields with errors */
+/* .error {
+    border-color: red;
+} */
+
+/* Style label for error */
+.error-label {
+    color: red;
+    font-weight: 200 !important;
+}
+
+.no-gutters .lt-strong {
+    font-weight: 600;
+}

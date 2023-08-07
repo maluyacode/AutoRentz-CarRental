@@ -10,6 +10,7 @@ use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Car\AccessoriesController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -67,9 +68,13 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/accessories/{id}/view/images', [AccessoriesController::class, 'viewMedia']);
     Route::post('/accessories/import', [AccessoriesController::class, 'import']);
 
-    Route::middleware('blockuser')->group(function () {
+    Route::middleware('auth')->group(function () {
         Route::get('/report/sales', [AdminController::class, 'salesReport']);
         Route::get('/data/charts', [AdminController::class, 'chartsData']);
         Route::get('/report/search', [AdminController::class, 'reportSearch']);
     });
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/garage', [UserController::class, 'garage']);
 });
