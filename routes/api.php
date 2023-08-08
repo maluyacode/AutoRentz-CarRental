@@ -77,4 +77,5 @@ Route::middleware('auth', 'admin')->group(function () {
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/garage', [UserController::class, 'garage']);
+    Route::get('/car/{id}/bookform', [UserController::class, 'carBookForm']);
 });

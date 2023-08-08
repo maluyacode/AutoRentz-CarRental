@@ -57,10 +57,10 @@ Route::prefix('user')->middleware(['auth'])->group(function () {
     Route::put('change/{id}/password', [UserController::class, 'changePassword'])->name('changePassword');
     Route::get('/addtogarage/{id}', [UserController::class, 'addtousergarage'])->name('addtogarage');
     Route::get('/view/garage', [UserController::class, 'viewusergarage'])->name('viewusergarage');
-    Route::get('/edit/garage/car/{id}', [UserController::class, 'editgarage'])->name('editgarage');
+    // Route::get('/edit/garage/car/{id}', [UserController::class, 'editgarage'])->name('editgarage');
     Route::post('/save/bookinfo/{id}', [UserController::class, 'savegarage'])->name('savegarage');
     Route::get('/remove/car/garage/{id}', [UserController::class, 'removecargarage'])->name('removecargarage');
-    Route::get('/book/car/garage/{id}', [UserController::class, 'bookcar'])->name('bookcar');
+    Route::post('/book/car/garage', [UserController::class, 'bookcar']);
 
 
     Route::prefix('/booking')->group(function () {

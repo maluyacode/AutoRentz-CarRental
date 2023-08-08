@@ -10,6 +10,7 @@ use App\Models\Customer;
 use App\Models\Car;
 use Illuminate\Support\Facades\DB;
 use App\Models\Booking;
+use Barryvdh\Debugbar\Facades\Debugbar;
 
 class CustomerClass
 {
@@ -122,37 +123,39 @@ class CustomerClass
     }
 
     // store the data from session to database table 'bookings'
-    public function sessionToBooking($usergarage, $id)
+    public function sessionToBooking($usergarage, $request)
     {
 
-        // dd($usergarage);
-        if ($usergarage && $id) {
+        $locationsTransac = $this->CheckTypeOfTransaction($request->typeget, $request->return_id, $request->pick_id, $request->address);
+
+        if ($request->drivetype == 1) {
+            $driver = 1;
+        } else {
+            $driver = null;
+        }
+
+        if ($usergarage && $request) {
             try {
                 DB::beginTransaction();
-                $carToBook = $usergarage[$id];
+                // $carToBook = $usergarage[$id];
                 $bookingTable = new Booking;
-                $bookingTable->customer_id = $carToBook['customer_id'];
-                $bookingTable->car_id = $carToBook['car_id'];
-                $bookingTable->start_date = $carToBook['start_date'];
-                $bookingTable->end_date = $carToBook['end_date'];
-                $bookingTable->pickup_location_id = $carToBook['pick_id'];
-                $bookingTable->return_location_id = $carToBook['return_id'];
-                $bookingTable->address = $carToBook['address'];
-
-                if ($carToBook['driver_id'] == 1) {
-                    $bookingTable->driver_id = 1;
-                } else {
-                    $bookingTable->driver_id = null;
-                }
-                $bookingTable->status = $carToBook['status'];
+                $bookingTable->customer_id = $request->customer_id;
+                $bookingTable->car_id = $request->car_id;
+                $bookingTable->start_date = $request->start_date;
+                $bookingTable->end_date = $request->end_date;
+                $bookingTable->pickup_location_id = $locationsTransac['pick_id'];
+                $bookingTable->return_location_id = $locationsTransac['return_id'];
+                $bookingTable->address = $locationsTransac['address'];
+                $bookingTable->driver_id = $driver;
+                $bookingTable->status = 'pending';
                 $bookingTable->save();
             } catch (\Exception $e) {
+                Debugbar::info($e);
                 DB::rollBack();
-                dd($e);
             }
             DB::commit();
             // remove the array of data from session garage id successfully transfered to bookings table
-            unset($usergarage[$id]);
+            unset($usergarage[$request->car_id]);
             Session::put('garage' . Auth::user()->id, $usergarage);
             Session::save();
             return $bookingTable;

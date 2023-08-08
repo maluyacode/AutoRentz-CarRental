@@ -18,7 +18,17 @@
     <p id=deleted style="display: none;">{!! Session::get('deleted') !!}</p>
     <script>
         var deleted = document.getElementById("deleted").textContent;
-        Swal.fire(deleted)
+        // Swal.fire(deleted)
+        Swal.fire({
+            // title: 'Custom animation with Animate.css',
+            html: `<div style="font-size: 18px;">${deleted}</div>`,
+            showClass: {
+                popup: 'animate__animated animate__fadeInDown'
+            },
+            hideClass: {
+                popup: 'animate__animated animate__fadeOutUp'
+            }
+        });
     </script>
 @endif
 @if (Session::get('inserted'))

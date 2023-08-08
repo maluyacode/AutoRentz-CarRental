@@ -24,8 +24,7 @@
     align-items: center;
 }
 
-.radio-drive-type p {
-    display: block;
+.radio-drive-type {
     margin-bottom: 5px;
     padding-top: 20px;
 }
@@ -61,4 +60,43 @@
 
 .no-gutters .lt-strong {
     font-weight: 600;
+}
+
+.buttons-garage button {
+    width: 100px;
+}
+
+.modal-footer button {
+    width: 100px;
+}
+
+.car-info {
+    text-transform: capitalize;
+    width: fit-content;
+    padding: 1px 5px;
+    background-color: #ffc107;
+    border-radius: 5px;
+}
+
+select option {
+    padding: 10px !important;
+}
+
+.disabled {
+    opacity: 0.5;
+    /* Adjust styling as needed */
+    cursor: not-allowed;
+}
+
+.py-4 {
+    height: 100vh;
+}
+/* Apply 16px font size to the title */
+.swal-title {
+    font-size: 20px;
+}
+
+/* Apply 16px font size to the buttons */
+.swal-button {
+    font-size: 16px;
 }

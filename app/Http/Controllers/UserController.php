@@ -109,21 +109,6 @@ class UserController extends Controller
         }
     }
 
-    public function garage()
-    {
-
-        // $carDetails = new CustomerClass();
-        // $garage = Session::get('garage' . Auth::user()->id);
-        // // dd($garage);
-        // $location = new Location;
-        // $accessory = DB::table('cars as ca')
-        //     ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-        //     ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-        //     ->get();
-        // // dd($accessory);
-        // return View::make('user.garage', compact('garage', 'carDetails', 'location', 'accessory'));
-    }
-
     public function viewusergarage()
     {
         $garage = Session::get('garage' . Auth::user()->id);
@@ -139,7 +124,7 @@ class UserController extends Controller
         ])->get()->keyBy('id');
 
         $locations = Location::select(DB::raw("CONCAT(street, ', ', baranggay, ', ', city) AS lugar"), 'id')->get()->pluck('lugar', 'id')->toArray();
-        // dd($locations);
+
         foreach ($cars as $car) {
             if (array_key_exists($car->id, $garage)) {
                 $garage[$car->id]["car"] = $car;
@@ -151,7 +136,7 @@ class UserController extends Controller
                 $garage[$car->id]["totalPrice"] = $car->price_per_day + $accessoriesFee;
             }
         }
-
+        $carInGarage = null;
         foreach ($garage as $key => $garageData) {
 
             $locationsForGarage = [];
@@ -172,39 +157,41 @@ class UserController extends Controller
             $carInGarage[$key] = $garageData;
         }
 
-        return View::make('user.garage', compact('carInGarage'));
+        return View::make('user.garage', compact('carInGarage', 'locations'));
     }
 
-    public function editgarage($id)
+    public function carBookForm($id)
     {
-        $carInGarage = Session::get('garage' . Auth::user()->id)[$id];
-        $car = new CustomerClass();
+        // $carInGarage = Session::get('garage' . Auth::user()->id)[$id];
+        // $car = new CustomerClass();
 
-        $carAccessories = Car::find($carInGarage['car_id'])->accessories()->get();
+        // $carAccessories = Car::find($carInGarage['car_id'])->accessories()->get();
 
-        $location = new Location;
+        // $location = new Location;
 
-        if ($carInGarage['pick_id'] && $carInGarage['return_id']) {
-            $pickLocation = Location::whereNotIn('id', [$carInGarage['pick_id']])->get();
-            $returnLocation = Location::whereNotIn('id', [$carInGarage['return_id']])->get();
-            // dd($pickLocation);
-        } else {
-            $pickLocation = Location::all();
-            $returnLocation = Location::all();
-        }
-
+        // if ($carInGarage['pick_id'] && $carInGarage['return_id']) {
+        //     $pickLocation = Location::whereNotIn('id', [$carInGarage['pick_id']])->get();
+        //     $returnLocation = Location::whereNotIn('id', [$carInGarage['return_id']])->get();
+        //     // dd($pickLocation);
+        // } else {
+        //     $pickLocation = Location::all();
+        //     $returnLocation = Location::all();
+        // }
         // dd($name->street);
         // dd($bookcar['car_id']);
-        return View::make('user.edit-garage-car', compact('carInGarage', 'car', 'carAccessories', 'location', 'pickLocation', 'returnLocation'));
+        // return View::make('user.edit-garage-car', compact('carInGarage', 'car', 'carAccessories', 'location', 'pickLocation', 'returnLocation'));
+
     }
 
     public function savegarage(Request $request, $id)
     {
-        $customerClass = new CustomerClass;
-        $transactionType = $customerClass->CheckTypeOfTransaction($request->typeget, $request->return_id, $request->pick_id, $request->address);
-        $editedInfo = ['customer_id' => $request->customer_id, 'car_id' => $id, 'start_date' => $request->start_date, 'end_date' => $request->end_date, 'pick_id' => $transactionType['pick_id'], 'return_id' => $transactionType['return_id'], 'address' => $transactionType['address'], 'driver_id' => $request->drivetype, 'status' => 'pending'];
-        $updatedInfo =  $customerClass->saveToGarageSession($editedInfo);
-        return back()->with("update", "Updated Successfully!");
+        Debugbar::info($request);
+        // $customerClass = new CustomerClass;
+        // $transactionType = $customerClass->CheckTypeOfTransaction($request->typeget, $request->return_id, $request->pick_id, $request->address);
+        // $editedInfo = ['customer_id' => $request->customer_id, 'car_id' => $id, 'start_date' => $request->start_date, 'end_date' => $request->end_date, 'pick_id' => $transactionType['pick_id'], 'return_id' => $transactionType['return_id'], 'address' => $transactionType['address'], 'driver_id' => $request->drivetype, 'status' => 'pending'];
+        // $updatedInfo =  $customerClass->saveToGarageSession($editedInfo);
+        // return back()->with("update", "Updated Successfully!");
+        return response()->json([]);
     }
 
 
@@ -217,33 +204,38 @@ class UserController extends Controller
             Session::save();
         }
         if ($garage) {
-            return redirect()->route('viewusergarage')->with("deleted", "Car already removed to your garage!👉👈");
+            return redirect()->route('viewusergarage')->with("deleted", "Car already removed to your garage!");
         } else {
             return redirect()->route('viewusergarage')->with("deleted", "Your garage is empty!");
         }
     }
 
-    public function bookcar($id)
+    public function bookcar(Request $request)
     {
+
         $user = Customer::where('user_id', auth()->user()->id)->first();
+
         if (!($user->address && $user->phone)) {
             return redirect()->route('viewprofile')->with('warning', 'Please complete your profile information.');
         }
+
         $usergarage = Session::get('garage' . auth()->user()->id);
-        if ((!$usergarage[$id]['start_date'] == null && !$usergarage[$id]['end_date'] == null) && (($usergarage[$id]['address']) || ($usergarage[$id]['pick_id'] && $usergarage[$id]['return_id']))) {
-            $customerClass = new CustomerClass();
-            $newbook = $customerClass->sessionToBooking($usergarage, $id);
 
-            $user = User::find(auth()->user()->id);
-            try {
+        $customerClass = new CustomerClass();
+        $newbook = $customerClass->sessionToBooking($usergarage, $request);
 
-                UserBookEvent::dispatch($newbook, $user->email, $user->name);
-            } catch (\Exception $e) {
-                return redirect()->route('viewusergarage')->with('success', 'Reservation confirmed, without email, due to connection problem');
-            }
-            return redirect()->route('viewusergarage')->with('success', "Reservation Confirmed! Your car has been successfully reserved. Please check your booking management for further details.");
+        Debugbar::info($newbook);
+
+        $user = User::find(auth()->user()->id);
+
+        try {
+            UserBookEvent::dispatch($newbook, $user->email, $user->name);
+        } catch (\Exception $e) {
+            return redirect()->route('viewusergarage')->with('success', 'Reservation confirmed, without notify email to admin, due to connection problem');
         }
-        return redirect()->route('editgarage', $id)->with('update', 'Please specify required details.');
+
+        return response()->json($newbook);
+        // return redirect()->route('editgarage', $id)->with('update', 'Please specify required details.');
     }
 
 

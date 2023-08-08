@@ -2,12 +2,16 @@
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/garage.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
 @endsection
 
 @section('content')
     {{-- {{ dd($carInGarage) }} --}}
     @include('layouts.session-messages')
-    <div class="container" style="height: 80vh; padding-top: 20px">
+    <div class="container" style="height: 100%; padding-top: 20px">
         @if ($carInGarage == null)
             <div class="container" style="width:100%flex; text-align:center; ">
                 <h2 style="width:auto; height:0px; margin:170px auto">Your garage is empty.</h2>
@@ -16,7 +20,7 @@
             <div class="row" style="font-size: 18px">
                 @foreach ($carInGarage as $key => $bookInfo)
                     {{-- {{ dd($bookInfo['car']->media[0]->original_url) }} --}}
-                    <div class="col-md-12 mb-4">
+                    <div class="col-md-12 mb-4 cars-row">
                         <div class="card">
                             <div class="row no-gutters">
                                 <div class="col-md-4">
@@ -53,27 +57,21 @@
                                             <small style="margin: 0 5px">{{ $bookInfo['car']->modelo->manufacturer->name }}
                                             </small>
                                         </div>
-                                        <p class="card-text">{{ $bookInfo['car']->description }}
+                                        <p class="card-text">{{ $bookInfo['car']->description }}</p>
+                                        <p class="card-text car-info" style="margin-bottom: 5px ">
+                                            <strong class="lt-strong"><i class="fa-solid fa-chair"></i></strong> -
+                                            <em>{{ $bookInfo['car']->seats }}</em> |
+                                            <strong class="lt-strong"><i class="fa-solid fa-gas-pump"></i></strong> - <em>
+                                                {{ $bookInfo['car']->fuel->name }}</em> |
+                                            <strong class="lt-strong"><i class="fa-solid fa-gears"></i></strong> - <em>
+                                                {{ $bookInfo['car']->transmission->name }}</em> |
+                                            <strong class="lt-strong"><i class="fa-solid fa-car-side"></i></strong> - <em>[
+                                                @foreach ($bookInfo['car']->accessories as $accessory)
+                                                    {{ $accessory->name }},
+                                                @endforeach
+                                            </em>]
                                         </p>
-                                        <p class="card-text" style="margin-bottom: 5px ">
-                                            @if ($bookInfo['start_date'] || $bookInfo['end_date'])
-                                                <strong class="lt-strong">Start Date:</strong> {{ $bookInfo['start_date'] }} |
-                                                <strong class="lt-strong">End Date: </strong> {{ $bookInfo['end_date'] }} |
-                                                <strong class="lt-strong"> {{ $bookInfo['days'] }} </strong> day(s) |
-                                            @else
-                                                <strong class="lt-strong">Start Date:</strong> <em> Please Specify</em> |
-                                                <strong class="lt-strong">End Date: </strong> <em> Please Specify</em> |
-                                                <strong class="lt-strong">Day(s): </strong> <em> Undetermined</em> |
-                                            @endif
-                                            <strong class="lt-strong">
-                                                @if ($bookInfo['driver_id'] == 1)
-                                                    With Driver
-                                                @elseif ($bookInfo['driver_id'] == 0)
-                                                    Self Drive
-                                                @endif
-                                            </strong>
-                                        </p>
-                                        <p class="card-text ">
+                                        {{-- <p class="card-text ">
                                             <strong class="lt-strong">Transaction</strong>
                                             @if ($bookInfo['address'])
                                                 <strong>- Delivery: </strong> {{ $bookInfo['address'] }}
@@ -87,26 +85,27 @@
                                                 - <em> Please Specify</em>
                                             @endif
 
-                                        </p>
+                                        </p> --}}
                                         <div class="row">
-                                            <div class="col-md-4">
+                                            <div class="col-md-12" style="text-align: right">
                                                 <p class="card-text"><strong class="lt-strong">Price:</strong>
                                                     ₱{{ number_format($bookInfo['car']->price_per_day, 0, '.', ',') }}
                                                     per day
                                                 </p>
                                             </div>
-                                            <div class="col-md-8" style="text-align: right">
+                                            {{-- <div class="col-md-8" style="text-align: right">
                                                 <h4 class="card-text"><strong class="lt-strong">Total Price:</strong>
                                                     {{ number_format($bookInfo['totalPrice'] * $bookInfo['days'], 0, '.', ',') }}
                                                 </h4>
-                                            </div>
+                                            </div> --}}
                                         </div>
-                                        <div style="margin: 10px 0px">
-                                            <button class="btn btn-danger delete-button">Remove</button>
-                                            <a href="{{ route('editgarage', $bookInfo['car_id']) }}"
-                                                class="btn btn-primary">Edit</a>
-                                            <button class="btn btn-success confirm-button" data-toggle="modal"
-                                                data-target="#bookModal">Book Now</button>
+                                        <div class="buttons-garage">
+                                            <button class="btn btn-danger delete-button" data-id="{{ $bookInfo['car_id'] }}">Remove</button>
+                                            {{-- <a href="{{ route('editgarage', $bookInfo['car_id']) }}"
+                                                class="btn btn-primary">Edit</a> --}}
+                                            <button class="btn btn-success confirm-button"
+                                                data-id="{{ $bookInfo['car_id'] }}" data-toggle="modal"
+                                                data-target="#bookModal">Book </button>
                                             <input value="{{ $bookInfo['car_id'] }}" hidden class="car-id">
                                         </div>
                                     </div>
@@ -115,7 +114,7 @@
                         </div>
                     </div>
                 @endforeach
-                @include('layouts.confirmation')
+                {{-- @include('layouts.confirmation') --}}
             </div>
         @endif
     </div>
@@ -127,11 +126,15 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Reservation Details</h5>
+                    <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" id="closeModalForm">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <div class="modal-body">
                     <form id="bookForm" action="" method="POST">
                         @csrf
-                        <input type="hidden" name="customer_id" value="{{ Auth::user()->id }}">
+                        <input type="hidden" name="customer_id" value="{{ Auth::user()->customer->id }}">
+                        <input type="hidden" name="car_id" id="car_id">
                         <div class="row">
                             <div class="form-group col-md-6">
                                 <label for="pickup-date">Start Date</label>
@@ -151,35 +154,41 @@
                                         <label class="form-check-label" for="pickup-radio">Pickup</label>
                                     </div>
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input" type="radio" name="typeget" id="delivery-radio"
-                                            value="delivery">
+                                        <input class="form-check-input" type="radio" name="typeget"
+                                            id="delivery-radio" value="delivery">
                                         <label class="form-check-label" for="delivery-radio">Delivery</label>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" id="pickup-group">
                                 <div class="form-group col-md-6">
-                                    <label for="pickup-location">Pickup Location</label>
+                                    {{-- <label for="pickup-location">Pickup Location</label> --}}
                                     <select class="form-control" id="pickup-location" name="pick_id">
                                         <option value="">Select pickup location</option>
+                                        @foreach ($locations as $key => $location)
+                                            <option value="{{ $key }}">{{ $location }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label for="return-location">Return Location</label>
+                                    {{-- <label for="return-location">Return Location</label> --}}
                                     <select type="text" class="form-control" id="return-location" name="return_id">
                                         <option value="">Select return location</option>
+                                        @foreach ($locations as $key => $location)
+                                            <option value="{{ $key }}">{{ $location }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group " id="address-group">
-                                <label for="delivery-address">Delivery Address</label>
+                                {{-- <label for="delivery-address">Delivery Address</label> --}}
                                 <input type="text" class="form-control" id="delivery-address" value=""
-                                    name="address">
+                                    placeholder="Enter delivery address" name="address">
                             </div>
                         </div>
                         <div class="row">
                             <div class="form-group col-md-12 radio-drive-type">
-                                <p>Select Drive Type</p>
+                                <span>Select Drive Type: </span>
                                 <div class="form-check form-check-inline">
                                     <input class="form-check-input" type="radio" name="drivetype" id="self-drive"
                                         value="0">
@@ -195,8 +204,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="submit" type="button" class="btn btn-primary">Submit</button>
+                    <button id="submit" type="button" class="btn btn-success">Submit</button>
                 </div>
             </div>
         </div>
