@@ -13,8 +13,9 @@
     @include('layouts.session-messages')
     <div class="container" style="height: 100%; padding-top: 20px">
         @if ($carInGarage == null)
-            <div class="container" style="width:100%flex; text-align:center; ">
-                <h2 style="width:auto; height:0px; margin:170px auto">Your garage is empty.</h2>
+            <div class="container" style="width:100%; text-align:center; margin-top:200px; ">
+                <h2 style="font-size: 20px;">Nothing to show.</h2>
+                <a href="{{ route('home') }}">Rent now</a>
             </div>
         @else
             <div class="row" style="font-size: 18px">
@@ -89,7 +90,7 @@
                                         <div class="row">
                                             <div class="col-md-12" style="text-align: right">
                                                 <p class="card-text"><strong class="lt-strong">Price:</strong>
-                                                    ₱{{ number_format($bookInfo['car']->price_per_day, 0, '.', ',') }}
+                                                    ₱{{ number_format($bookInfo['totalPrice'], 0, '.', ',') }}
                                                     per day
                                                 </p>
                                             </div>
@@ -100,12 +101,14 @@
                                             </div> --}}
                                         </div>
                                         <div class="buttons-garage">
-                                            <button class="btn btn-danger delete-button" data-id="{{ $bookInfo['car_id'] }}">Remove</button>
+                                            <button class="btn btn-danger delete-button"
+                                                data-id="{{ $bookInfo['car_id'] }}">Remove</button>
                                             {{-- <a href="{{ route('editgarage', $bookInfo['car_id']) }}"
                                                 class="btn btn-primary">Edit</a> --}}
                                             <button class="btn btn-success confirm-button"
                                                 data-id="{{ $bookInfo['car_id'] }}" data-toggle="modal"
-                                                data-target="#bookModal">Book </button>
+                                                data-target="#bookModal" data-price="{{ $bookInfo['totalPrice'] }}">Book
+                                            </button>
                                             <input value="{{ $bookInfo['car_id'] }}" hidden class="car-id">
                                         </div>
                                     </div>
@@ -126,7 +129,8 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLongTitle">Reservation Details</h5>
-                    <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close" id="closeModalForm">
+                    <button type="button" class="close btn btn-danger" data-dismiss="modal" aria-label="Close"
+                        id="closeModalForm">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
@@ -134,8 +138,9 @@
                     <form id="bookForm" action="" method="POST">
                         @csrf
                         <input type="hidden" name="customer_id" value="{{ Auth::user()->customer->id }}">
+                        <span class="rentprice"></span>
                         <input type="hidden" name="car_id" id="car_id">
-                        <div class="row">
+                        <div class="row row-form">
                             <div class="form-group col-md-6">
                                 <label for="pickup-date">Start Date</label>
                                 <input type="text" class="form-control date-pick" id="pickup-date" name="start_date">
@@ -145,7 +150,7 @@
                                 <input type="text" class="form-control date-pick" id="return-date" name="end_date">
                             </div>
                         </div>
-                        <div>
+                        <div class="row row-form">
                             <div class="row pickup-deliver">
                                 <div class="form-group">
                                     <div class="form-check form-check-inline">
@@ -186,7 +191,7 @@
                                     placeholder="Enter delivery address" name="address">
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row row-form">
                             <div class="form-group col-md-12 radio-drive-type">
                                 <span>Select Drive Type: </span>
                                 <div class="form-check form-check-inline">
@@ -200,6 +205,9 @@
                                     <label class="form-check-label" for="with-driver">With Driver</label>
                                 </div>
                             </div>
+                            <span class="total-price-row">
+                                <p> Total Rent Price: <span class="text-price">0</span></p>
+                            </span>
                         </div>
                     </form>
                 </div>

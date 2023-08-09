@@ -24,6 +24,11 @@
     align-items: center;
 }
 
+.radio-drive-type span {
+    display: block;
+    margin-bottom: 15px;
+}
+
 .radio-drive-type {
     margin-bottom: 5px;
     padding-top: 20px;
@@ -33,6 +38,10 @@
 .form-check-inline input,
 .form-check-inline label {
     cursor: pointer !important;
+}
+
+#pickup-group select {
+    margin-top: 5px;
 }
 
 .pickup-deliver {
@@ -91,6 +100,7 @@ select option {
 .py-4 {
     height: 100vh;
 }
+
 /* Apply 16px font size to the title */
 .swal-title {
     font-size: 20px;
@@ -99,4 +109,15 @@ select option {
 /* Apply 16px font size to the buttons */
 .swal-button {
     font-size: 16px;
+}
+
+.row-form {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.total-price-row {
+    display: flex;
+    align-items: end;
+    justify-content: end;
 }

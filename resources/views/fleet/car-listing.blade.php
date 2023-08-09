@@ -23,10 +23,10 @@
     <section class="shop" id="list-cars">
         <div class="container-fluid shop-container">
             <div class="row">
-                <div class="col-md-12">
+                <div class="col-md-4">
                     <form action="{{ route('carsearch') }}" method="GET" id="car-search-form">
-                        <div class="input-group mb-3 search-row">
-                            <input type="text" class="form-control search-input" placeholder="Search here..."
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control search-input" placeholder="Input keywords"
                                 name="search" id="car-search-input" onkeyup="searchObjects()">
                             <button class="btn btn-warning btn-search" type="submit">Search</button>
                         </div>

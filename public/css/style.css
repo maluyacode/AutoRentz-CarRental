@@ -140,3 +140,7 @@ main {
     opacity: 0.8;
     font-weight: lighter;
 }
+
+.btn-search {
+    z-index: 0 !important;
+}

@@ -60,8 +60,8 @@ $(function () {
         const pickdate = new Date($('#pickup-date').val());
         pickdate.setHours(0, 0, 0, 0);
 
-        return returndate > pickdate;
-    }, "Please select a valid date");
+        return returndate >= pickdate;
+    }, "Shold not be less than to start date.");
 
     validator = $('#bookForm').validate({
         rules: {
@@ -151,7 +151,16 @@ let buttonBook;
 
 
 $(document).on('click', '.confirm-button', function () {
+
     buttonBook = $(this);
+
+    let price = $(this).attr('data-price');
+
+    $('.rentprice').attr({
+        "data-rentprice": price,
+    })
+
+    $("#bookForm").trigger("reset");
 
     let id = $(this).attr('data-id');
 
@@ -166,7 +175,7 @@ $(document).on('click', '.confirm-button', function () {
 
 $('#submit').on('click', function () {
 
-
+    // console.log(price);
     if ($("#bookForm").valid()) {
 
         $('#closeModalForm').trigger('click');
@@ -245,7 +254,7 @@ $(document).on('click', 'button.delete-button', function () {
     Swal.fire({
         title: 'Confirmation',
         text: 'Are you sure you want to remove this from your garage?',
-        icon: 'warning',
+        // icon: 'warning',
         showCancelButton: true,
         confirmButtonText: 'Yes',
         cancelButtonText: 'No',
@@ -297,3 +306,48 @@ $(document).on('click', 'button.delete-button', function () {
 //     }
 // })
 
+$('#pickup-date').on('change', function () {
+    let pickDate = new Date($(this).val());
+    let returnDate = new Date($('#return-date').val());
+
+    if (!isNaN(pickDate) && !isNaN(returnDate)) {
+
+        compute(returnDate, pickDate)
+
+    }
+})
+
+
+$('#return-date').on('change', function () {
+    let returnDate = new Date($(this).val());
+    let pickDate = new Date($('#pickup-date').val());
+
+    if (!isNaN(pickDate) && !isNaN(returnDate)) {
+
+        compute(returnDate, pickDate)
+
+    }
+})
+
+
+function compute(returnDate, pickDate) {
+
+    returnDate.setHours(0, 0, 0, 0);
+    pickDate.setHours(0, 0, 0, 0);
+
+    if (pickDate > returnDate) {
+
+        $('.text-price').html(0);
+
+    } else {
+
+        let timeDifference = returnDate - pickDate;
+        let days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+
+        let price = $('.rentprice').attr('data-rentprice');
+        let totalprice = (days + 1) * Number(price);
+        $('.text-price').html(totalprice.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' }));
+    }
+
+
+}

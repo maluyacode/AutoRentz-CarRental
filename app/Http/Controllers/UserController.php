@@ -113,6 +113,14 @@ class UserController extends Controller
     {
         $garage = Session::get('garage' . Auth::user()->id);
 
+
+        $locations = Location::select(DB::raw("CONCAT(street, ', ', baranggay, ', ', city) AS lugar"), 'id')->get()->pluck('lugar', 'id')->toArray();
+
+        if (!$garage) {
+            return View::make('user.garage', ["carInGarage" => null, "locations" => $locations]);
+        }
+
+
         $cars = Car::with([
             'modelo',
             'modelo.manufacturer',
@@ -123,7 +131,7 @@ class UserController extends Controller
             'media',
         ])->get()->keyBy('id');
 
-        $locations = Location::select(DB::raw("CONCAT(street, ', ', baranggay, ', ', city) AS lugar"), 'id')->get()->pluck('lugar', 'id')->toArray();
+
 
         foreach ($cars as $car) {
             if (array_key_exists($car->id, $garage)) {
