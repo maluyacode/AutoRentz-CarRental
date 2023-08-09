@@ -406,3 +406,8 @@
     top: 100px;
     left: 1000px;
 }
+
+.images-car {
+    height: inherit !important;
+    object-fit: cover;
+}

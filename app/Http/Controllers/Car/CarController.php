@@ -305,6 +305,33 @@ class CarController extends Controller
         return View::make('fleet.car-details', compact('car', 'accessory', 'customerClass', 'accessoryfee'));
     }
 
+    public function carlisting()
+    {
+        $cars = Car::with([
+            'accessories' => function ($query) {
+                return $query->select('id', 'name', 'fee');
+            },
+            'modelo' => function ($query) {
+                return $query->select('id', 'type_id', 'manufacturer_id',  'name', 'year');
+            },
+            'modelo.manufacturer' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'modelo.type' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'transmission' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'fuel' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'media'
+        ])->get();
+
+        return response()->json($cars);
+    }
+
     public function carlists()
     {
         $accessInfo = new AccessInformation();

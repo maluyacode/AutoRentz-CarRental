@@ -27,6 +27,7 @@ use App\Http\Controllers\UserController;
 //     return $request->user();
 // });
 Route::get('/search/any', [SearchController::class, 'dataSearch']);
+Route::get('/car/listing', [CarController::class, 'carlisting']);
 Route::middleware('auth', 'admin')->group(function () {
 
     Route::get('/show/{id}', [CarController::class, 'show']);

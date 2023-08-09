@@ -1,4 +1,5 @@
-<script>
+{{-- <script>
+
     let data = {!! $data !!};
     let accessories = {!! $accessories !!};
     // console.log(accessories);
@@ -98,4 +99,4 @@
         totalCarPrice = total + Number(price);
         return totalCarPrice.toLocaleString();
     }
-</script>
+</script> --}}

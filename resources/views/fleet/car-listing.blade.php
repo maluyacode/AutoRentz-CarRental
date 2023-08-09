@@ -23,7 +23,7 @@
     <section class="shop" id="list-cars">
         <div class="container-fluid shop-container">
             <div class="row">
-                <div class="col-md-4">
+                {{-- <div class="col-md-4">
                     <form action="{{ route('carsearch') }}" method="GET" id="car-search-form">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control search-input" placeholder="Input keywords"
@@ -31,7 +31,7 @@
                             <button class="btn btn-warning btn-search" type="submit">Search</button>
                         </div>
                     </form>
-                </div>
+                </div> --}}
                 <div class="row js-car-list">
                     {{-- @foreach ($cars as $car)
                         <div style="width: 400px; margin-bottom: 40px">
@@ -68,4 +68,7 @@
         </div>
     </section>
     @include('fleet.js-car-search')
+@endsection
+@section('scripts')
+    <script src="{{ asset('/js/car-listing.js') }}"></script>
 @endsection
