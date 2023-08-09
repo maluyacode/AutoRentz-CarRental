@@ -1,10 +1,10 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('admindashboard') }}" class="brand-link">
-        <img src="{{ url('storage/images/Logo.png') }}" alt="AdminLTE Logo" class="brand-image img-square elevation-3"
-            style="opacity: .8">
+        {{-- <img src="{{ url('storage/images/Logo.png') }}" alt="AdminLTE Logo" class="brand-image img-square elevation-3"
+            style="opacity: .8"> --}}
         <span class="brand-text font-weight-bold"
-            style="margin-left: 5px; font-family:'Times New Roman', Times, serif">AutoRentz</span>
+            style="margin-left: 5px; font-family:'Times New Roman', Times, serif">AutoRentz Car Rental</span>
     </a>
 
     <!-- Sidebar -->
@@ -46,11 +46,6 @@
                         </p>
                     </a>
                 </li>
-                <style>
-                    .child-item {
-                        margin-left: 10px;
-                    }
-                </style>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="fa fa-light fa-car" style="margin: 0 2px"></i>
@@ -110,10 +105,9 @@
                         <i class="fa fa-thin fa-book" style="margin: 0 2px"></i>
                         <p>
                             Manage Bookings
-                            <i class="right fas fa-angle-left"></i>
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
+                    {{-- <ul class="nav nav-treeview">
                         <li class="nav-item child-item">
                             <a href="{{ route('bookings.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
@@ -138,7 +132,7 @@
                                 <p>Finished</p>
                             </a>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('drivers.page') }}" class="nav-link">

@@ -25,12 +25,12 @@
                         <div class="card">
                             <div class="row no-gutters">
                                 <div class="col-md-4">
-                                    <div class="row" style="margin: 5%">
+                                    <div class="row row-images-car">
                                         <a href="{{ route('cardetails', $key) }}">
                                             @if (count($bookInfo['car']->media) > 0)
-                                                <img src="{{ $bookInfo['car']->media[0]->original_url }}" alt="car-image">
+                                                <img src="{{ $bookInfo['car']->media[0]->original_url }}" alt="car-image" class="car-image-garage">
                                             @else
-                                                No images in media
+                                                <img src="/storage/images/Logo.png" alt="car-image" class="car-image-garage">
                                             @endif
                                         </a>
                                     </div>

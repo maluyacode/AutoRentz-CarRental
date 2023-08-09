@@ -98,17 +98,16 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     });
 
     Route::middleware('blockuser')->group(function () {
-        Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
-        Route::get('/pendings', [BookingController::class, 'adminPendings'])->name('adminPendings');
-        Route::get('/confirms', [BookingController::class, 'adminConfirms'])->name('adminConfirms');
-        Route::get('/finished', [BookingController::class, 'adminFinish'])->name('adminFinish');
+        // Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+        Route::view('/bookings', 'admin.bookings.index')->name('bookings.index');
 
         Route::get('/bookings/create', [AdminController::class, 'createBooking'])->name('createBooking');
         Route::get('/confirm/{id?}', [AdminController::class, 'confirmBooking'])->name('confirmBooking');
+        Route::get('/cancel/{id}', [AdminController::class, 'cancellBooking'])->name('cancellBooking');
         Route::post('/bookings/store', [AdminController::class, 'storeBooking'])->name('storeBooking');
         Route::get('/bookings/{id}/edit', [AdminController::class, 'editBooking'])->name('editBooking');
         Route::put('/bookings/{id}/update', [AdminController::class, 'updateBooking'])->name('updateBooking');
-        Route::delete('/bookings/{id}/delete', [AdminController::class, 'deleteBooking'])->name('deleteBooking');
+        Route::get('/bookings/{id}/delete', [AdminController::class, 'deleteBooking'])->name('deleteBooking');
         Route::get('/bookings/{id}/finished', [AdminController::class, 'finishedBooking'])->name('finishedBooking');
 
         Route::get('/users/view', [UserController::class, 'index'])->name('users.index');

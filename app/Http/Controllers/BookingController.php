@@ -193,31 +193,6 @@ class BookingController extends Controller
         return back()->with("deleted", "Deleted Successfuly!");
     }
 
-    public function index(BookingDataTable $dataTable) //admin access
-    { // admin access
-        $header = "Bookings";
-        $drivers = Driver::all()->skip(1);
-        return $dataTable->render('admin.bookings.index', compact('drivers', 'header'));
-    }
-
-    public function adminPendings(PendingDataTable $dataTable) //admin access
-    {
-        $drivers = Driver::all()->skip(1);
-        $header = "Pendings";
-        return $dataTable->render('admin.bookings.index', compact('drivers', 'header'));
-    }
-    public function adminConfirms(ConfirmDataTable $dataTable) //admin access
-    {
-        $drivers = Driver::all()->skip(1);
-        $header = "Confirmed";
-        return $dataTable->render('admin.bookings.index', compact('drivers', 'header'));
-    }
-    public function adminFinish(FinishDataTable $dataTable) //admin access
-    {
-        $drivers = Driver::all()->skip(1);
-        $header = "Finished";
-        return $dataTable->render('admin.bookings.index', compact('drivers', 'header'));
-    }
 
     public function print($id)
     {
@@ -270,5 +245,90 @@ class BookingController extends Controller
         $pdf = Pdf::loadView('print.transaction', $data);
         return $pdf->download('autorentzinvoice_' . $id . '_' . $date . '.pdf');
         // return View::make('print.transaction', compact('book', 'customer', 'car', 'accessInfo', 'driver', 'totalPrice'));
+    }
+
+    public function bookings()
+    {
+        $bookings = Booking::with([
+            'customer',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.manufacturer',
+            'car.modelo.type',
+            'picklocation',
+            'returnlocation',
+            'driver'
+        ])->get();
+
+        return response()->json($bookings);
+    }
+
+    public function adminPendings() //admin access
+    {
+        $bookings = Booking::with([
+            'customer',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.manufacturer',
+            'car.modelo.type',
+            'picklocation',
+            'returnlocation',
+            'driver'
+        ])->where('status', 'pending')->get();
+
+        return response()->json($bookings);
+    }
+
+    public function adminConfirms() //admin access
+    {
+        $bookings = Booking::with([
+            'customer',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.manufacturer',
+            'car.modelo.type',
+            'picklocation',
+            'returnlocation',
+            'driver'
+        ])->where('status', 'confirmed')->get();
+
+        return response()->json($bookings);
+    }
+
+    public function adminCancelled() //admin access
+    {
+        $bookings = Booking::with([
+            'customer',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.manufacturer',
+            'car.modelo.type',
+            'picklocation',
+            'returnlocation',
+            'driver'
+        ])->where('status', 'cancelled')->get();
+
+        return response()->json($bookings);
+    }
+
+    public function adminFinish() //admin access
+    {
+        $bookings = Booking::with([
+            'customer',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.manufacturer',
+            'car.modelo.type',
+            'picklocation',
+            'returnlocation',
+            'driver'
+        ])->where('status', 'finished')->get();
+
+        return response()->json($bookings);
     }
 }

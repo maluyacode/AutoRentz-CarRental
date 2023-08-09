@@ -1,0 +1,31 @@
+.btn-group-toggle label {
+    font-weight: 400 !important;
+}
+
+#bookings-table {
+    margin-top: 25px !important;
+}
+
+thead th,
+.dtr-title {
+    font-weight: 600 !important;
+    letter-spacing: 1px;
+}
+
+tbody {
+    letter-spacing: 0.5px;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
+.font-size-18 {
+    font-size: 18px;
+}
+
+.swal2-actions {
+    gap: 10px;
+}

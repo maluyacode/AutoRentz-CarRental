@@ -1,74 +1,64 @@
 @extends('admin.index')
 
-@section('header')
-    <div class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">{{ $header }}</h1>
-                </div><!-- /.col -->
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item"><a href="#">Manage Bookings</a></li>
-                        <li class="breadcrumb-item active">{{ $header }}</li>
-                    </ol>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
-    </div>
+@section('pageStyles')
+    <link rel="stylesheet" href="{{ asset('css/bookings.css') }}">
 @endsection
-@include('layouts.session-messages')
 @section('content')
-    <style>
-        details {
-            border: 1px solid #aaa;
-            border-radius: 4px;
-            padding: 0.5em 0.5em 0;
-        }
-
-        summary {
-            font-weight: bold;
-            margin: -0.5em -0.5em 0;
-            padding: 0.5em;
-        }
-
-        details[open] {
-            padding: 0.5em;
-        }
-
-        details[open] summary {
-            border-bottom: 1px solid #aaa;
-            margin-bottom: 0.5em;
-        }
-
-        .booking-class {
-            text-transform: capitalize;
-        }
-
-        .data {
-            height: 50px;
-            margin: 10px
-        }
-        .status{
-            font-size: 20px;
-        }
-    </style>
+    @include('layouts.session-messages')
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title">Rentahan ng kotse ni Earl Russell SY</h3>
+                            <h3 class="card-title">Bookings</h3>
+                            <div style="float: right;" class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary active">
+                                    <input class="booking-status" type="radio" name="options" value="all"
+                                        id="all" autocomplete="off" checked> All
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="booking-status" type="radio" name="options" value="pendings"
+                                        id="pendings" autocomplete="off"> Pendings
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="booking-status" type="radio" name="options" value="confirmed"
+                                        id="confirmed" autocomplete="off"> Confirmed
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="booking-status" type="radio" name="options" value="finished"
+                                        id="finished" autocomplete="off"> Finished
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="booking-status" type="radio" name="options" value="cancelled"
+                                        id="cancelled" autocomplete="off"> Cancelled
+                                </label>
+                            </div>
                         </div>
-                        <!-- /.card-header -->
                         <div class="card-body">
-                            {{-- <a href="{{ route('car.create') }}" class="btn btn-block bg-gradient-primary btn-sm"
-                                style="width:150px; margin:5px">
-                                Add New
-                            </a> --}}
-                            {!! $dataTable->table() !!}
-                            <div class="modal fade bd-example-modal-sm" id="myModal" tabindex="-1" role="dialog"
+                            <table id="bookings-table" class="table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Customer</th>
+                                        <th>Car</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Rent Price</th>
+                                        {{-- <th>Transaction</th>
+                                        <th>Locations(s)</th>
+                                        <th>Drive Type</th> --}}
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+
+                            {{-- {!! $dataTable->table() !!} --}}
+                            {{-- <div class="modal fade bd-example-modal-sm" id="myModal" tabindex="-1" role="dialog"
                                 aria-labelledby="mySmallModalLabel" aria-hidden="true" style="margin:auto">
                                 <div class="modal-dialog modal-md">
                                     <form action="{{ route('confirmBooking', 0) }}" method="GET">
@@ -86,24 +76,24 @@
                                         </div>
                                     </form>
                                 </div>
-                            </div>
+                            </div> --}}
 
-                            {{-- <button type="button" class="btn btn-primary " data-toggle="modal"
-                                data-target=".bd-example-modal-sm" value="2">Small modal</button> --}}
-                            {{-- <button class="btn-data" ata-toggle="modal" data-target=".bd-example-modal-sm" value="2">sadsad</button> --}}
                         </div>
-                        <!-- /.card-body -->
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    {!! $dataTable->scripts() !!}
-    <script>
+    {{-- {!! $dataTable->scripts() !!} --}}
+    {{-- <script>
         $(document).on('click', '.btn-confirm-booking', function() {
             var bookingId = $(this).data('booking-id');
             $('input[name="booking_id"]').val(bookingId);
             $('#myModal').modal('show');
         });
-    </script>
+    </script> --}}
+@endsection
+
+@section('pageScripts')
+    <script src="{{ asset('js/bookings.js') }}"></script>
 @endsection

@@ -11,6 +11,7 @@ use App\Http\Controllers\LocationController;
 use App\Http\Controllers\Car\AccessoriesController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\BookingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -70,6 +71,12 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::post('/accessories/import', [AccessoriesController::class, 'import']);
 
     Route::middleware('auth')->group(function () {
+        Route::get('/bookings', [BookingController::class, 'bookings']);
+        Route::get('/pendings', [BookingController::class, 'adminPendings'])->name('adminPendings');
+        Route::get('/confirms', [BookingController::class, 'adminConfirms'])->name('adminConfirms');
+        Route::get('/cancelled', [BookingController::class, 'adminCancelled'])->name('adminCancelled');
+        Route::get('/finished', [BookingController::class, 'adminFinish'])->name('adminFinish');
+
         Route::get('/report/sales', [AdminController::class, 'salesReport']);
         Route::get('/data/charts', [AdminController::class, 'chartsData']);
         Route::get('/report/search', [AdminController::class, 'reportSearch']);

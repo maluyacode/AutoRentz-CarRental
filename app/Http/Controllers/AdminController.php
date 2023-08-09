@@ -286,18 +286,19 @@ class AdminController extends Controller
 
     public function confirmBooking(Request $request, $id)
     {
-        if ($id == 0) {
+        Debugbar::info($request, $id);
+        if (is_numeric($id)) {
             DB::beginTransaction();
             try {
 
                 $booking = Booking::find($request->booking_id);
                 $booking->status = 'confirmed';
-                $booking->driver_id = $request->driver_id;
+                $booking->driver_id = $id;
 
                 $car = Car::find($booking->car_id);
                 $car->car_status = 'taken';
 
-                $driver = Driver::find($request->driver_id);
+                $driver = Driver::find($id);
                 $driver->driver_status = 'taken';
             } catch (\Exception $e) {
                 DB::rollBack();
@@ -311,12 +312,13 @@ class AdminController extends Controller
 
             DB::commit();
             $this->mail($booking->id);
-            dd($booking->id);
-            return back()->with('update', 'Book confirmed 🤑');
+            // dd($booking->id);
+            // return back()->with('update', 'Book confirmed 🤑');
+            return response()->json($booking);
         } else {
             DB::beginTransaction();
             try {
-                $booking = Booking::find($id);
+                $booking = Booking::find($request->booking_id);
                 $booking->status = 'confirmed';
 
                 $car = Car::find($booking->car_id);
@@ -329,8 +331,9 @@ class AdminController extends Controller
             $car->save();
             $booking->save();
             DB::commit();
-            $this->mail($id);
-            return back()->with('update', 'Book confirmed 🤑');
+            $this->mail($booking->id);
+            // return back()->with('update', 'Book confirmed 🤑');
+            return response()->json($booking);
         }
     }
 
@@ -354,6 +357,19 @@ class AdminController extends Controller
             dd($e);
             return back()->with('update', 'Book confirmed, without email due to connection problem');
         }
+    }
+
+    public function cancellBooking($id)
+    {
+        $booking = Booking::find($id);
+        // dd($booking);
+        if ($booking) {
+            $booking->status = "cancelled";
+            $booking->save();
+            // return back()->with("deleted", "Book cancelled! 👉🥺👈");
+            return response()->json($booking);
+        }
+        return "Error";
     }
 
     public function finishedBooking($id)
@@ -385,7 +401,8 @@ class AdminController extends Controller
             return back()->with('deleted', 'Error Occured!');
         }
         DB::commit();
-        return back()->with('update', 'Transaction finished! 🤑');
+        // return back()->with('update', 'Transaction finished! 🤑');
+        return response()->json($booking);
     }
 
     public function createBooking()
@@ -557,7 +574,8 @@ class AdminController extends Controller
     public function deleteBooking($id)
     {
         Booking::withTrashed()->find($id)->forceDelete();
-        return back()->with('deleted', 'Deleted successfully 💔');
+        // return back()->with('deleted', 'Deleted successfully 💔');
+        return response()->json([]);
     }
 
     public function salesReport()

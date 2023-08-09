@@ -39,8 +39,8 @@ function displayCar(carData) {
                                             <img class="images-car" src="${carlist.media[0]?.original_url || '/storage/images/Logo.png'}" alt="car-image">
                                         </div>
 
-                                        <div class="flip-box-back" style="background-image: url('${carlist.media[0]?.original_url}')">
-                                            <h4>₱ ${computeTotalPrice(carlist.id, carlist.price_per_day, carlist.accessories)} per day</h4>
+                                        <div class="flip-box-back" style="background-image: url('/storage/images/Logo.png')">
+                                            <h4>₱ ${computeTotalPrice(carlist.price_per_day, carlist.accessories)} per day</h4>
                                             <p class="car-description">Seat Capacity: ${carlist.seats}</p>
                                             <p class="car-description">Transmission: ${carlist.transmission.name}</p>
                                             <p class="car-description">Fuel Type: ${carlist.fuel.name}</p>
@@ -84,14 +84,14 @@ function flip() {
 
 }
 
-function computeTotalPrice(carId, price, accessories) {
+function computeTotalPrice(price, accessories) {
     console.log(price);
+
     let total = 0;
     let totalCarPrice = 0;
+
     accessories.forEach(function (accessory) {
-        if (accessory.id === carId) {
-            total += Number(accessory.fee);
-        }
+        total += Number(accessory.fee);
     });
     totalCarPrice = total + Number(price);
     return totalCarPrice.toLocaleString();
