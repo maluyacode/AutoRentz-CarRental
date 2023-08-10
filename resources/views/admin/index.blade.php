@@ -10,6 +10,7 @@
 
     @include('admin.styles')
     @yield('pageStyles')
+
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">

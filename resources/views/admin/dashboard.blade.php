@@ -2,6 +2,9 @@
 
 @section('pageStyles')
     <link rel="stylesheet" href="{{ asset('css/dashboard.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous">
+    </script>
 @endsection
 
 @section('content')
@@ -123,16 +126,39 @@
                     {{-- add Item --}}
                     <div class="carousel-item">
                         <div class="chart-container">
-                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                <label class="btn btn-outline-secondary active">
-                                    <input class="income-radio" type="radio" name="options" id="option2" autocomplete="off" value="default"> Default
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input class="income-radio" type="radio" name="options" id="option3" autocomplete="off" value="days"> Days
-                                </label>
-                                <label class="btn btn-outline-secondary">
-                                    <input class="income-radio" type="radio" name="options" id="option3" autocomplete="off" value="months"> Months
-                                </label>
+                            <div class="row">
+                                <div class="btn-group btn-group-toggle col-md-2" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary active">
+                                        <input class="income-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="months"> Months
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="income-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="days"> Days
+                                    </label>
+                                </div>
+                                <div class="date-picker col-md-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Start</div>
+                                        </div>
+                                        <input class="date-range" type="text" class="form-control" id="start-date"
+                                            placeholder="YYYY-MM-DD">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">End</div>
+                                        </div>
+                                        <input class="date-range" type="text" class="form-control" id="end-date"
+                                            placeholder="YYYY-MM-DD">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 select-group">
+                                    <select id="chart-types" class="custom-select mb-2">
+                                        <option value="line" selected>Line Chart</option>
+                                        <option value="bar">Bar Chart</option>
+                                    </select>
+                                </div>
                             </div>
                             <canvas id="monthlyIncomeChart"></canvas>
                         </div>
@@ -189,5 +215,8 @@
 @section('pageScripts')
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js" charset="utf-8"></script> --}}
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     <script src="{{ asset('js/dashboard.js') }}"></script>
 @endsection

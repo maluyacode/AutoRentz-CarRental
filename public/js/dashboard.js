@@ -1,27 +1,42 @@
-let originalData;
-let incomeCanvas;
-
-$('.carousel').carousel({
-    interval: false,
-});
-$(function () {
-    getData();
-})
-
 
 Chart.defaults.backgroundColor = '#9BD0F5';
 Chart.defaults.font.size = 16;
 Chart.defaults.color = '#000';
 
-function setOrignalData(data) {
+let originalData;
+let incomeChart;
+let daysMonths = "months";
+
+let incomeChartType = 'line';
+
+$('.carousel').carousel({
+    interval: false,
+});
+
+
+$(function () {
+    getData();
+
+    $('#start-date').datepicker({
+        changeYear: true,
+        changeMonth: true,
+    });
+    $('#end-date').datepicker({
+        changeYear: true,
+        changeMonth: true,
+    });
+})
+
+
+function setOrignalData(data) { // setting fixed data
     originalData = data
 }
 
-function getOriginalData() {
+function getOriginalData() { // where you can access the fixed data for charts
     return originalData;
 }
 
-function getData() {
+function getData() { // request data
     $.ajax({
         url: `/api/data/charts`,
         type: 'GET',
@@ -33,7 +48,7 @@ function getData() {
 
             setOrignalData(data);
 
-            monthlyIncome(data.monthlyIncome);
+            processByMonths(data.monthlyIncome);
             rentCount(data.rentCountPerCar);
             monthlyRegistered(data.registeredPerMonth)
 
@@ -45,19 +60,58 @@ function getData() {
     })
 }
 
-$(document).on('change', '.income-radio', function () {
-    let value = $(this).val();
+
+// DATE RANGE INCOME
+$(document).on('change', '.date-range', function () { // date range for income
+
+    let start = new Date($('#start-date').val());
+    let end = new Date($('#end-date').val());
+    let filteredData = {};
+
+    // start.setHours(0, 0, 0, 0);
+    // end.setHours(0, 0, 0, 0);
+
+    data = getOriginalData();
+
+    $.each(data.monthlyIncome, function (dateKey, income) {
+        let currentDate = new Date(dateKey);
+
+        if (currentDate >= start && currentDate <= end) {
+            filteredData[dateKey] = income;
+        }
+    });
+
+    if (daysMonths == "months") {
+
+        processByMonths(filteredData)
+
+    } else if (daysMonths == "days") {
+
+        processByDays(filteredData)
+
+    }
+});
+
+$(document).on('change', '.income-radio', function () { // months or date in x-axis of chart
+    daysMonths = $(this).val();
 
 
-    if (value == "months") {
+    if (daysMonths == "months") {
         let data = getOriginalData();
         processByMonths(data.monthlyIncome);
+    } else if (daysMonths == "days") {
+        let data = getOriginalData();
+        processByDays(data.monthlyIncome);
     }
 })
 
+function processByDays(data) { // displays the x-axis in days
+    monthlyIncome(data);
+}
 
-function processByMonths(data) {
-    incomeCanvas.destroy();
+
+function processByMonths(data) { // displays the x-axis in months
+
     let keyValue = {};
 
     $.each(data, function (dateKey, income) {
@@ -74,14 +128,28 @@ function processByMonths(data) {
     monthlyIncome(keyValue);
 }
 
+$('#chart-types').on('change', function () { // different types of charts
+    incomeChartType = $(this).val();
+    if (incomeChartType == 'bar') {
+        incomeChart.config.type = 'bar'
+        incomeChart.update();
+    } else if (incomeChartType == 'line') {
+        incomeChart.config.type = 'line'
+        incomeChart.update();
+    }
+})
 
-function monthlyIncome(data) {
-    let chart;
 
-    incomeCanvas = document.getElementById('monthlyIncomeChart');
+function monthlyIncome(data) { // initial config for charts
 
-    chart = new Chart(incomeCanvas, {
-        type: 'line',
+    let ctx = document.getElementById('monthlyIncomeChart');
+
+    if (incomeChart) {
+        incomeChart.destroy()
+    }
+
+    incomeChart = new Chart(ctx, {
+        type: incomeChartType,
         data: {
             labels: Object.keys(data),
             datasets: [{
@@ -103,7 +171,7 @@ function monthlyIncome(data) {
         }
     });
 }
-
+// DATE RANGE INCOME
 
 
 

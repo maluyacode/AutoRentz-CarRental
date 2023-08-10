@@ -26,3 +26,24 @@
 .content-wrapper {
     background-color: #0000;
 }
+
+.date-picker {
+    display: flex;
+
+}
+
+.date-picker .input-group {
+    margin-right: 5px;
+}
+
+.chart-container .row {
+    margin-bottom: 30px;
+}
+
+.select-group {
+    width: fit-content;
+}
+
+.custom-select {
+    margin-bottom: 0 !important;
+}
