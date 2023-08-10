@@ -123,6 +123,17 @@
                     {{-- add Item --}}
                     <div class="carousel-item">
                         <div class="chart-container">
+                            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                                <label class="btn btn-outline-secondary active">
+                                    <input class="income-radio" type="radio" name="options" id="option2" autocomplete="off" value="default"> Default
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="income-radio" type="radio" name="options" id="option3" autocomplete="off" value="days"> Days
+                                </label>
+                                <label class="btn btn-outline-secondary">
+                                    <input class="income-radio" type="radio" name="options" id="option3" autocomplete="off" value="months"> Months
+                                </label>
+                            </div>
                             <canvas id="monthlyIncomeChart"></canvas>
                         </div>
                     </div>

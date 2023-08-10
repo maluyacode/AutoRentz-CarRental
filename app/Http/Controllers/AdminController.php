@@ -24,6 +24,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\MailToUser;
 use App\TotalRentPrice;
 use Barryvdh\Debugbar\Facades\Debugbar;
+use DateTime;
 
 class AdminController extends Controller
 {
@@ -46,8 +47,20 @@ class AdminController extends Controller
         $bookings = Booking::with(['car', 'car.accessories'])
             ->where('status', '=', 'finished')
             ->withTrashed()
-            ->orderBy('created_at')
+            ->orderBy('end_date')
             ->get();
+
+        $currentYear = date('Y');
+        $startDate = new DateTime("$currentYear-01-01");
+        $endDate = new DateTime("$currentYear-12-31");
+
+        $dates = array();
+        $currentDate = clone $startDate;
+
+        while ($currentDate <= $endDate) {
+            $dates[$currentDate->format('Y-m-d')] = 0;
+            $currentDate->modify('+1 day');
+        }
 
         foreach ($bookings as $booking) {
             $days = date_diff(
@@ -58,21 +71,16 @@ class AdminController extends Controller
                 return $accessory->fee;
             })->sum();
 
-            $monthly[] = [
-                "month" => date_create($booking->created_at)->format("F"),
+            $income = [
+                "month" => date_create($booking->created_at)->format("Y-m-d"),
                 "rent" => ($booking->car->price_per_day + $accessoriesFee) * $days
             ];
-        }
 
-        for ($i = 1; $i <= 12; $i++) {
-            $monthlyIncome[date('F', mktime(0, 0, 0, $i, 10))] = 0;
-        }
-
-        foreach ($monthly as $key => $income) {
-            if (array_key_exists($income["month"], $monthlyIncome)) {
-                $monthlyIncome[$income["month"]] += $income["rent"];
+            if (array_key_exists($income["month"], $dates)) {
+                $dates[$income["month"]] += $income["rent"];
             }
         }
+
 
         $carData = DB::table('cars')
             ->leftJoin('bookings', function ($join) {
@@ -108,7 +116,7 @@ class AdminController extends Controller
 
 
         return response()->json([
-            'monthlyIncome' => $monthlyIncome,
+            'monthlyIncome' => $dates,
             'rentCountPerCar' => $carData,
             'registeredPerMonth' => $registersPerMonth
         ]);

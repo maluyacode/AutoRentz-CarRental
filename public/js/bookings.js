@@ -1,5 +1,9 @@
 $(function () {
     dataTableFill('/api/bookings');
+    $('.buttons-import').attr({
+        "data-toggle": "modal",
+        "data-target": "#importModal"
+    })
 })
 let table;
 function dataTableFill(apiLocation) {
@@ -17,6 +21,11 @@ function dataTableFill(apiLocation) {
                 text: '<i class="fas fa-plus"></i> Create',
                 action: createButton,
                 className: "buttons-create",
+            },
+            {
+                text: '<i class="fas fa-file-import"></i> Import',
+                action: importButton,
+                className: "buttons-import",
             },
             {
                 text: '<i class="fas fa-copy"></i> Copy',
@@ -168,6 +177,10 @@ $(document).on('change', '.booking-status', function () {
         dataTableFill('/api/cancelled');
     }
 })
+
+function importButton() {
+    console.log("import");
+}
 
 function sum(input) {
     if (toString.call(input) !== "[object Array]")

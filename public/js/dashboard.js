@@ -1,5 +1,27 @@
+let originalData;
+let incomeCanvas;
 
+$('.carousel').carousel({
+    interval: false,
+});
 $(function () {
+    getData();
+})
+
+
+Chart.defaults.backgroundColor = '#9BD0F5';
+Chart.defaults.font.size = 16;
+Chart.defaults.color = '#000';
+
+function setOrignalData(data) {
+    originalData = data
+}
+
+function getOriginalData() {
+    return originalData;
+}
+
+function getData() {
     $.ajax({
         url: `/api/data/charts`,
         type: 'GET',
@@ -8,26 +30,57 @@ $(function () {
         },
         dataType: "json",
         success: function (data) {
+
+            setOrignalData(data);
+
             monthlyIncome(data.monthlyIncome);
             rentCount(data.rentCountPerCar);
             monthlyRegistered(data.registeredPerMonth)
+
+
         },
         error: function (error) {
             alert("error");
         }
-
     })
+}
+
+$(document).on('change', '.income-radio', function () {
+    let value = $(this).val();
+
+
+    if (value == "months") {
+        let data = getOriginalData();
+        processByMonths(data.monthlyIncome);
+    }
 })
-Chart.defaults.backgroundColor = '#9BD0F5';
-Chart.defaults.font.size = 16;
-Chart.defaults.color = '#000';
+
+
+function processByMonths(data) {
+    incomeCanvas.destroy();
+    let keyValue = {};
+
+    $.each(data, function (dateKey, income) {
+        var date = new Date(dateKey);
+        var month = date.toLocaleString('default', { month: 'long' }); // Get month name
+
+        if (!keyValue[month]) {
+            keyValue[month] = 0;
+        }
+
+        keyValue[month] += income;
+    });
+
+    monthlyIncome(keyValue);
+}
 
 
 function monthlyIncome(data) {
+    let chart;
 
-    const ctx = document.getElementById('monthlyIncomeChart');
+    incomeCanvas = document.getElementById('monthlyIncomeChart');
 
-    new Chart(ctx, {
+    chart = new Chart(incomeCanvas, {
         type: 'line',
         data: {
             labels: Object.keys(data),
@@ -51,10 +104,14 @@ function monthlyIncome(data) {
     });
 }
 
+
+
+
 function rentCount(data) {
+
     const ctx = document.getElementById('rentCountPerMonthChart');
 
-    new Chart(ctx, {
+    chart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: Object.keys(data),
@@ -76,6 +133,9 @@ function rentCount(data) {
         }
     });
 }
+
+
+
 
 function monthlyRegistered(data) {
     const ctx = document.getElementById('customerRegisteredChart');
@@ -101,6 +161,9 @@ function monthlyRegistered(data) {
         }
     });
 }
+
+
+
 
 function colors() {
     return [

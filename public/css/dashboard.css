@@ -1,11 +1,11 @@
 .carousel-control-prev {
     width: 50px;
-    background-color: #27282928;
+    /* background-color: #27282928; */
 }
 
 .carousel-control-next {
     width: 50px;
-    background-color: #27282928;
+    /* background-color: #27282928; */
 }
 
 
@@ -21,4 +21,8 @@
 .carousel-control-next:hover,
 .carousel-control-prev:hover {
     background-color: #27282961;
+}
+
+.content-wrapper {
+    background-color: #0000;
 }

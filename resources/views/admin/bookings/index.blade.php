@@ -56,42 +56,37 @@
 
                                 </tbody>
                             </table>
-
-                            {{-- {!! $dataTable->table() !!} --}}
-                            {{-- <div class="modal fade bd-example-modal-sm" id="myModal" tabindex="-1" role="dialog"
-                                aria-labelledby="mySmallModalLabel" aria-hidden="true" style="margin:auto">
-                                <div class="modal-dialog modal-md">
-                                    <form action="{{ route('confirmBooking', 0) }}" method="GET">
-                                        @csrf
-                                        <div class="modal-content"
-                                            style="text-align:center; height:250px; padding:20px; font-size:20px">
-                                            <input type="text" class="input-data data" name="booking_id" hidden>
-                                            <label for="">Assign Driver</label>
-                                            <select name="driver_id" class="data">
-                                                @foreach ($drivers as $driver)
-                                                    <option value="{{ $driver->id }}">{{ $driver->fname }}</option>
-                                                @endforeach
-                                            </select>
-                                            <button type="submit" style="width:50%; margin: auto">Submit</button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div> --}}
-
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    {{-- {!! $dataTable->scripts() !!} --}}
-    {{-- <script>
-        $(document).on('click', '.btn-confirm-booking', function() {
-            var bookingId = $(this).data('booking-id');
-            $('input[name="booking_id"]').val(bookingId);
-            $('#myModal').modal('show');
-        });
-    </script> --}}
+    <div class="modal fade" id="importModal" tabindex="-1" role="dialog" aria-labelledby="importModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="importModalLabel">Import Excel Records</h5>
+                    {{-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button> --}}
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            <input type="file" class="custom-file-input" id="inputGroupFile03">
+                            <label class="custom-file-label" for="inputGroupFile03">Choose file</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('pageScripts')
