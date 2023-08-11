@@ -47,3 +47,11 @@
 .custom-select {
     margin-bottom: 0 !important;
 }
+
+.chart-container * {
+    font-weight: 400 !important;
+}
+
+.car-row .col-md-4 {
+    justify-content: center;
+}

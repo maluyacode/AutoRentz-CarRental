@@ -165,6 +165,33 @@
                     </div>
                     <div class="carousel-item">
                         <div class="chart-container">
+                            <div class="row car-row">
+                                <div class="btn-group btn-group-toggle col-md-4" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary active">
+                                        <input class="car-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="all"> Rent Info
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="car-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="model"> Model
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="car-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="manufacturer"> Manufacturer
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="car-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="type"> Types
+                                    </label>
+                                </div>
+                                <div class="col-md-3 select-group">
+                                    <select id="chart-types-car" class="custom-select mb-2">
+                                        <option value="bar">Bar Chart</option>
+                                        <option value="doughnut">Doughnut Chart</option>
+                                        <option value="pie">Pie</option>
+                                    </select>
+                                </div>
+                            </div>
                             <canvas id="rentCountPerMonthChart"></canvas>
                         </div>
                     </div>

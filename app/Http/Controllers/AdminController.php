@@ -44,6 +44,7 @@ class AdminController extends Controller
 
     public function chartsData()
     {
+        // charts whole year income
         $bookings = Booking::with(['car', 'car.accessories'])
             ->where('status', '=', 'finished')
             ->withTrashed()
@@ -80,19 +81,9 @@ class AdminController extends Controller
                 $dates[$income["month"]] += $income["rent"];
             }
         }
+        // charts whole year income
 
-
-        $carData = DB::table('cars')
-            ->leftJoin('bookings', function ($join) {
-                $join->on('cars.id', '=', 'bookings.car_id');
-                $join->where('bookings.status', '=', 'finished');
-            })
-            ->join('modelos', 'modelos.id', '=', 'cars.modelos_id')
-            ->selectRaw('count(cars.id) as count, CONCAT(cars.platenumber, " ", modelos.name) as car_info')
-            ->groupBy('cars.platenumber', 'modelos.name')
-            ->orderBy('count', 'DESC')
-            ->pluck('count', 'car_info')
-            ->all();
+        $carData = Car::with(['bookings', 'accessories', 'modelo', 'modelo.type', 'modelo.manufacturer'])->get();
 
         $customer = DB::table('customers')
             ->groupBy('month')
