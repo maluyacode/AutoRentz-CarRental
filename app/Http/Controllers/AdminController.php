@@ -85,31 +85,15 @@ class AdminController extends Controller
 
         $carData = Car::with(['bookings', 'accessories', 'modelo', 'modelo.type', 'modelo.manufacturer'])->get();
 
-        $customer = DB::table('customers')
-            ->groupBy('month')
-            ->select(
-                DB::raw('count(monthname(created_at)) as count'),
-                DB::raw('monthname(created_at) as month'),
-            )
-            ->orderBy('month', 'ASC')
-            ->get()
-            ->toArray();
 
-        for ($i = 1; $i <= 12; $i++) {
-            $registersPerMonth[date('F', mktime(0, 0, 0, $i, 10))] = 0;
-        }
 
-        foreach ($customer as $key => $customerJoin) {
-            if (array_key_exists($customerJoin->month, $registersPerMonth)) {
-                $registersPerMonth[$customerJoin->month] = $customerJoin->count;
-            }
-        }
+        $registered = Customer::with(['bookings', 'bookings.car'])->get();
 
 
         return response()->json([
             'monthlyIncome' => $dates,
             'rentCountPerCar' => $carData,
-            'registeredPerMonth' => $registersPerMonth
+            'registered' => $registered
         ]);
     }
 

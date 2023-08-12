@@ -197,6 +197,46 @@
                     </div>
                     <div class="carousel-item">
                         <div class="chart-container">
+                            <div class="row row-customer">
+                                <div class="btn-group btn-group-toggle col-md-3" data-toggle="buttons">
+                                    <label class="btn btn-outline-secondary active">
+                                        <input class="customer-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="months-registered"> Month
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="customer-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="weeks-registered"> Week
+                                    </label>
+                                    <label class="btn btn-outline-secondary">
+                                        <input class="customer-radio" type="radio" name="options" id="option3"
+                                            autocomplete="off" value="days-registered"> Day
+                                    </label>
+                                </div>
+                                <div class="date-picker col-md-6">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">Start</div>
+                                        </div>
+                                        <input class="date-range-customer" type="text" class="form-control"
+                                            placeholder="YYYY-MM-DD" id="date-start-register">
+                                    </div>
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <div class="input-group-text">End</div>
+                                        </div>
+                                        <input class="date-range-customer" type="text" class="form-control"
+                                            placeholder="YYYY-MM-DD" id="date-end-register">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 select-group">
+                                    <select id="chart-types-customer" class="custom-select mb-2">
+                                        <option value="bar">Bar Chart</option>
+                                        <option value="doughnut">Doughnut Chart</option>
+                                        <option value="pie">Pie Chart</option>
+                                        <option value="line">Line Chart</option>
+                                    </select>
+                                </div>
+                            </div>
                             <canvas id="customerRegisteredChart"></canvas>
                         </div>
                     </div>

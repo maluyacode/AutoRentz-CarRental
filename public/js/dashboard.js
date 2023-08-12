@@ -7,9 +7,12 @@ let originalData;
 
 let incomeChart;
 let rentCarChart;
+let regiteredChart;
 
 let daysMonths = "months";
 let incomeChartType = 'line';
+
+let DAY_MONTH_WEKK;
 
 
 $('.carousel').carousel({
@@ -28,6 +31,12 @@ $(function () {
         changeYear: true,
         changeMonth: true,
     });
+
+    $('.date-range-customer').datepicker({
+        changeYear: true,
+        changeMonth: true,
+    });
+
 })
 
 
@@ -53,8 +62,8 @@ function getData() { // request data
 
             processByMonths(data.monthlyIncome);
             rentCount(data.rentCountPerCar);
-            monthlyRegistered(data.registeredPerMonth)
-
+            monthlyRegistered(data.registered)
+            console.log(data.registered)
 
         },
         error: function (error) {
@@ -73,8 +82,7 @@ $(document).on('change', '.date-range', function () { // date range for income
     let filteredData = {};
 
     // start.setHours(0, 0, 0, 0);
-    // end.setHours(0, 0, 0, 0);
-
+    end.setHours(23, 59, 59, 999);
     data = getOriginalData();
 
     $.each(data.monthlyIncome, function (dateKey, income) {
@@ -101,9 +109,11 @@ $(document).on('change', '.income-radio', function () { // months or date in x-a
 
 
     if (daysMonths == "months") {
+        $('.date-range').val('')
         let data = getOriginalData();
         processByMonths(data.monthlyIncome);
     } else if (daysMonths == "days") {
+        $('.date-range').val('')
         let data = getOriginalData();
         processByDays(data.monthlyIncome);
     }
@@ -230,7 +240,7 @@ $(document).on('change', '.car-radio', function () {
         rentCarChart.config.data.labels = Object.keys(carModels);
         rentCarChart.config.data.datasets = [
             {
-                label: 'Number Cars in Model ',
+                label: 'Cars Model ',
                 data: Object.values(carModels),
                 borderWidth: 1,
                 backgroundColor: colors(),
@@ -441,10 +451,203 @@ function groupByTypes(cars) {
 // --------------RENT COUNT OR INCOME PER CARS -------------
 
 
+
+// --------------- EWAN --------------------
+
+$(document).on('change', '#chart-types-customer', function () {
+    let value = $(this).val();
+    if (value == 'bar') {
+        regiteredChart.config.type = 'bar'
+        regiteredChart.update()
+    } else if (value == 'doughnut') {
+        regiteredChart.config.type = 'doughnut'
+        regiteredChart.update()
+    } else if (value == 'pie') {
+        regiteredChart.config.type = 'pie'
+        regiteredChart.update()
+    } else if (value == 'line') {
+        regiteredChart.config.type = 'line'
+        regiteredChart.update()
+    }
+})
+
+$(document).on('change', '.date-range-customer', function () {
+    let start = new Date($('#date-start-register').val())
+    let end = new Date($('#date-end-register').val())
+    end.setHours(23, 59, 59, 999);
+    // if (start && end) {
+    //     return "";
+    // }
+
+    let data = getOriginalData();
+
+    let customersData = []
+    $.each(data.registered, function (i, value) {
+        let date = new Date(value.created_at)
+        // console.log(i);
+        if (date >= start && date <= end) {
+
+            customersData.push(value);
+        }
+    })
+
+    if (DAY_MONTH_WEKK == "months-registered") {
+
+        groupByMonth(customersData)
+
+    } else if (DAY_MONTH_WEKK == "weeks-registered") {
+
+        groupByWeek(customersData)
+
+    } else if (DAY_MONTH_WEKK == "days-registered") {
+
+        groupByDay(customersData, start, end)
+
+    }
+})
+
+$(document).on('change', '.customer-radio', function () { // months or date in x-axis of chart
+    DAY_MONTH_WEKK = $(this).val();
+
+    let data = getOriginalData()
+
+
+    if (DAY_MONTH_WEKK == "months-registered") {
+        $('.date-range-customer').val('')
+        groupByMonth(data.registered)
+
+    } else if (DAY_MONTH_WEKK == "weeks-registered") {
+        $('.date-range-customer').val('')
+        groupByWeek(data.registered)
+
+    } else if (DAY_MONTH_WEKK == "days-registered") {
+        $('.date-range-customer').val('')
+        groupByDay(data.registered, '2023-01-01', '2023-12-31')
+
+    }
+})
+
+function groupByMonth(customers) {
+    const monthsData = {};
+
+    // Generate data for January to December
+    for (let month = 1; month <= 12; month++) {
+        let date = new Date();
+        date.setMonth(month - 1);
+        monthsData[date.toLocaleString('en-US', { month: 'long' })] = 0;
+    }
+
+    $.each(customers, function (i, value) {
+        let date = new Date(value.created_at);
+        let monthName = date.toLocaleString('en-US', { month: 'long' })
+
+        if (monthsData.hasOwnProperty(monthName)) {
+            monthsData[monthName]++;
+        }
+
+    })
+
+    regiteredChart.config.data.labels = Object.keys(monthsData);
+    regiteredChart.config.data.datasets = [
+        {
+            label: 'Monthly Registration',
+            data: Object.values(monthsData),
+            borderWidth: 1,
+            backgroundColor: colors(),
+            borderRadius: 10,
+            borderColor: '#7EAA92',
+            fill: true,
+            tension: 0.3,
+        }
+    ]
+    regiteredChart.update();
+}
+
+function groupByWeek(customers) {
+
+    const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const weekDayData = {};
+
+    $.each(weekday, function (i, value) {
+        weekDayData[value] = 0;
+    })
+
+    $.each(customers, function (i, value) {
+        let date = new Date(value.created_at);
+        let dayName = date.toLocaleString('en-US', { weekday: 'long' });
+
+        if (weekDayData.hasOwnProperty(dayName)) {
+            weekDayData[dayName]++;
+        }
+
+    })
+    console.log(weekDayData);
+    regiteredChart.config.data.labels = Object.keys(weekDayData);
+    regiteredChart.config.data.datasets = [
+        {
+            label: 'Week Registration',
+            data: Object.values(weekDayData),
+            borderWidth: 1,
+            backgroundColor: colors(),
+            borderRadius: 10,
+            borderColor: '#7EAA92',
+            fill: true,
+            tension: 0.3,
+        }
+    ]
+    regiteredChart.update();
+
+}
+
+
+function groupByDay(customers, start, end) {
+
+    let startDate = new Date(start);
+    let endDate = new Date(end);
+
+    startDate.setHours(23, 59, 59, 999);
+    endDate.setHours(23, 59, 59, 999);
+
+
+    let yearDates = [];
+
+    let currentDate = startDate;
+    while (currentDate <= endDate) {
+        const formattedDate = currentDate.toISOString().split('T')[0];
+        yearDates[formattedDate] = 0;
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+
+
+    $.each(customers, function (i, value) {
+        let date = new Date(value.created_at)
+        let format = date.toISOString().split('T')[0];
+        if (yearDates.hasOwnProperty(format)) {
+            yearDates[format]++;
+        }
+    })
+    regiteredChart.config.data.labels = Object.keys(yearDates);
+    regiteredChart.config.data.datasets = [
+        {
+            label: 'Dates Registration',
+            data: Object.values(yearDates),
+            borderWidth: 1,
+            backgroundColor: colors(),
+            borderRadius: 10,
+            borderColor: '#7EAA92',
+            fill: true,
+            tension: 0.3,
+        }
+    ]
+    regiteredChart.update();
+}
+
+
 function monthlyRegistered(data) {
     const ctx = document.getElementById('customerRegisteredChart');
 
-    new Chart(ctx, {
+    regiteredChart = new Chart(ctx, {
         type: 'bar',
         data: {
             labels: Object.keys(data),
@@ -467,6 +670,12 @@ function monthlyRegistered(data) {
 }
 
 
+
+// --------------- EWAN --------------------
+
+
+
+
 function colors() {
     return [
         '#7158e2',
@@ -486,5 +695,3 @@ function colors() {
         "#AAAAAA",
     ]
 }
-
-
