@@ -19,11 +19,16 @@
 @endsection
 @include('layouts.session-messages')
 @section('content')
-<style>
-    .role{
-        text-transform: capitalize;
-    }
-</style>
+    <style>
+        .role {
+            text-transform: capitalize;
+
+        }
+
+        td.lowercase {
+            text-transform: lowercase !important;
+        }
+    </style>
     <section class="content">
         <div class="container-fluid">
             <div class="row">

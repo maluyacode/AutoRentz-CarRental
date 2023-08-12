@@ -21,6 +21,7 @@ class UserBookListener
         $mail = new MailBooking($event->book);
         $mailmessage = $mail->build();
         $mailmessage->from($event->email, $event->name);
+        $mailmessage->subject('New Reservation');
         Mail::to('autorentz24@gmail.com')->send($mailmessage);
     }
 }

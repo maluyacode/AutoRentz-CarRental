@@ -239,6 +239,7 @@ class UserController extends Controller
         try {
             UserBookEvent::dispatch($newbook, $user->email, $user->name);
         } catch (\Exception $e) {
+            Debugbar::info($e);
             return redirect()->route('viewusergarage')->with('success', 'Reservation confirmed, without notify email to admin, due to connection problem');
         }
 

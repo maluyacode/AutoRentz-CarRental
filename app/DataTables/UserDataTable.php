@@ -119,6 +119,7 @@ class UserDataTable extends DataTable
                 ->title('IMAGES')
                 ->searchable(false),
             Column::make('email')
+                ->addClass('lowercase')
                 ->title('EMAIL')
                 ->searchable(false),
             Column::make('role')

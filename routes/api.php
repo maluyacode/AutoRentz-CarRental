@@ -70,7 +70,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::get('/accessories/{id}/view/images', [AccessoriesController::class, 'viewMedia']);
     Route::post('/accessories/import', [AccessoriesController::class, 'import']);
 
-    Route::middleware('auth')->group(function () {
+    Route::middleware('blockuser')->group(function () {
         Route::get('/bookings', [BookingController::class, 'bookings']);
         Route::get('/pendings', [BookingController::class, 'adminPendings'])->name('adminPendings');
         Route::get('/confirms', [BookingController::class, 'adminConfirms'])->name('adminConfirms');

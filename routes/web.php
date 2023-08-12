@@ -117,6 +117,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
         Route::put('/update/{id}/users', [UserController::class, 'updateUser'])->name('users.update');
         Route::delete('/delete/{id}/users', [UserController::class, 'destroyUser'])->name('users.destroy');
     });
+
     Route::get('report/sales', function () {
         return view('admin.bookings.report');
     })->name('report');

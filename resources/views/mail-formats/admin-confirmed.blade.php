@@ -121,6 +121,7 @@
                     @else
                         <dd>Self Drive</dd>
                     @endif
+                    <dt> <a href="{{ route('print', $book->id) }}">Download</a></dt>
                 </dl>
                 <div style="width: 100%; height: 75px; text-align: right;">
                     <h3 style="margin-right: 50px;">Total Rent Price: ₱{{ number_format($total, 2, '.', ',') }}
