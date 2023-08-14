@@ -18,7 +18,8 @@ use App\DataTables\PendingDataTable;
 use App\DataTables\ConfirmDataTable;
 use App\DataTables\FinishDataTable;
 use App\Models\Customer;
-use Barryvdh\DomPDF\Facade\Pdf;
+// use Barryvdh\DomPDF\Facade\Pdf;
+use Barryvdh\DomPDF\PDF;
 
 class BookingController extends Controller
 {
@@ -196,54 +197,36 @@ class BookingController extends Controller
 
     public function print($id)
     {
-        $book = Booking::find($id);
-        $customer = Customer::find($book->customer_id);
-        $accessInfo = new AccessInformation();
-        if ($book->driver_id) {
-            $driver = Driver::find($book->driver_id);
-        } else {
-            $driver = null;
-        }
+        $book = Booking::with([
+            'customer',
+            'customer.user',
+            'car',
+            'car.accessories',
+            'car.modelo',
+            'car.modelo.type',
+            'car.modelo.manufacturer',
+            'car.transmission',
+            'car.fuel',
+            'picklocation',
+            'returnlocation',
+            'driver',
+        ])->find($id);
 
-        $car = DB::table('cars as ca')
-            ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-            ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-            ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-            ->join('types as ty', 'ty.id', 'mo.type_id')
-            ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-            ->select(
-                'ca.*',
-                'fu.name as fuelname',
-                'ta.name as transname',
-                'mo.name as modelname',
-                'mo.year as modelyear',
-                'ty.name as typename',
-                'ma.name as manufacturername',
-                'fu.id as fuelID',
-                'ta.id as transID',
-                'mo.id as modelID',
-                'ty.id as typeID',
-                'ma.id as manuID'
-            )->where('ca.id', $book->car_id)
-            ->first();
-        $accessory = DB::table('cars as ca')
-            ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-            ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-            ->get();
-        $customerClass = new CustomerClass();
-        $totalPrice = $customerClass->computationDisplay($book->start_date, $book->end_date, $car->price_per_day, $accessory, $car->id);
+        $additionalFee = $book->car->accessories->map(function ($accessory) {
+            return $accessory->fee;
+        })->sum();
+        $days = date_diff(
+            date_create($book->end_date),
+            date_create($book->start_date)
+        )->format('%a') + 1;
+        $carPrice = $additionalFee + $book->car->price_per_day;
+        $total = $carPrice * $days;
 
-        $data = [
-            'book' => $book,
-            'customer' => $customer,
-            'car' => $car,
-            'accessInfo' => $accessInfo,
-            'driver' => $driver,
-            'totalPrice' => $totalPrice
-        ];
-        $date = $accessInfo->formatDate(now());
-        $pdf = Pdf::loadView('print.transaction', $data);
-        return $pdf->download('autorentzinvoice_' . $id . '_' . $date . '.pdf');
+        $pdf = app(PDF::class);
+        $view = view('print.transaction', ['book' => $book, 'total' => $total, 'carPrice' => $carPrice]);
+        $pdf->loadHTML($view->render());
+
+        return $pdf->download('autorentzinvoice_' . $id . '_' . now() . '.pdf');
         // return View::make('print.transaction', compact('book', 'customer', 'car', 'accessInfo', 'driver', 'totalPrice'));
     }
 

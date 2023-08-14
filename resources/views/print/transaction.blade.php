@@ -113,8 +113,8 @@
                 </th>
                 <th width="50%" colspan="2" class="text-end company-data">
                     <span>Book Id: #{{ $book->id }}</span> <br>
-                    <span>Booking Date: {{ $accessInfo->formatDate($book->created_at) }}</span> <br>
-                    <span>Confirmed Date: : {{ $accessInfo->formatDate($book->updated_at) }}</span> <br>
+                    <span>Booking Date: {{ $book->created_at }}</span> <br>
+                    <span>Confirmed Date: : {{ $book->updated_at }}</span> <br>
                 </th>
             </tr>
             <tr class="bg-blue">
@@ -128,44 +128,44 @@
                 <td>{{ $book->id }}</td>
 
                 <td>Full Name:</td>
-                <td>{{ $customer->name }}</td>
+                <td>{{ $book->customer->name }}</td>
             </tr>
             <tr>
                 <td>Start Date:</td>
-                <td>{{ $accessInfo->formatDate($book->start_date) }}</td>
+                <td>{{ $book->start_date }}</td>
                 <td></td>
                 <td></td>
             </tr>
             <tr>
                 <td>End Date:</td>
-                <td>{{ $accessInfo->formatDate($book->end_date) }}</td>
+                <td>{{ $book->end_date }}</td>
 
                 <td>Email Address:</td>
-                <td>{{ $customer->email }}</td>
+                <td>{{ $book->customer->email }}</td>
             </tr>
             <tr>
                 @if (!$book->address)
                     <td>Pickup Location:</td>
-                    <td>{{ $accessInfo->picklocation($book->pickup_location_id) }}</td>
+                    <td>{{ $book->picklocation->street . ' ' . $book->picklocation->baranggay }}</td>
                 @else
                     <td></td>
                     <td></td>
                 @endif
 
                 <td>Phone:</td>
-                <td>{{ $customer->phone }}</td>
+                <td>{{ $book->customer->phone }}</td>
             </tr>
             <tr>
                 @if (!$book->address)
                     <td>Return Location:</td>
-                    <td>{{ $accessInfo->returnlocation($book->return_location_id) }}</td>
+                    <td>{{ $book->returnlocation->street . ' ' . $book->returnlocation->baranggay }}</td>
                 @else
                     <td></td>
                     <td></td>
                 @endif
 
                 <td>Address:</td>
-                <td>{{ $customer->address }}</td>
+                <td>{{ $book->customer->address }}</td>
             </tr>
             <tr>
                 @if ($book->address)
@@ -188,9 +188,9 @@
                 @if ($book->driver_id)
                     <td>Driver:</td>
                     <td style="text-transform: capitalize"><a href="">
-                            {{ $driver->fname }} {{ $driver->lname }} -
+                            {{ $book->driver->fname }} {{ $book->driver->lname }} -
                             Licensed NO:
-                            {{ $driver->licensed_no }}
+                            {{ $book->driver->licensed_no }}
                         </a>
                     </td>
                 @else
@@ -223,21 +223,23 @@
         </thead>
         <tbody>
             <tr>
-                <td>{{ $car->platenumber }}</td>
+                <td>{{ $book->car->platenumber }}</td>
                 <td>
-                    <a href="">{{ $car->modelname }} {{ $car->modelyear }} {{ $car->typename }} -
-                        {{ $car->manufacturername }}
+                    <a href="">{{ $book->car->modelo->name }} {{ $book->car->modelo->year }}
+                        {{ $book->car->modelo->type->name }} -
+                        {{ $book->car->modelo->manufacturer->name }}
                     </a>
                 </td>
-                <td>{{ $car->seats }}</td>
-                <td>{{ $car->transname }}</td>
-                <td style="text-transform: capitalize">{{ $car->fuelname }}</td>
-                <td>{{ $car->price_per_day }}</td>
-                <td>{{ $accessInfo->countDays($book->start_date, $book->end_date) }}</td>
+                <td>{{ $book->car->seats }}</td>
+                <td>{{ $book->car->transmission->name }}</td>
+                <td style="text-transform: capitalize">{{ $book->car->fuel->name }}</td>
+                <td>{{ $carPrice }}</td>
+                <td>{{ $days = date_diff(date_create($book->end_date), date_create($book->start_date))->format('%a') + 1 }}
+                </td>
             </tr>
             <tr>
                 <td colspan="4" class="total-heading">Total Rent Price</td>
-                <td colspan="5" class="total-heading">PHP {{ $totalPrice }}</td>
+                <td colspan="5" class="total-heading">PHP {{ $total }}</td>
             </tr>
         </tbody>
     </table>

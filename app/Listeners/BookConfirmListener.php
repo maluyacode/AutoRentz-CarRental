@@ -30,9 +30,9 @@ class BookConfirmListener
     {
         // dd($event->book);
         $mail = new MailToUser($event->book);
-        $mailmessage = $mail->build();
-        $mailmessage->from('autorentz24@gmail.com', 'AutoRentz');
-        $mailmessage->subject('Reservation Confirmed');
-        Mail::to($event->book->customer->user->email)->send($mailmessage);
+        // $mailmessage = $mail->build();
+        $mail->from('autorentz24@gmail.com', 'AutoRentz');
+        $mail->subject('Reservation Confirmed');
+        Mail::to($event->book->customer->user->email)->send($mail);
     }
 }

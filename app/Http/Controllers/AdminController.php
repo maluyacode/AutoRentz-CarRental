@@ -180,13 +180,15 @@ class AdminController extends Controller
                 'car.modelo',
                 'car.modelo.type',
                 'car.modelo.manufacturer',
+                'car.transmission',
+                'car.fuel',
                 'picklocation',
                 'returnlocation',
                 'driver',
             ])->find($id);
             BookConfirmEvent::dispatch($book);
         } catch (\Exception $e) {
-            dd($e);
+            Debugbar::info($e);
             return back()->with('update', 'Book confirmed, without email due to connection problem');
         }
     }
