@@ -15,33 +15,20 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class DriverController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(DriverDataTable $dataTable)
     {
         $drivers = Driver::with(['media'])->whereKeyNot(1)->get();
         return response()->json($drivers);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
         return view('drivers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function viewMedia($id)
     {
         $driver = Driver::find($id);
@@ -110,23 +97,13 @@ class DriverController extends Controller
         return response()->json($driver);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $driver = Driver::find($id);
@@ -135,13 +112,7 @@ class DriverController extends Controller
         return response()->json($driver);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         Debugbar::info($id);
@@ -177,12 +148,7 @@ class DriverController extends Controller
         return response()->json($driver);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function destroy($id)
     {
         Driver::destroy($id);
@@ -199,7 +165,7 @@ class DriverController extends Controller
         } else {
             $searchValue = $data && false;
         }
-        // dd($searchValue);
+
         $drivers = DB::table('drivers')
             ->whereNotIn('id', [1])
             ->where(function ($query) use ($searchValue) {

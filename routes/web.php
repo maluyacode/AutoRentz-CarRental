@@ -35,35 +35,33 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
 Route::get('/home', [CarController::class, 'carlists'])->name('home');
 Route::any('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
 Route::get('/locations/{id}/show', [LocationController::class, 'show'])->name('locations.show');
-// Route::post('/locations/{data?}', [LocationController::class, 'locationlists'])->name('locations');
 Route::any('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
-// Route::post('/drivers/{data?}', [DriverController::class, 'driverlists'])->name('drivers');
 Route::get('/driver/{id}', [DriverController::class, 'driverDetails'])->name('driver.details');
 Route::post('/search', [SearchController::class, 'search'])->name('global.search');
 
-// for Listing, Viewing details
 Route::prefix('fleet/car')->group(function () {
     Route::get('/details/{id}', [CarController::class, 'cardetails'])->name('cardetails');
     Route::get('/search', [CarController::class, 'carsearch'])->name('carsearch');
 });
 
-//User Routes
+
 Route::prefix('user')->middleware(['auth'])->group(function () {
+
     Route::get('/profile', [UserController::class, 'profile'])->name('viewprofile');
     Route::put('/edit/{id}', [UserController::class, 'edit'])->name('editprofile');
     Route::put('change/{id}/password', [UserController::class, 'changePassword'])->name('changePassword');
     Route::get('/addtogarage/{id}', [UserController::class, 'addtousergarage'])->name('addtogarage');
     Route::get('/view/garage', [UserController::class, 'viewusergarage'])->name('viewusergarage');
-    // Route::get('/edit/garage/car/{id}', [UserController::class, 'editgarage'])->name('editgarage');
     Route::post('/save/bookinfo/{id}', [UserController::class, 'savegarage'])->name('savegarage');
     Route::get('/remove/car/garage/{id}', [UserController::class, 'removecargarage'])->name('removecargarage');
     Route::post('/book/car/garage', [UserController::class, 'bookcar']);
 
-
     Route::prefix('/booking')->group(function () {
+
         Route::get('view/pendings', [BookingController::class, 'pendings'])->name('pendings');
         Route::get('/edit/{id}', [BookingController::class, 'editbooking'])->name('edit');
         Route::post('/save/{id}', [BookingController::class, 'savechanges'])->name('savechanges');
@@ -77,15 +75,17 @@ Route::prefix('user')->middleware(['auth'])->group(function () {
 });
 
 
-//Administrator Routes
 Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+
     Route::get('/dashboard', [AdminController::class, 'AdminDashboard'])->name('admindashboard');
 
     Route::view('/location', 'location.index')->name('location.index'); //mp4
-    // Cars
+
     Route::prefix('car')->group(function () {
+
         Route::resource('manufacturers', ManufacturerController::class);
         Route::post('manufacturer/storeMedia', [ManufacturerController::class, 'storeMedia'])->name('manufacturer.storeMedia');
+
         Route::resource('types', TypeController::class);
         Route::resource('model', ModelController::class);
         Route::resource('fuel', FuelController::class);
@@ -98,7 +98,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     });
 
     Route::middleware('blockuser')->group(function () {
-        // Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+
         Route::view('/bookings', 'admin.bookings.index')->name('bookings.index');
 
         Route::get('/bookings/create', [AdminController::class, 'createBooking'])->name('createBooking');
@@ -119,6 +119,7 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     });
 
     Route::get('report/sales', function () {
+
         return view('admin.bookings.report');
     })->name('report');
 });

@@ -1,10 +1,8 @@
 <?php
 
 use App\Http\Controllers\AdminController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Car\CarController;
-use App\Http\Controllers\Car\FuelController;
 use App\Http\Controllers\Car\TransmissionController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\LocationController;
@@ -27,8 +25,10 @@ use App\Http\Controllers\BookingController;
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
 Route::get('/search/any', [SearchController::class, 'dataSearch']);
 Route::get('/car/listing', [CarController::class, 'carlisting']);
+
 Route::middleware('auth', 'admin')->group(function () {
 
     Route::get('/show/{id}', [CarController::class, 'show']);
@@ -71,6 +71,7 @@ Route::middleware('auth', 'admin')->group(function () {
     Route::post('/accessories/import', [AccessoriesController::class, 'import']);
 
     Route::middleware('blockuser')->group(function () {
+
         Route::get('/bookings', [BookingController::class, 'bookings']);
         Route::get('/pendings', [BookingController::class, 'adminPendings'])->name('adminPendings');
         Route::get('/confirms', [BookingController::class, 'adminConfirms'])->name('adminConfirms');
@@ -84,6 +85,7 @@ Route::middleware('auth', 'admin')->group(function () {
 });
 
 Route::middleware(['auth'])->group(function () {
+
     Route::get('/garage', [UserController::class, 'garage']);
     Route::get('/car/{id}/bookform', [UserController::class, 'carBookForm']);
 });

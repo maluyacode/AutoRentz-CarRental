@@ -13,11 +13,7 @@ use Barryvdh\Debugbar\Facades\Debugbar;
 
 class TransmissionController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(TransmissionDataTable $dataTable)
     {
         // $transmissions = Transmission::all();
@@ -25,22 +21,11 @@ class TransmissionController extends Controller
         return $dataTable->render('car.transmission.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         return view('car.transmission.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         $rules = [
@@ -60,36 +45,17 @@ class TransmissionController extends Controller
         return response()->json(["created" => "New transmission type sucessfully created!", "status" => 200]);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $transmission = Transmission::find($id);
         return View::make('car.transmission.edit', compact('transmission'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         Debugbar::info($request);
@@ -110,12 +76,6 @@ class TransmissionController extends Controller
         return response()->json(["update" => "Transmission updated!", "status" => 200]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         Transmission::destroy($id);

@@ -144,3 +144,13 @@ main {
 .btn-search {
     z-index: 0 !important;
 }
+
+#tags{
+    margin-top: 0px !important;
+    letter-spacing: 1px;
+}
+
+.search-item{
+    display: flex;
+    align-items: center;
+}

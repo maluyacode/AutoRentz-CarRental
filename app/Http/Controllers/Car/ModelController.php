@@ -17,11 +17,7 @@ use Illuminate\Support\Facades\Session;
 
 class ModelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(ModeloDataTable $dataTable)
     {
         // $modelos = DB::table('manufacturers as ma')
@@ -34,11 +30,6 @@ class ModelController extends Controller
         return $dataTable->render('car.model.index');
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         $manufacturers = Manufacturer::all();
@@ -46,12 +37,6 @@ class ModelController extends Controller
         return View::make('car.model.create', compact('manufacturers', 'types'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         // dd($request->type);
@@ -74,23 +59,11 @@ class ModelController extends Controller
         return redirect()->route('model.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         $model =  DB::table('manufacturers as ma')
@@ -104,13 +77,6 @@ class ModelController extends Controller
         return View::make('car.model.edit', compact('model', 'manufacturers', 'types'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         // dd($request);
@@ -133,12 +99,6 @@ class ModelController extends Controller
         return redirect()->route('model.index')->with("update", "Updated Succesfully!");
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         Modelo::destroy($id);

@@ -29,7 +29,6 @@
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @if (Auth::check() && (Auth::user()->role == 'admin' || Auth::user()->role == 'user'))
                             <a class="nav-link nav-dashboard nav-link-color" id="link1"
@@ -37,9 +36,6 @@
                                 Dashboard
                             </a>
                         @endif
-                        {{-- <a class="nav-link" href="{{ route('home') }}">
-                                Home
-                            </a> --}}
                         <a class="nav-link nav-home nav-link-color" id="link2" href="{{ route('home') }}"
                             style="color: #F6F1E9;">
                             Home
@@ -56,7 +52,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         <!-- Authentication Links -->
-                        <li class="nav-item ">
+                        <li class="nav-item search-item">
                             <form action="{{ route('global.search') }}" method="POST">
                                 @csrf
                                 <div class="form-group global-search" style="width: 400px">
@@ -65,7 +61,7 @@
                                             placeholder="Input keywords" name="search">
                                     </div>
                                     <button class="btn btn-warning btn-sm" type="submit"
-                                        style="height: 40px; margin-top:8px; margin-left:-52px;">Search</button>
+                                        style="height: 40px; margin-left:-52px;">Search</button>
                                 </div>
                             </form>
                         </li>
@@ -109,7 +105,7 @@
                                 @endif
                             </a>
                             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown"
-                                style="right: 45px; top:80px; z-index: 1;">
+                                style="right: 150px; top:80px; z-index: 1;">
                                 <a class="dropdown-item" href="{{ route('pendings') }}">Bookings</a>
                                 <a class="dropdown-item" href="{{ route('viewprofile', Auth::user()->id) }}">
                                     Profile

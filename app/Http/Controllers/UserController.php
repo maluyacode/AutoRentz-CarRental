@@ -31,7 +31,6 @@ class UserController extends Controller
 {
     public function profile() // viewing profile of a user/customer
     {
-        // dd(Session::all());
         $customer = Customer::where('user_id', Auth::user()->id)->first();
         if (!$customer) {
             $customer = new CustomerClass;
@@ -144,6 +143,7 @@ class UserController extends Controller
                 $garage[$car->id]["totalPrice"] = $car->price_per_day + $accessoriesFee;
             }
         }
+
         $carInGarage = null;
         foreach ($garage as $key => $garageData) {
 
@@ -167,41 +167,6 @@ class UserController extends Controller
 
         return View::make('user.garage', compact('carInGarage', 'locations'));
     }
-
-    public function carBookForm($id)
-    {
-        // $carInGarage = Session::get('garage' . Auth::user()->id)[$id];
-        // $car = new CustomerClass();
-
-        // $carAccessories = Car::find($carInGarage['car_id'])->accessories()->get();
-
-        // $location = new Location;
-
-        // if ($carInGarage['pick_id'] && $carInGarage['return_id']) {
-        //     $pickLocation = Location::whereNotIn('id', [$carInGarage['pick_id']])->get();
-        //     $returnLocation = Location::whereNotIn('id', [$carInGarage['return_id']])->get();
-        //     // dd($pickLocation);
-        // } else {
-        //     $pickLocation = Location::all();
-        //     $returnLocation = Location::all();
-        // }
-        // dd($name->street);
-        // dd($bookcar['car_id']);
-        // return View::make('user.edit-garage-car', compact('carInGarage', 'car', 'carAccessories', 'location', 'pickLocation', 'returnLocation'));
-
-    }
-
-    public function savegarage(Request $request, $id)
-    {
-        Debugbar::info($request);
-        // $customerClass = new CustomerClass;
-        // $transactionType = $customerClass->CheckTypeOfTransaction($request->typeget, $request->return_id, $request->pick_id, $request->address);
-        // $editedInfo = ['customer_id' => $request->customer_id, 'car_id' => $id, 'start_date' => $request->start_date, 'end_date' => $request->end_date, 'pick_id' => $transactionType['pick_id'], 'return_id' => $transactionType['return_id'], 'address' => $transactionType['address'], 'driver_id' => $request->drivetype, 'status' => 'pending'];
-        // $updatedInfo =  $customerClass->saveToGarageSession($editedInfo);
-        // return back()->with("update", "Updated Successfully!");
-        return response()->json([]);
-    }
-
 
     public function removecargarage($id)
     {

@@ -19,61 +19,13 @@
                                     <!-- small box -->
                                     <div class="small-box bg-info" style="text-align: center">
                                         <div class="inner">
-                                            <h3>₱{{ number_format($totalPrice, 2, '.', ',') }}</h3>
+                                            <h3>₱{{ number_format($totalIncome, 2, '.', ',') }}</h3>
                                             <p>Overall Income</p>
                                         </div>
                                         <a href="{{ route('bookings.index') }}" class="small-box-footer">More info <i
                                                 class="fas fa-arrow-circle-right"></i></a>
                                     </div>
                                 </div>
-                                <!-- ./col -->
-                                {{-- <div class="col-lg-3 col-6" style="text-align: center">
-                                    <!-- small box -->
-                                    <div class="small-box bg-secondary">
-                                        <div class="inner">
-                                            <h3>{{ $pendings }}</h3>
-
-                                            <p>Pendings</p>
-                                        </div>
-                                        <a href="{{ route('adminPendings') }}" class="small-box-footer">More info <i
-                                                class="fas fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                                <!-- ./col -->
-                                <div class="col-lg-3 col-6" style="text-align: center">
-                                    <!-- small box -->
-                                    <div class="small-box bg-warning">
-                                        <div class="inner">
-                                            <h3>{{ $confirmed }}</h3>
-                                            <p>Confirmed</p>
-                                        </div>
-                                        <a href="{{ route('adminConfirms') }}" class="small-box-footer">More info <i
-                                                class="fas fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                                <!-- ./col -->
-                                <div class="col-lg-3 col-6" style="text-align: center">
-                                    <!-- small box -->
-                                    <div class="small-box bg-success">
-                                        <div class="inner">
-                                            <h3>{{ $finished }}</h3>
-
-                                            <p>Finished</p>
-                                        </div>
-                                        <a href="{{ route('adminFinish') }}" class="small-box-footer">More info <i
-                                                class="fas fa-arrow-circle-right"></i></a>
-                                    </div>
-                                </div>
-                                <div class="col-lg-3 col-6" style="text-align: center">
-                                    <!-- small box -->
-                                    <div class="small-box bg-danger">
-                                        <div class="inner">
-                                            <h3>{{ $cancelled }}</h3>
-                                            <p>Cancelled</p>
-                                        </div>
-                                    </div>
-                                </div> --}}
-                                <!-- ./col -->
                         @endif
                         <div class="col-lg-3 col-6" style="text-align: center">
                             <!-- small box -->

@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\AccessInformation;
-use App\Charts\CarRentChart;
-use App\Charts\CustomerRegisterChart;
-use App\Charts\MonthlyIncomeChart;
-use App\CustomerClass;
 use App\Events\BookConfirmEvent;
 use App\Models\Booking;
 use App\Models\Car;
@@ -14,34 +10,16 @@ use App\Models\Customer;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use App\Models\Location;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
-use PhpParser\Node\Expr\Cast\Bool_;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\MailToUser;
 use App\TotalRentPrice;
 use Barryvdh\Debugbar\Facades\Debugbar;
 use DateTime;
 
 class AdminController extends Controller
 {
-    private $color;
-    public function __construct()
-    {
-        return $this->color = [
-            'rgba(255, 99, 132, 0.2)',
-            'rgba(255, 159, 64, 0.2)',
-            'rgba(255, 205, 86, 0.2)',
-            'rgba(75, 192, 192, 0.2)',
-            'rgba(54, 162, 235, 0.2)',
-            'rgba(153, 102, 255, 0.2)',
-            'rgba(201, 203, 207, 0.2)'
-        ];
-    }
-
     public function chartsData()
     {
         // charts whole year income
@@ -84,9 +62,6 @@ class AdminController extends Controller
         // charts whole year income
 
         $carData = Car::with(['bookings', 'accessories', 'modelo', 'modelo.type', 'modelo.manufacturer'])->get();
-
-
-
         $registered = Customer::with(['bookings', 'bookings.car'])->get();
 
 
@@ -99,20 +74,23 @@ class AdminController extends Controller
 
     public function AdminDashboard()
     {
-        $allBooking = DB::table('bookings')
-            ->select('bookings.*', 'cars.id as car_id', 'cars.price_per_day as price_per_day')
-            ->join('cars', 'cars.id', 'bookings.car_id')
-            ->where('status', 'finished')
-            ->get();
-        $accessory = DB::table('cars as ca')
-            ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-            ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-            ->get();
-        $compute = new CustomerClass();
-        $totalPrice = 0;
-        foreach ($allBooking as $booking) {
-            $totalPrice += $compute->computationDisplay($booking->start_date, $booking->end_date, $booking->price_per_day, $accessory, $booking->car_id);
-        }
+
+        $bookings = Booking::with(['car', 'car.accessories'])->get();
+
+        $totalIncome = $bookings->map(function ($booking) {
+
+            $days = date_diff(
+                date_create($booking->end_date),
+                date_create($booking->start_date)
+            )->format('%a') + 1;
+
+            $accessoriesFee = $booking->car->accessories->map(function ($accessory) {
+                return $accessory->fee;
+            })->sum();
+
+            return ($booking->car->price_per_day + $accessoriesFee) * $days;
+        })->sum();
+
         $pendings = Booking::where('status', 'pending')->withTrashed()->get()->count();
         $confirmed = Booking::where('status', 'confirmed')->withTrashed()->get()->count();
         $finished = Booking::where('status', 'finished')->withTrashed()->get()->count();
@@ -122,122 +100,10 @@ class AdminController extends Controller
         $drivers = Driver::whereNotIn('id', [1])->get()->count();
         $locations = Location::all()->count();
 
-
-        // Monthly Income Chart
-        $bookings = Booking::with(['car', 'car.accessories'])
-            ->where('status', '=', 'finished')
-            ->withTrashed()
-            ->orderBy('created_at')
-            ->get();
-
-        foreach ($bookings as $booking) {
-            $days = date_diff(
-                date_create($booking->end_date),
-                date_create($booking->start_date)
-            )->format('%a') + 1;
-            $accessoriesFee = $booking->car->accessories->map(function ($accessory) {
-                return $accessory->fee;
-            })->sum();
-
-            $monthly[] = [
-                "month" => date_create($booking->created_at)->format("F"),
-                "rent" => ($booking->car->price_per_day + $accessoriesFee) * $days
-            ];
-        }
-
-        for ($i = 1; $i <= 12; $i++) {
-            $months[date('F', mktime(0, 0, 0, $i, 10))] = 0;
-        }
-
-        foreach ($monthly as $key => $income) {
-            if (array_key_exists($income["month"], $months)) {
-                $months[$income["month"]] += $income["rent"];
-            }
-        }
-
-        $monthlyIncome = new MonthlyIncomeChart;
-        $monthlyIncome->labels(array_keys($months));
-        $monthlyIncome->dataset("Monthly Income 2023", 'line', array_values($months))->options([
-            "backgroundColor" => $this->color,
-            "borderColor" => 'rgba(0, 0, 0, 0.1)',
-            "tension" => 0.2,
-            "fill" => true,
-            "minBarLength" => 2,
-        ]);
-
-        $monthlyIncome->displayLegend(false);
-        $monthlyIncome->title("Monthly Income 2023", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
-
-
-        // Car Rent Chart
-        $carData = DB::table('cars')
-            ->leftJoin('bookings', function ($join) {
-                $join->on('cars.id', 'bookings.car_id');
-                $join->where('bookings.status', '=', 'finished');
-            })
-            ->groupBy('platenumber')
-            ->pluck(
-                DB::raw('count(car_id)'),
-                'platenumber'
-            )->all();
-
-        $carRentChart = new CarRentChart;
-        $carRentChart->labels(array_keys($carData));
-        $carRentChart->dataset(false, "bar", array_values($carData))->options([
-            "backgroundColor" => $this->color,
-            "borderColor" => $this->color,
-            "minBarLength" => 2,
-            "hoverBackgroundColor" => [
-                'rgb(255, 99, 132)',
-                'rgb(255, 159, 64)',
-                'rgb(255, 205, 86)',
-                'rgb(75, 192, 192)',
-                'rgb(54, 162, 235)',
-                'rgb(153, 102, 255)',
-                'rgb(201, 203, 207)'
-            ],
-        ]);
-        $carRentChart->displayLegend(false);
-        $carRentChart->title("Car Rents", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
-
-
-        // Registered Customers Chart
-        $customer = DB::table('customers')
-            ->groupBy('month')
-            ->select(
-                DB::raw('count(monthname(created_at)) as count'),
-                DB::raw('monthname(created_at) as month'),
-            )
-            ->orderBy('month', 'ASC')
-            ->get()
-            ->toArray();
-
-        for ($i = 1; $i <= 12; $i++) {
-            $months[date('F', mktime(0, 0, 0, $i, 10))] = 0;
-        }
-
-        foreach ($customer as $key => $customerJoin) {
-            if (array_key_exists($customerJoin->month, $months)) {
-                $months[$customerJoin->month] = $customerJoin->count;
-            }
-        }
-
-        $customerRegister = new CustomerRegisterChart;
-        $customerRegister->labels(array_keys($months));
-        $customerRegister->dataset('Registered Customers 2023', "line", array_values($months))->options([
-            "backgroundColor" => $this->color,
-            "borderColor" => 'rgb(75, 192, 192)',
-            "minBarLength" => 2,
-            "fill" => false,
-        ]);
-        $customerRegister->displayLegend(false);
-        $customerRegister->title("Registered Customers 2023", 20, '#666', true, "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif");
-
-
         return view(
             'admin.dashboard',
             compact(
-                'totalPrice',
+                'totalIncome',
                 'pendings',
                 'confirmed',
                 'finished',
@@ -246,25 +112,8 @@ class AdminController extends Controller
                 'drivers',
                 'users',
                 'locations',
-                'carRentChart',
-                'customerRegister',
-                'monthlyIncome'
             )
         );
-    }
-
-
-    public function color()
-    {
-        return [
-            'rgb(255, 99, 132)',
-            'rgb(255, 159, 64)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(54, 162, 235)',
-            'rgb(153, 102, 255)',
-            'rgb(201, 203, 207)'
-        ];
     }
 
     public function confirmBooking(Request $request, $id)
@@ -394,27 +243,7 @@ class AdminController extends Controller
         $allcustomer = Customer::all();
         $accessInfo = new AccessInformation();
         $allCar = $accessInfo->carJoined()->get();
-        // $allCar = DB::table('cars as ca')
-        //     ->join('fuels as fu', 'fu.id', 'ca.fuel_id')
-        //     ->join('transmissions as ta', 'ta.id', 'ca.transmission_id')
-        //     ->join('modelos as mo', 'mo.id', 'ca.modelos_id')
-        //     ->join('types as ty', 'ty.id', 'mo.type_id')
-        //     ->join('manufacturers as ma', 'ma.id', 'mo.manufacturer_id')
-        //     ->select(
-        //         'ca.*',
-        //         'fu.name as fuelname',
-        //         'ta.name as transmissionname',
-        //         'mo.name as modelname',
-        //         'mo.year as modelyear',
-        //         'ty.name as typename',
-        //         'ma.name as manufacturername',
-        //         'fu.id as fuelID',
-        //         'ta.id as transID',
-        //         'mo.id as modelID',
-        //         'ty.id as typeID',
-        //         'ma.id as manuID'
-        //     )
-        //     ->get();
+
         return View::make('admin.bookings.create', compact('allLocation', 'allcustomer', 'allCar'));
     }
 
@@ -612,9 +441,7 @@ class AdminController extends Controller
             'car.modelo:id,manufacturer_id,type_id,name,year',
             'car.modelo.manufacturer:id,name',
             'car.modelo.type:id,name',
-        ])
-            ->whereBetween('start_date', [$request->start, $request->end])
-            ->get();
+        ])->whereBetween('start_date', [$request->start, $request->end])->get();
 
         foreach ($bookings as $key => $booking) {
 

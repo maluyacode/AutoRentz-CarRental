@@ -243,7 +243,7 @@ class CarController extends Controller
         });
 
         $car->accessories()->detach($prevAcessories);
-        $car->accessories()->attach(array_values($request->accessories_id));
+        $car->accessories()->attach(array_values($request->accessories_id)); // attach method
 
         if ($request->document !== null) {
             foreach ($request->input("document", []) as $file) {
@@ -268,18 +268,6 @@ class CarController extends Controller
             'media'
         ])->where('id', $id)->first();
 
-        // if ($request->accessories_id) {
-        //     DB::table('accessorie_car')->where('car_id', $id)->delete();
-        //     foreach ($request->accessories_id as $key => $data) {
-        //         DB::table('accessorie_car')
-        //             ->insert([
-        //                 "car_id" => $id,
-        //                 "accessorie_id" => $data
-        //             ]);
-        //     }
-        // } else {
-        //     DB::table('accessorie_car')->where('car_id', $id)->delete();
-        // }
         return response()->json($car);
     }
 
