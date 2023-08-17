@@ -232,6 +232,10 @@
         }
     </script>
     <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+
+
+
+
     <script src="{{ asset('js/car-index.js') }}"></script>
     {{-- <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.js"></script> --}}
 @endsection

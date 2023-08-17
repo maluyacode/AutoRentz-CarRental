@@ -32,11 +32,14 @@ class UserController extends Controller
     public function profile() // viewing profile of a user/customer
     {
         $customer = Customer::where('user_id', Auth::user()->id)->first();
+
         if (!$customer) {
             $customer = new CustomerClass;
             $customer->insert();
         }
-        $user = Customer::where('user_id', Auth::user()->id)->first();
+
+        $user = User::with(['customer'])->find(Auth::user()->id);
+
         return View::make('user.profile', compact('user'));
     }
 

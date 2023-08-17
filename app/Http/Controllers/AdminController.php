@@ -62,6 +62,7 @@ class AdminController extends Controller
         // charts whole year income
 
         $carData = Car::with(['bookings', 'accessories', 'modelo', 'modelo.type', 'modelo.manufacturer'])->get();
+
         $registered = Customer::with(['bookings', 'bookings.car'])->get();
 
 

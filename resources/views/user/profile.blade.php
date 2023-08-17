@@ -50,13 +50,13 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="address">Address</label>
-                                    <input type="text" class="form-control" id="address" value="{{ $user->address }}"
-                                        name="address">
+                                    <input type="text" class="form-control" id="address"
+                                        value="{{ $user->customer->address }}" name="address">
                                 </div>
                                 <div class="form-group">
                                     <label for="phone">Phone</label>
-                                    <input type="text" class="form-control" id="phone" value="{{ $user->phone }}"
-                                        name="phone">
+                                    <input type="text" class="form-control" id="phone"
+                                        value="{{ $user->customer->phone }}" name="phone">
                                 </div>
                                 <div class="form-group">
                                     <label for="email">Email address</label>
@@ -88,21 +88,24 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('changePassword', $user->user_id) }}" method="POST">
+                <form action="{{ route('changePassword', $user->id) }}" method="POST">
                     @csrf
                     @method('PUT')
                     <div class="modal-body">
                         <div class="form-group">
                             <label for="exampleInputPassword1">Previous Password</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password" name="prevpass">
+                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                                name="prevpass">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">New Password</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password" name="newpass">
+                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                                name="newpass">
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">Confirm Password</label>
-                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password" name="confirmpass">
+                            <input type="text" class="form-control" id="exampleInputPassword1" placeholder="Password"
+                                name="confirmpass">
                         </div>
                     </div>
                     <div class="modal-footer">

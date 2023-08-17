@@ -45,7 +45,7 @@ let table = $('#location-table').DataTable({
         {
             data: null,
             render: function (data) {
-                return `<img class="model-image" src="${data.media[0]?.original_url}" alt="NONE">`
+                return `<img class="model-image" src="${data.media[0]?.original_url || '/storage/images/Logo.png'}" alt="NONE">`
             },
             class: "data-image",
 
