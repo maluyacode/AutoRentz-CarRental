@@ -101,3 +101,17 @@ tr.newRow {
     height: 75px;
     object-fit: cover;
 }
+
+.status .available{
+    background-color: #A8DF8E;
+    width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.status .taken{
+    background-color: #FF6969;
+    width: 100px;
+    padding: 5px 25px;
+    border-radius: 5px;
+}

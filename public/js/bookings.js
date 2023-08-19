@@ -107,7 +107,11 @@ function dataTableFill(apiLocation) {
             //     data: 'driver_id',
             // },
             {
-                data: 'status'
+                data: null,
+                render: function (data) {
+                    return `<span class=${data.status}>${data.status}</span>`;
+                },
+                class: 'status',
             },
             {
                 data: null,
@@ -463,9 +467,9 @@ function loading() {
     Swal.fire({
         // title: '',
         // html: '<b></b>',
-        timer: 10000,
+        // timer: 10000,
         allowOutsideClick: false,
-        timerProgressBar: true,
+        // timerProgressBar: true,
         didOpen: () => {
             Swal.showLoading()
             // const b = Swal.getHtmlContainer().querySelector('b')

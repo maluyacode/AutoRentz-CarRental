@@ -184,9 +184,9 @@ $('#submit').on('click', function () {
         Swal.fire({
             // title: '',
             // html: '<b></b>',
-            timer: 10000,
+            // timer: 10000,
             allowOutsideClick: false,
-            timerProgressBar: true,
+            // timerProgressBar: true,
             didOpen: () => {
                 Swal.showLoading()
                 // const b = Swal.getHtmlContainer().querySelector('b')

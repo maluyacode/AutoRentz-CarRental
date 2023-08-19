@@ -58,7 +58,11 @@ let table = $('#drivers-table').DataTable({
             data: 'address'
         },
         {
-            data: 'driver_status'
+            data: null,
+            render: function (data) {
+                return `<span class=${data.driver_status}>${data.driver_status}</span>`;
+            },
+            class: 'status'
         },
         {
             data: null,

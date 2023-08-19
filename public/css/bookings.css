@@ -33,3 +33,37 @@ tbody {
 .input-group *{
     cursor: pointer;
 }
+
+.status{
+    justify-content: center;
+    text-align: center;
+    font-weight: 500;
+}
+
+.status .finished{
+    background-color: #A8DF8E;
+    width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}
+
+.status .cancelled{
+    background-color: #FF6969;
+    width: 100px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status .confirmed{
+    background-color: #8CABFF;
+    width: 100px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.status .pending{
+    background-color: #FFDBC3;
+    width: 100px;
+    padding: 5px 10px;
+    border-radius: 5px;
+}

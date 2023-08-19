@@ -80,7 +80,11 @@ let table = $('#car-table').DataTable({
             }
         },
         {
-            data: 'car_status'
+            data: null,
+            render: function (data) {
+                return `<span class=${data.car_status}>${data.car_status}</span>`;
+            },
+            class: 'status'
         },
         {
             data: null,
