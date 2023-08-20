@@ -1,94 +1,83 @@
 @extends('layouts.app')
 
-@section('content')
-    @include('layouts.session-messages')
-    <style>
-        .mySlides {
-            display: none;
-        }
-        .car-detail{
-            padding-top: 50px;
-        }
-    </style>
-    <section class="car-detail" style="height: 80vh">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="car-image">
-                        <div class="w3-content w3-display-container">
-                            @foreach ($images[] = explode('=', $car->image_path) as $key => $image)
-                                <div class="w3-display-container mySlides">
-                                    <img src="{{ '/storage/images/' . $image }}" style="width:100%">
-                                </div>
-                            @endforeach
-                            <button class="w3-button w3-display-left w3-black" onclick="plusDivs(-1)">&#10094;</button>
-                            <button class="w3-button w3-display-right w3-black" onclick="plusDivs(1)">&#10095;</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="car-info">
-                        <div style="display: flex;">
-                            <h2>{{ $car->modelname . ' ' . $car->typename . ' ' . $car->modelyear }}</h2>
-                            <h5 style=" margin:5px; height: 20px">{{ $car->manufacturername }}</h5>
-                        </div>
-                        <p><strong>Description:</strong> {{ $car->description }} </p>
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/car-details.css') }}">
+@endsection
 
-                        <table>
-                            <tr>
-                                <td style="width: 300px">
-                                    <p><strong>Price:</strong>
-                                        ₱{{ $customerClass->computationDisplay(null, null, $car->price_per_day, $accessoryfee, $car->id) }}
-                                        /day</p>
-                                </td>
-                                <td style="width: 300px">
-                                    <p><strong>Seats:</strong> {{ $car->seats }} people capacity</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="width: 300px">
-                                    <p><strong>Transmission:</strong> {{ $car->transmissionname }} </p>
-                                </td>
-                                <td style="width: 300px">
-                                    <p><strong>Fuel Type:</strong> {{ $car->fuelname }} </p>
-                                </td>
-                            </tr>
-                        </table>
-                        <p><strong>Additional:</strong>
-                            |
-                            @foreach ($accessory as $accessories)
-                                {{ $accessories->name }} |
-                            @endforeach
-                        </p>
-                        <div class="button-group">
-                            <a href="{{ route('addtogarage', $car->id) }}" class="btn btn-secondary">Add to Garage</a>
+@section('content')
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="card mb-3">
+                <h3 class="card-title"><span>{{ $car->modelo->name }} {{ $car->modelo->type->name }}
+                        {{ $car->modelo->manufacturer->name }}</span> <span><a href="{{ route('addtogarage', $car->id) }}"
+                            class="btn btn-warning">ADD TO GARAGE</a></span></h3>
+                <div class="card-img-top">
+                    <img src="{{ isset($car->media[0]) ? $car->media[0]->original_url : asset('/storage/images/Logo.png') }}"
+                        alt="Card image cap">
+                    <img src="{{ isset($car->media[1]) ? $car->media[1]->original_url : asset('/storage/images/Logo.png') }}"
+                        alt="Card image cap">
+                    <img src="{{ isset($car->media[2]) ? $car->media[2]->original_url : asset('/storage/images/Logo.png') }}"
+                        alt="Card image cap">
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">{{ $car->description }}</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="4">Car Details </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="model">
+                                    <tr>
+                                        <th scope="row">Model</th>
+                                        <td>{{ $car->modelo->name }} {{ $car->modelo->year }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Manufacturer</th>
+                                        <td>{{ $car->modelo->manufacturer->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Car Type</th>
+                                        <td>{{ $car->modelo->type->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Transmisson</th>
+                                        <td>{{ $car->transmission->name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">Fuel</th>
+                                        <td>{{ $car->fuel->name }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th scope="col" colspan="4">Car Accessories </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="model">
+                                    @foreach ($car->accessories as $accessory)
+                                        <tr>
+                                            <th scope="row">{{ $accessory->name }}</th>
+                                            <td><i class="bi bi-check-circle"></i></td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
-    </section>
-    <script>
-        var slideIndex = 1;
-        showDivs(slideIndex);
+    </div>
+@endsection
 
-        function plusDivs(n) {
-            showDivs(slideIndex += n);
-        }
-
-        function showDivs(n) {
-            var i;
-            var x = document.getElementsByClassName("mySlides");
-            if (n > x.length) {
-                slideIndex = 1
-            }
-            if (n < 1) {
-                slideIndex = x.length
-            }
-            for (i = 0; i < x.length; i++) {
-                x[i].style.display = "none";
-            }
-            x[slideIndex - 1].style.display = "block";
-        }
-    </script>
+@section('scripts')
 @endsection

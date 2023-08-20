@@ -280,17 +280,29 @@ class CarController extends Controller
 
     public function cardetails($id)
     {
-        $accessInfo = new AccessInformation();
-        $car = $accessInfo->carJoined()
-            ->where('ca.id', $id)
-            ->first();
-        $customerClass = new CustomerClass();
-        $accessory = Car::find($id)->accessories()->get();
-        $accessoryfee = DB::table('cars as ca')
-            ->join('accessorie_car as ac_ca', 'ca.id', 'ac_ca.car_id')
-            ->join('accessories as ac', 'ac_ca.accessorie_id', 'ac.id')
-            ->get();
-        return View::make('fleet.car-details', compact('car', 'accessory', 'customerClass', 'accessoryfee'));
+        $car = Car::with([
+            'accessories' => function ($query) {
+                return $query->select('id', 'name', 'fee');
+            },
+            'modelo' => function ($query) {
+                return $query->select('id', 'type_id', 'manufacturer_id',  'name', 'year');
+            },
+            'modelo.manufacturer' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'modelo.type' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'transmission' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'fuel' => function ($query) {
+                return $query->select('id', 'name');
+            },
+            'media'
+        ])->find($id);
+
+        return View::make('fleet.car-details', compact('car'));
     }
 
     public function carlisting()

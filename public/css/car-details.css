@@ -1,0 +1,55 @@
+.container-fluid {
+    background-color: #F6F1E9;
+}
+
+.card {
+    background-color: #0000;
+    padding: 20px;
+    border: none;
+}
+
+.card-img-top {
+    display: flex;
+    justify-content: space-around;
+}
+
+.card-img-top img {
+    width: 30%;
+    border: 5px solid #352F44;
+    border-radius: 10px;
+    object-fit: contain;
+}
+
+.card-title {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    margin-left: 75px;
+    margin-right: 75px;
+
+}
+
+.card-title span {
+    font-weight: 600;
+}
+
+.card-body {
+    padding: 0 50px;
+}
+
+.card-text {
+    margin-top: 20px;
+    text-align: justify;
+}
+
+table tbody {
+    text-transform: capitalize;
+}
+
+.card-title {
+    text-transform: uppercase;
+}
+
+.model tr th {
+    font-weight: lighter;
+}
