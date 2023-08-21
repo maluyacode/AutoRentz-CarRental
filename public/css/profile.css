@@ -1,0 +1,26 @@
+.btn-primary {
+    margin: 15px
+}
+
+.password {
+    background-color: red
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border: 1px solid #000;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+#profile {
+    width: 50%;
+    margin: auto;
+    padding-top: 80px;
+    min-width: 500px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}

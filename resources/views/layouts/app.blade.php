@@ -99,7 +99,7 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                 @if (Auth::user()->customer && Auth::user()->customer->image_path)
                                     <img src="{{ Auth::user()->customer->image_path }}" width="40px"
-                                        style="border-radius: 50%" height="40px">
+                                        style="border-radius: 50%; object-fit:cover" height="40px">
                                 @else
                                     {{ Auth::user()->name }}
                                 @endif

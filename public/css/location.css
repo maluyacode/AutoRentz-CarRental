@@ -56,13 +56,16 @@
     margin-top: 50px;
 }
 
-.row-location{
+.row-location {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
 }
 
 .card {
-    width: 90%;
+    /* width: 90%; */
+    min-width: 350px;
+    min-height: 375px;
     padding: 20px;
     background-color: #4E3636;
     color: #F4EEE0;
